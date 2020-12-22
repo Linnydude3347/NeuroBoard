@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:leonardo",
+    "port": "/dev/tty.usbmodem14201",
+    "sketch": "NeuroBoard.ino",
+    "version": "1.0.4"
+}

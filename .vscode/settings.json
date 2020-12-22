@@ -1,0 +1,24 @@
+{
+    "C_Cpp.errorSquiggles": "Enabled",
+    "files.associations": {
+        "vector": "cpp",
+        "ostream": "cpp",
+        "__locale": "cpp",
+        "algorithm": "cpp",
+        "memory": "cpp",
+        "streambuf": "cpp",
+        "locale": "cpp",
+        "*.tcc": "cpp",
+        "__bit_reference": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "initializer_list": "cpp",
+        "iterator": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp",
+        "ranges": "cpp"
+    }
+}

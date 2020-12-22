@@ -1,0 +1,40 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Users/benantonellis/Library/Arduino15/packages/arduino/tools/**",
+                "/Users/benantonellis/Library/Arduino15/packages/arduino/hardware/avr/1.8.3/**",
+                "${workspaceFolder}/**",
+                "/Users/benantonellis/Documents/Arduino/libraries/Neuroduino",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/leonardo",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/**",
+                "/Applications/Arduino.app/Contents/Java/libraries/pt/",
+                "/Applications/Arduino.app/Contents/Java/libraries/**",
+                "/Users/benantonellis/Documents/Arduino/libraries/**"
+            ],
+            "defines": [
+                "USBCON"
+            ],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            "forcedInclude": [
+                "/Users/benantonellis/Library/Arduino15/packages/arduino/hardware/avr/1.8.3/cores/arduino/Arduino.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/io2323.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/io43u35x.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iotn26.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/interrupt.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iotnx4.h"
+            ]
+        }
+    ],
+    "version": 4
+}
