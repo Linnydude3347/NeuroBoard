@@ -329,7 +329,16 @@ bool debounceWait(const unsigned int& interval) {
 
 }
 
-bool NeuroBoard::validAnalog(const uint8_t& newChannel) {
+/**
+ * Determines if the passed analog is valid to use on the
+ * Neuroduino Board. This is private because only our
+ * function needs to use it.
+ * 
+ * @param newChannel The new analog channel to listen on.
+ * 
+ * @return bool.
+**/
+bool validAnalog(const uint8_t& newChannel) {
 
     // TODO: Check for valid analog within bounds.
 
