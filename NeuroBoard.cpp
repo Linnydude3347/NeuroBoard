@@ -342,7 +342,11 @@ bool validAnalog(const uint8_t& newChannel) {
 
     // TODO: Check for valid analog within bounds.
 
-	return !(newChannel < 0 or (newChannel > 11 and newChannel < 18) or newChannel > 29);
+	return !(
+        newChannel < 0 or                       // Any value less than 0 cannot be an analog.
+        (newChannel > 11 and newChannel < 18)   // Allows integer input while also allowing A(N) input.
+        or newChannel > 29                      // Anything bigger than 29 (A11) cannot be an analog.
+    );
 
 }
 
