@@ -166,7 +166,13 @@ class NeuroBoard {
         void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(), const unsigned int& secondFactor);
 
         /**
-         * Function overload to avoid default parameters.
+         * Calls the passed function when the envelope value is greater
+         * than the passed threshold.
+         * 
+         * @param threshold Threshold for envelope value.
+         * @param callback Function to call when threshold is reached.
+         * 
+         * @return void.
         **/
         void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)());
 

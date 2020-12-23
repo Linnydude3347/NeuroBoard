@@ -21,6 +21,8 @@ void loop() {
 	int sample = board.getNewSample();
     int envelopeValue = board.getEnvelopeValue();
 
+	board.enableButtonPress(WHITE_BTN, [](){ Serial.println("Reached!"); }, 250);
+
 	Serial.println(sample);
     delay(25);
 
