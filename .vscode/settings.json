@@ -19,6 +19,8 @@
         "string": "cpp",
         "string_view": "cpp",
         "unordered_map": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp"
     }
 }

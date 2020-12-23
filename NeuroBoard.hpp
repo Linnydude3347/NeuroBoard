@@ -26,6 +26,12 @@ struct button {
     void (*callback)(void);
     unsigned int interval;
 
+    button(){
+        _button = NULL;
+        callback = nullptr;
+        interval = NULL;
+    };
+
 };
 
 typedef struct button Button;

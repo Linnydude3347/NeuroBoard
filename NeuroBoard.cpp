@@ -10,15 +10,60 @@
 /* ******************************************************* */
 /** @author Stanislav Mircic **/
 
-#define SHIFT_LATCH_PIN B00000100                        //latch pin for shift register        RCK - PB2
+#define SHIFT_LATCH_PIN B00000100                        // latch pin for shift register RCK - PB2
 #define I_SHIFT_LATCH_PIN B11111011 
-#define SHIFT_CLOCK_PIN B00000010                        //clock pin for shift register              PB1
+#define SHIFT_CLOCK_PIN B00000010                        // clock pin for shift register PB1
 #define I_SHIFT_CLOCK_PIN B11111101 
-#define SHIFT_DATA_PIN  B00001000                        //serial data pin for shift register SER - PB3
+#define SHIFT_DATA_PIN  B00001000                        // serial data pin for shift register SER - PB3
 #define I_SHIFT_DATA_PIN  B11110111 
 #define BITMASK_ONE B00000001
 
 /* ******************************************************* */
+
+/// PRIVATE FUNCTIONS ///
+
+unsigned long debouncingMilliseconds = 0;
+/**
+ * Private function to wait for the amount of time passed
+ * to the enableButtonPress function.
+ * 
+ * @param interval Milliseconds to wait until next press.
+ * 
+ * @return bool.
+**/
+bool debounceWait(const unsigned int& interval) {
+
+    // TODO: Set debounce wait for 250 milliseconds.
+
+    unsigned long ms = millis();
+    bool done = (ms - debouncingMilliseconds) >= interval;
+
+    if (done) 
+        debouncingMilliseconds = ms;
+    return done;
+
+}
+
+/**
+ * Determines if the passed analog is valid to use on the
+ * Neuroduino Board. This is private because only our
+ * function needs to use it.
+ * 
+ * @param newChannel The new analog channel to listen on.
+ * 
+ * @return bool.
+**/
+bool validAnalog(const uint8_t& newChannel) {
+
+    // TODO: Check for valid analog within bounds.
+
+    return !(
+        newChannel < 0 or                       // Any value less than 0 cannot be an analog.
+        (newChannel > 11 and newChannel < 18)   // Allows integer input while also allowing A(N) input.
+        or newChannel > 29                      // Anything bigger than 29 (A11) cannot be an analog.
+    );
+
+}
 
 // Button Variables //
 
@@ -306,42 +351,6 @@ bool NeuroBoard::wait(const unsigned int& milliseconds, void (*callback)(void)) 
         callback();
     }
     return done;
-
-}
-
-/// PRIVATE FUNCTIONS ///
-unsigned long debouncingMilliseconds = 0;
-bool debounceWait(const unsigned int& interval) {
-
-    // TODO: Set debounce wait for 250 milliseconds.
-
-    unsigned long ms = millis();
-    bool done = (ms - debouncingMilliseconds) >= interval;
-
-    if (done) 
-        debouncingMilliseconds = ms;
-    return done;
-
-}
-
-/**
- * Determines if the passed analog is valid to use on the
- * Neuroduino Board. This is private because only our
- * function needs to use it.
- * 
- * @param newChannel The new analog channel to listen on.
- * 
- * @return bool.
-**/
-bool validAnalog(const uint8_t& newChannel) {
-
-    // TODO: Check for valid analog within bounds.
-
-	return !(
-        newChannel < 0 or                       // Any value less than 0 cannot be an analog.
-        (newChannel > 11 and newChannel < 18)   // Allows integer input while also allowing A(N) input.
-        or newChannel > 29                      // Anything bigger than 29 (A11) cannot be an analog.
-    );
 
 }
 
