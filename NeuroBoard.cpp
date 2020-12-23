@@ -212,7 +212,7 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void), const unsigned int& interval) {
 
     // TODO: Call callback function when button is pressed.
 
@@ -232,13 +232,13 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), co
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)()) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) {
 
     this->enableButtonPress(button, callback, 250);
 
 }
 
-void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void callback()) {
+void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)(void)) {
 
     // TODO: Call callback function when button is held for X milliseconds.
 
@@ -258,7 +258,7 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void callback(), const unsigned int& secondFactor) {
+void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void), const unsigned int& secondFactor) {
 
     // TODO: Call callback when passed threshold is met by envelope value.
 
@@ -275,7 +275,7 @@ void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void callba
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)()) {
+void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void)) {
 
     this->setTriggerOnEnvelope(threshold, callback, threshold - (threshold / 10));
 
@@ -294,7 +294,7 @@ bool NeuroBoard::wait(const unsigned int& milliseconds) {
     
 }
 
-bool NeuroBoard::wait(const unsigned int& milliseconds, void callback()) {
+bool NeuroBoard::wait(const unsigned int& milliseconds, void (*callback)(void)) {
 
     // TODO: Wait n milliseconds, then invoke callback.
 
@@ -388,7 +388,7 @@ void NeuroBoard::writeLEDs(byte outByte) {
     PORTB |= SHIFT_LATCH_PIN;
 }
 
-void NeuroBoard::writeLED(int led, bool state) {
+void NeuroBoard::writeLED(const int& led, const bool& state) {
 
     byte bitMask = BITMASK_ONE;
     if (!(0 < led < 7)) {

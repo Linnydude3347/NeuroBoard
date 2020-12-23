@@ -133,7 +133,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval);
+        void enableButtonPress(const uint8_t& button, void (*callback)(void), const unsigned int& interval);
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -144,7 +144,7 @@ class NeuroBoard {
          * @param button Which button to map the passed function to.
          * @param callback Function to call when button is pressed.
         **/
-        void enableButtonPress(const uint8_t& button, void (*callback)());
+        void enableButtonPress(const uint8_t& button, void (*callback)(void));
 
         /**
          * Calls a function when a button is pressed for a long time.
@@ -159,7 +159,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)());
+        void enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)(void));
 
         /**
          * Calls the passed function when the envelope value is greater 
@@ -174,7 +174,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(), const unsigned int& secondFactor);
+        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void), const unsigned int& secondFactor);
 
         /**
          * Calls the passed function when the envelope value is greater
@@ -185,7 +185,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)());
+        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void));
 
         /**
          * Custom delay function so our code can continue to run while the 
@@ -212,12 +212,12 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        bool wait(const unsigned int& milliseconds, void (*callback)());
+        bool wait(const unsigned int& milliseconds, void (*callback)(void));
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
 
-        void writeLED(int led, bool state);
+        void writeLED(const int& led, const bool& state);
 
         /* ******************************************************* */
 
