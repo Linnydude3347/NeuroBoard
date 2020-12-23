@@ -33,8 +33,6 @@ unsigned long debouncingMilliseconds = 0;
 **/
 bool debounceWait(const unsigned int& interval) {
 
-    // TODO: Set debounce wait for 250 milliseconds.
-
     unsigned long ms = millis();
     bool done = (ms - debouncingMilliseconds) >= interval;
 
@@ -54,8 +52,6 @@ bool debounceWait(const unsigned int& interval) {
  * @return bool.
 **/
 bool validAnalog(const uint8_t& newChannel) {
-
-    // TODO: Check for valid analog within bounds.
 
     return !(
         newChannel < 0 or                       // Any value less than 0 cannot be an analog.
@@ -176,8 +172,6 @@ ISR (TIMER1_COMPA_vect) {
 
 void NeuroBoard::startMeasurements(void) {
 
-    // TODO: See documentation.
-
     // Set pin modes for Stanislav's code //
 
     pinMode(14, OUTPUT); // MISO
@@ -213,8 +207,6 @@ void NeuroBoard::startMeasurements(void) {
 
 void NeuroBoard::startCommunicaton(void) {
 
-    // TODO: See documentation.
-
     // Set serial to analog reading value //
 
     Serial.begin(SERIAL_CAP);
@@ -227,8 +219,6 @@ void NeuroBoard::startCommunicaton(void) {
 
 int NeuroBoard::getNewSample(void) {
 
-    // TODO: Return the newest sample from the buffer.
-
     int value = buffer[tail]; // Can't just return this because tail is changed below //
     full = false;
     tail = (tail + 1) % BUFFER_SIZE;
@@ -239,15 +229,11 @@ int NeuroBoard::getNewSample(void) {
 
 int NeuroBoard::getEnvelopeValue(void) {
 
-    // TODO: Return envelope value from ISR.
-
     return envelopeValue;
 
 }
 
 void NeuroBoard::setChannel(const uint8_t& newChannel) {
-
-    // TODO: Set channel to passed channel.
 
     if (!validAnalog(newChannel)) {
         NeuroBoard::channel = this->channels[newChannel];
@@ -258,8 +244,6 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 }
 
 void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void), const unsigned int& interval) {
-
-    // TODO: Call callback function when button is pressed.
 
     if (button == RED_BTN) {
         NeuroBoard::redButtonTrigger._button = button;
@@ -285,8 +269,6 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 
 void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)(void)) {
 
-    // TODO: Call callback function when button is held for X milliseconds.
-
     if (button == RED_BTN) {
         NeuroBoard::redLongButtonTrigger._button = button;
         NeuroBoard::redLongButtonTrigger.callback = callback;
@@ -304,8 +286,6 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int
 }
 
 void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void), const unsigned int& secondFactor) {
-
-    // TODO: Call callback when passed threshold is met by envelope value.
 
     if (envelopeValue >= threshold) {
         if (!this->thresholdMet) {
@@ -328,8 +308,6 @@ void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*call
 
 bool NeuroBoard::wait(const unsigned int& milliseconds) {
 
-    //TODO: Return true once delay is finished.
-
     unsigned long long ms = millis();
     bool done = (ms - this->previousMilliseconds) >= milliseconds;
 
@@ -340,8 +318,6 @@ bool NeuroBoard::wait(const unsigned int& milliseconds) {
 }
 
 bool NeuroBoard::wait(const unsigned int& milliseconds, void (*callback)(void)) {
-
-    // TODO: Wait n milliseconds, then invoke callback.
 
     unsigned long ms = millis();
     bool done = (ms - this->previousMillisecondsCallback) >= milliseconds;
