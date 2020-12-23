@@ -56,6 +56,8 @@ class NeuroBoard {
         static unsigned int redButtonHoldCount;
         static unsigned int whiteButtonHoldCount;
 
+        static int decayRate;
+
         /**
          * Samples data to a circular buffer, and calculates envelope value 
          * all in the background. Sets pin modes for Stanislav's code.
@@ -122,6 +124,19 @@ class NeuroBoard {
          * @return void.
         **/
         void setChannel(const uint8_t& channel);
+
+        /**
+         * Sets the decay rate for the setTriggerOnEnvelope function.
+         * I.E, setDecayRate(5) will subtract envelopeValue by 5 every tick.
+         * 
+         * - Usable in setup: true
+         * - Usable in loop: true
+         * 
+         * @param rate Integer representing the scale at which envelopeValue will be subtracted.
+         * 
+         * @return void
+        **/
+        void setDecayRate(const int& rate);
 
         /**
          * Calls the passed function when the specified button is pressed.

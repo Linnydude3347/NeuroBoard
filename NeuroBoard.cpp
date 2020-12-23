@@ -76,6 +76,8 @@ bool NeuroBoard::whiteLongButtonSet = false;
 unsigned int NeuroBoard::redButtonHoldCount = 0;
 unsigned int NeuroBoard::whiteButtonHoldCount = 0;
 
+int NeuroBoard::decayRate = 1;
+
 // Buffer Variables //
 
 int* buffer = new int[BUFFER_SIZE];
@@ -102,7 +104,7 @@ ISR (TIMER1_COMPA_vect) {
 
     // Calculate envelope value here //
 
-    envelopeValue = (reading >= envelopeValue) ? reading : envelopeValue - 1;
+    envelopeValue = (reading >= envelopeValue) ? reading : envelopeValue - NeuroBoard::decayRate;
 
     // Place new reading in buffer //
 
@@ -240,6 +242,15 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
     } else {
         NeuroBoard::channel = newChannel;
     }
+
+}
+
+void NeuroBoard::setDecayRate(const int& rate) {
+
+    // Check to ensure positive input, some users may interpret decay rate
+    // as a negative value. This prevents that mistake.
+
+    NeuroBoard::decayRate = (rate < 0) ? abs(rate) : rate;
 
 }
 
