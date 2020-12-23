@@ -222,7 +222,7 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void callback(), const unsigned int& interval=250) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval=250) {
 
     // TODO: Call callback function when button is pressed.
 
@@ -262,16 +262,9 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void callback(), const unsigned int& secondFactor=0) {
+void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void callback(), const unsigned int& secondFactor) {
 
     // TODO: Call callback when passed threshold is met by envelope value.
-
-    const int THRESHOLD_SCALE_FACTOR = threshold / 10;
-    int secondThreshold = secondFactor;
-
-    if (secondFactor == 0) {
-        secondThreshold = threshold - THRESHOLD_SCALE_FACTOR;
-    }
 
     if (envelopeValue >= threshold) {
         if (!this->thresholdMet) {
@@ -279,10 +272,16 @@ void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void callba
             callback();
         }
     } else {
-        if (envelopeValue <= secondThreshold) {
+        if (envelopeValue <= secondFactor) {
             this->thresholdMet = false;
         }
     }
+
+}
+
+void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)()) {
+
+    setTriggerOnEnvelope(threshold, callback, threshold - (threshold / 10));
 
 }
 

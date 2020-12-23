@@ -103,7 +103,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonPress(const uint8_t& button, void callback(), const unsigned int& interval=250);
+        void enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval=250);
 
         /**
          * Calls a function when a button is pressed for a long time.
@@ -118,7 +118,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void callback());
+        void enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)());
 
         /**
          * Calls the passed function when the envelope value is greater 
@@ -133,7 +133,12 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const unsigned int& threshold, void callback(), const unsigned int& secondFactor=0);
+        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(), const unsigned int& secondFactor);
+
+        /**
+         * Function overload to avoid default parameters.
+        **/
+        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)());
 
         /**
          * Custom delay function so our code can continue to run while the 
