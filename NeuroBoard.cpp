@@ -217,17 +217,17 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), co
     // TODO: Call callback function when button is pressed.
 
     if (button == RED_BTN) {
-        redButtonTrigger._button = button;
-        redButtonTrigger.callback = callback;
-        redButtonTrigger.interval = interval;
-        redButtonSet = true;
+        NeuroBoard::redButtonTrigger._button = button;
+        NeuroBoard::redButtonTrigger.callback = callback;
+        NeuroBoard::redButtonTrigger.interval = interval;
+        NeuroBoard::redButtonSet = true;
     }
 
     if (button == WHITE_BTN) {
-        whiteButtonTrigger._button = button;
-        whiteButtonTrigger.callback = callback;
-        whiteButtonTrigger.interval = interval;
-        whiteButtonSet = true;
+        NeuroBoard::whiteButtonTrigger._button = button;
+        NeuroBoard::whiteButtonTrigger.callback = callback;
+        NeuroBoard::whiteButtonTrigger.interval = interval;
+        NeuroBoard::whiteButtonSet = true;
     }
 
 }
@@ -237,17 +237,17 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int
     // TODO: Call callback function when button is held for X milliseconds.
 
     if (button == RED_BTN) {
-        redLongButtonTrigger._button = button;
-        redLongButtonTrigger.callback = callback;
-        redLongButtonTrigger.interval = milliseconds; // Instead of creating new struct, just use same variable.
-        redLongButtonSet = true;
+        NeuroBoard::redLongButtonTrigger._button = button;
+        NeuroBoard::redLongButtonTrigger.callback = callback;
+        NeuroBoard::redLongButtonTrigger.interval = milliseconds; // Instead of creating new struct, just use same variable.
+        NeuroBoard::redLongButtonSet = true;
     }
 
     if (button == WHITE_BTN) {
-        whiteLongButtonTrigger._button = button;
-        whiteLongButtonTrigger.callback = callback;
-        whiteLongButtonTrigger.interval = milliseconds; // Instead of creating new struct, just use same variable.
-        whiteLongButtonSet = true;
+        NeuroBoard::whiteLongButtonTrigger._button = button;
+        NeuroBoard::whiteLongButtonTrigger.callback = callback;
+        NeuroBoard::whiteLongButtonTrigger.interval = milliseconds; // Instead of creating new struct, just use same variable.
+        NeuroBoard::whiteLongButtonSet = true;
     }
 
 }
