@@ -20,12 +20,39 @@
 #define MAX_LEDS 8
 #define SERIAL_CAP 230400
 
+struct button {
+
+    uint8_t _button;
+    void (*callback)(void);
+    unsigned int interval;
+
+};
+
+typedef struct button Button;
+
 /**
  * Class for interacting with the Neuroduino Board.
 **/
 class NeuroBoard {
 
     public:
+
+        // Static member variables //
+
+        static uint8_t channel;
+
+        static Button redButtonTrigger;
+        static Button whiteButtonTrigger;
+        static Button redLongButtonTrigger;
+        static Button whiteLongButtonTrigger;
+
+        static bool redButtonSet;
+        static bool whiteButtonSet;
+        static bool redLongButtonSet;
+        static bool whiteLongButtonSet;
+
+        static unsigned int redButtonHoldCount;
+        static unsigned int whiteButtonHoldCount;
 
         /**
          * Samples data to a circular buffer, and calculates envelope value 
@@ -60,8 +87,11 @@ class NeuroBoard {
         int getNewSample(void);
 
         /**
-         * Returns the envelope value of the channel. This is the highest reading,
-         * subtracted by one for each reading that isn't higher than it.
+         * Returns the envelope value of the channel.
+         * 
+         * For every incoming reading from the analog, if that reading isn't bigger
+         * than the current envelope value, the envelope value is subtracted by one.
+         * This ensures we don't have an envelope value higher than necessary.
          * 
          * - Usable in setup: false
          * - Usable in loop: true

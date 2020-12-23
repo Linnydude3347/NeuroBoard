@@ -22,28 +22,18 @@
 
 // Button Variables //
 
-struct button {
+Button NeuroBoard::redButtonTrigger = Button();
+Button NeuroBoard::whiteButtonTrigger = Button();
+Button NeuroBoard::redLongButtonTrigger = Button();
+Button NeuroBoard::whiteLongButtonTrigger = Button();
 
-    uint8_t _button;
-    void (*callback)(void);
-    unsigned int interval;
+bool NeuroBoard::redButtonSet = false;
+bool NeuroBoard::whiteButtonSet = false;
+bool NeuroBoard::redLongButtonSet = false;
+bool NeuroBoard::whiteLongButtonSet = false;
 
-};
-
-typedef struct button Button;
-
-Button redButtonTrigger;
-Button whiteButtonTrigger;
-Button redLongButtonTrigger;
-Button whiteLongButtonTrigger;
-
-bool redButtonSet = false;
-bool whiteButtonSet = false;
-bool redLongButtonSet = false;
-bool whiteLongButtonSet = false;
-
-unsigned int redButtonHoldCount = 0;
-unsigned int whiteButtonHoldCount = 0;
+unsigned int NeuroBoard::redButtonHoldCount = 0;
+unsigned int NeuroBoard::whiteButtonHoldCount = 0;
 
 // Buffer Variables //
 
@@ -59,7 +49,7 @@ int envelopeValue;
 // Serial variable, changed in startCommunication method //
 
 bool communicate = false;
-uint8_t channel = A0;
+uint8_t NeuroBoard::channel = A0;
 
 // ISR //
 
@@ -67,7 +57,7 @@ ISR (TIMER1_COMPA_vect) {
 
     // Get reading from analog //
 
-    int reading = analogRead(channel);
+    int reading = analogRead(NeuroBoard::channel);
 
     // Calculate envelope value here //
 
@@ -95,42 +85,42 @@ ISR (TIMER1_COMPA_vect) {
 
     // Check if buttons are enabled //
 
-    if (redButtonSet) {
+    if (NeuroBoard::redButtonSet) {
 
-        if (digitalRead(redButtonTrigger._button)) {
-            if (debounceWait(redButtonTrigger.interval)) {
-                redButtonTrigger.callback();
+        if (digitalRead(NeuroBoard::redButtonTrigger._button)) {
+            if (debounceWait(NeuroBoard::redButtonTrigger.interval)) {
+                NeuroBoard::redButtonTrigger.callback();
             }
         }
 
     }
 
-    if (whiteButtonSet) {
+    if (NeuroBoard::whiteButtonSet) {
 
-        if (digitalRead(whiteButtonTrigger._button)) {
-            if (debounceWait(whiteButtonTrigger.interval)) {
-                whiteButtonTrigger.callback();
+        if (digitalRead(NeuroBoard::whiteButtonTrigger._button)) {
+            if (debounceWait(NeuroBoard::whiteButtonTrigger.interval)) {
+                NeuroBoard::whiteButtonTrigger.callback();
             }
         }
 
     }
 
-    if (redLongButtonSet) {
+    if (NeuroBoard::redLongButtonSet) {
 
-        redButtonHoldCount = digitalRead(redLongButtonTrigger._button) ? (redButtonHoldCount + 1) : 0;
-        if (redButtonHoldCount == redLongButtonTrigger.interval) {
-            redButtonHoldCount = 0;
-            redLongButtonTrigger.callback();
+        NeuroBoard::redButtonHoldCount = digitalRead(NeuroBoard::redLongButtonTrigger._button) ? (NeuroBoard::redButtonHoldCount + 1) : 0;
+        if (NeuroBoard::redButtonHoldCount == NeuroBoard::redLongButtonTrigger.interval) {
+            NeuroBoard::redButtonHoldCount = 0;
+            NeuroBoard::redLongButtonTrigger.callback();
         }
 
     }
 
-    if (whiteLongButtonSet) {
+    if (NeuroBoard::whiteLongButtonSet) {
 
-        whiteButtonHoldCount = digitalRead(whiteLongButtonTrigger._button) ? (whiteButtonHoldCount + 1) : 0;
-        if (whiteButtonHoldCount == whiteLongButtonTrigger.interval) {
-            whiteButtonHoldCount = 0;
-            whiteLongButtonTrigger.callback();
+        NeuroBoard::whiteButtonHoldCount = digitalRead(NeuroBoard::whiteLongButtonTrigger._button) ? (NeuroBoard::whiteButtonHoldCount + 1) : 0;
+        if (NeuroBoard::whiteButtonHoldCount == NeuroBoard::whiteLongButtonTrigger.interval) {
+            NeuroBoard::whiteButtonHoldCount = 0;
+            NeuroBoard::whiteLongButtonTrigger.callback();
         }
 
     }
@@ -215,9 +205,9 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
     // TODO: Set channel to passed channel.
 
     if (!validAnalog(newChannel)) {
-        channel = this->channels[newChannel];
+        NeuroBoard::channel = this->channels[newChannel];
     } else {
-        channel = newChannel;
+        NeuroBoard::channel = newChannel;
     }
 
 }
