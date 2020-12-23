@@ -122,7 +122,7 @@ class NeuroBoard {
         void setChannel(const uint8_t& channel);
 
         /**
-         * Calls a function when a button is pressed.
+         * Calls the passed function when the specified button is pressed.
          * 
          * - Usable in setup: true
          * - Usable in loop: true
@@ -133,7 +133,18 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval=250);
+        void enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval);
+
+        /**
+         * Calls the passed function when the specified button is pressed.
+         * 
+         * - Usable in setup: true
+         * - Usable in loop: true
+         * 
+         * @param button Which button to map the passed function to.
+         * @param callback Function to call when button is pressed.
+        **/
+        void enableButtonPress(const uint8_t& button, void (*callback)());
 
         /**
          * Calls a function when a button is pressed for a long time.

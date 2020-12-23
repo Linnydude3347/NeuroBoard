@@ -212,7 +212,7 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval=250) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), const unsigned int& interval) {
 
     // TODO: Call callback function when button is pressed.
 
@@ -229,6 +229,12 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(), co
         NeuroBoard::whiteButtonTrigger.interval = interval;
         NeuroBoard::whiteButtonSet = true;
     }
+
+}
+
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)()) {
+
+    this->enableButtonPress(button, callback, 250);
 
 }
 
@@ -271,7 +277,7 @@ void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void callba
 
 void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)()) {
 
-    setTriggerOnEnvelope(threshold, callback, threshold - (threshold / 10));
+    this->setTriggerOnEnvelope(threshold, callback, threshold - (threshold / 10));
 
 }
 
