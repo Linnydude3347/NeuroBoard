@@ -195,7 +195,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        bool wait(const unsigned int& milliseconds, void callback());
+        bool wait(const unsigned int& milliseconds, void (*callback)());
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
