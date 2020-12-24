@@ -322,8 +322,9 @@ bool NeuroBoard::wait(const unsigned int& milliseconds) {
     unsigned long long ms = millis();
     bool done = (ms - this->previousMilliseconds) >= milliseconds;
 
-    if (done)
+    if (done) {
         this->previousMilliseconds = ms;
+    }
     return done;
     
 }
