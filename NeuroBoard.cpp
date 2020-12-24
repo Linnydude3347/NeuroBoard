@@ -68,11 +68,6 @@ Button NeuroBoard::whiteButtonTrigger = Button();
 Button NeuroBoard::redLongButtonTrigger = Button();
 Button NeuroBoard::whiteLongButtonTrigger = Button();
 
-bool NeuroBoard::redButtonSet = false;
-bool NeuroBoard::whiteButtonSet = false;
-bool NeuroBoard::redLongButtonSet = false;
-bool NeuroBoard::whiteLongButtonSet = false;
-
 unsigned int NeuroBoard::redButtonHoldCount = 0;
 unsigned int NeuroBoard::whiteButtonHoldCount = 0;
 
@@ -128,7 +123,7 @@ ISR (TIMER1_COMPA_vect) {
 
     // Check if buttons are enabled //
 
-    if (NeuroBoard::redButtonSet) {
+    if (NeuroBoard::redButtonTrigger.enabled) {
 
         if (digitalRead(NeuroBoard::redButtonTrigger._button)) {
             if (debounceWait(NeuroBoard::redButtonTrigger.interval)) {
@@ -138,7 +133,7 @@ ISR (TIMER1_COMPA_vect) {
 
     }
 
-    if (NeuroBoard::whiteButtonSet) {
+    if (NeuroBoard::whiteButtonTrigger.enabled) {
 
         if (digitalRead(NeuroBoard::whiteButtonTrigger._button)) {
             if (debounceWait(NeuroBoard::whiteButtonTrigger.interval)) {
@@ -148,7 +143,7 @@ ISR (TIMER1_COMPA_vect) {
 
     }
 
-    if (NeuroBoard::redLongButtonSet) {
+    if (NeuroBoard::redLongButtonTrigger.enabled) {
 
         NeuroBoard::redButtonHoldCount = digitalRead(NeuroBoard::redLongButtonTrigger._button) ? (NeuroBoard::redButtonHoldCount + 1) : 0;
         if (NeuroBoard::redButtonHoldCount == NeuroBoard::redLongButtonTrigger.interval) {
@@ -158,7 +153,7 @@ ISR (TIMER1_COMPA_vect) {
 
     }
 
-    if (NeuroBoard::whiteLongButtonSet) {
+    if (NeuroBoard::whiteLongButtonTrigger.enabled) {
 
         NeuroBoard::whiteButtonHoldCount = digitalRead(NeuroBoard::whiteLongButtonTrigger._button) ? (NeuroBoard::whiteButtonHoldCount + 1) : 0;
         if (NeuroBoard::whiteButtonHoldCount == NeuroBoard::whiteLongButtonTrigger.interval) {
@@ -257,17 +252,11 @@ void NeuroBoard::setDecayRate(const int& rate) {
 void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void), const unsigned int& interval) {
 
     if (button == RED_BTN) {
-        NeuroBoard::redButtonTrigger._button = button;
-        NeuroBoard::redButtonTrigger.callback = callback;
-        NeuroBoard::redButtonTrigger.interval = interval;
-        NeuroBoard::redButtonSet = true;
+        NeuroBoard::redButtonTrigger.set(button, callback, interval, true);
     }
 
     if (button == WHITE_BTN) {
-        NeuroBoard::whiteButtonTrigger._button = button;
-        NeuroBoard::whiteButtonTrigger.callback = callback;
-        NeuroBoard::whiteButtonTrigger.interval = interval;
-        NeuroBoard::whiteButtonSet = true;
+        NeuroBoard::whiteButtonTrigger.set(button, callback, interval, true);
     }
 
 }
@@ -281,17 +270,11 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)(void)) {
 
     if (button == RED_BTN) {
-        NeuroBoard::redLongButtonTrigger._button = button;
-        NeuroBoard::redLongButtonTrigger.callback = callback;
-        NeuroBoard::redLongButtonTrigger.interval = milliseconds; // Instead of creating new struct, just use same variable.
-        NeuroBoard::redLongButtonSet = true;
+        NeuroBoard::redLongButtonTrigger.set(button, callback, milliseconds, true);
     }
 
     if (button == WHITE_BTN) {
-        NeuroBoard::whiteLongButtonTrigger._button = button;
-        NeuroBoard::whiteLongButtonTrigger.callback = callback;
-        NeuroBoard::whiteLongButtonTrigger.interval = milliseconds; // Instead of creating new struct, just use same variable.
-        NeuroBoard::whiteLongButtonSet = true;
+        NeuroBoard::whiteLongButtonTrigger.set(button, callback, milliseconds, true);
     }
 
 }

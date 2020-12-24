@@ -25,8 +25,18 @@ struct button {
     uint8_t _button;
     void (*callback)(void);
     unsigned int interval;
+    bool enabled;
 
     button(){};
+
+    void set(uint8_t __button, void (*_callback)(void), const unsigned int& _interval, const bool& _enabled) {
+
+        _button = __button;
+        callback = _callback;
+        interval = _interval;
+        enabled = _enabled;
+
+    }
 
 };
 
@@ -47,11 +57,6 @@ class NeuroBoard {
         static Button whiteButtonTrigger;
         static Button redLongButtonTrigger;
         static Button whiteLongButtonTrigger;
-
-        static bool redButtonSet;
-        static bool whiteButtonSet;
-        static bool redLongButtonSet;
-        static bool whiteLongButtonSet;
 
         static unsigned int redButtonHoldCount;
         static unsigned int whiteButtonHoldCount;
