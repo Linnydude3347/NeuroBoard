@@ -31,7 +31,7 @@ unsigned long debouncingMilliseconds = 0;
  * 
  * @return bool.
 **/
-bool debounceWait(const unsigned int& interval) {
+bool debounceWait(const uint8_t& interval) {
 
     unsigned long ms = millis();
     bool done = (ms - debouncingMilliseconds) >= interval;
@@ -249,7 +249,7 @@ void NeuroBoard::setDecayRate(const int& rate) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void), const unsigned int& interval) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void), const uint8_t& interval) {
 
     if (button == RED_BTN) {
         NeuroBoard::redButtonTrigger.set(button, callback, interval, true);
@@ -267,7 +267,7 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 
 }
 
-void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)(void)) {
+void NeuroBoard::enableButtonLongPress(const uint8_t& button, const uint8_t& milliseconds, void (*callback)(void)) {
 
     if (button == RED_BTN) {
         NeuroBoard::redLongButtonTrigger.set(button, callback, milliseconds, true);
@@ -279,7 +279,7 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const unsigned int
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void), const unsigned int& secondFactor) {
+void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void), const uint8_t& secondFactor) {
 
     if (envelopeValue >= threshold) {
         if (!this->thresholdMet) {
@@ -294,13 +294,13 @@ void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*call
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void)) {
+void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void)) {
 
     this->setTriggerOnEnvelope(threshold, callback, threshold - (threshold / 10));
 
 }
 
-bool NeuroBoard::wait(const unsigned int& milliseconds) {
+bool NeuroBoard::wait(const uint8_t& milliseconds) {
 
     unsigned long long ms = millis();
     bool done = (ms - this->previousMilliseconds) >= milliseconds;
@@ -312,7 +312,7 @@ bool NeuroBoard::wait(const unsigned int& milliseconds) {
     
 }
 
-bool NeuroBoard::wait(const unsigned int& milliseconds, void (*callback)(void)) {
+bool NeuroBoard::wait(const uint8_t& milliseconds, void (*callback)(void)) {
 
     unsigned long ms = millis();
     bool done = (ms - this->previousMillisecondsCallback) >= milliseconds;

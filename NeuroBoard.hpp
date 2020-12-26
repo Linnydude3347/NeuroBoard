@@ -155,7 +155,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonPress(const uint8_t& button, void (*callback)(void), const unsigned int& interval);
+        void enableButtonPress(const uint8_t& button, void (*callback)(void), const uint8_t& interval);
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -181,7 +181,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonLongPress(const uint8_t& button, const unsigned int& milliseconds, void (*callback)(void));
+        void enableButtonLongPress(const uint8_t& button, const uint8_t& milliseconds, void (*callback)(void));
 
         /**
          * Calls the passed function when the envelope value is greater 
@@ -196,7 +196,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void), const unsigned int& secondFactor);
+        void setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void), const uint8_t& secondFactor);
 
         /**
          * Calls the passed function when the envelope value is greater
@@ -207,7 +207,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const unsigned int& threshold, void (*callback)(void));
+        void setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void));
 
         /**
          * Custom delay function so our code can continue to run while the 
@@ -220,7 +220,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        bool wait(const unsigned int& milliseconds);
+        bool wait(const uint8_t& milliseconds);
 
         /**
          * Custom delay function so our code can continue to run while the 
@@ -234,7 +234,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        bool wait(const unsigned int& milliseconds, void (*callback)(void));
+        bool wait(const uint8_t& milliseconds, void (*callback)(void));
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
