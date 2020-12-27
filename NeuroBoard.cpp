@@ -68,8 +68,8 @@ Button NeuroBoard::whiteButtonTrigger = Button();
 Button NeuroBoard::redLongButtonTrigger = Button();
 Button NeuroBoard::whiteLongButtonTrigger = Button();
 
-unsigned int NeuroBoard::redButtonHoldCount = 0;
-unsigned int NeuroBoard::whiteButtonHoldCount = 0;
+uint8_t NeuroBoard::redButtonHoldCount = 0;
+uint8_t NeuroBoard::whiteButtonHoldCount = 0;
 
 int NeuroBoard::decayRate = 1;
 

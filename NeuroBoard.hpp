@@ -58,8 +58,8 @@ class NeuroBoard {
         static Button redLongButtonTrigger;
         static Button whiteLongButtonTrigger;
 
-        static unsigned int redButtonHoldCount;
-        static unsigned int whiteButtonHoldCount;
+        static uint8_t redButtonHoldCount;
+        static uint8_t whiteButtonHoldCount;
 
         static int decayRate;
 

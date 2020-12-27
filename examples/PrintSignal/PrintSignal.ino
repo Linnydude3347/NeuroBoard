@@ -2,11 +2,16 @@
  * Simple program that prints the signal recieved from the
  * spike recorder to the Arduino Serial Console/Plotter
  * 
- * View Console: Shift + Command + M
- * View Plotter: Shift + Command + L
+ * MAC:
+ * 	View Console: Shift + Command + M
+ * 	View Plotter: Shift + Command + L
+ * 
+ * WINDOWS:
+ * 	View Console: Control + Shift + M
+ *  View Plotter: Control + Shift + L
  * 
  * @author Ben Antonellis
- * @date 09-24-20
+ * @date September 24th, 2020
 **/
 
 #include "NeuroBoard.hpp"
