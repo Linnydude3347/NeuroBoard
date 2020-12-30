@@ -20,7 +20,7 @@
 #define MAX_LEDS 8
 #define SERIAL_CAP 230400
 
-struct button {
+typedef struct button {
 
     uint8_t _button;
     void (*callback)(void);
@@ -38,9 +38,7 @@ struct button {
 
     }
 
-};
-
-typedef struct button Button;
+} Button;
 
 /**
  * Class for interacting with the Neuroduino Board.
@@ -61,7 +59,7 @@ class NeuroBoard {
         static uint8_t redButtonHoldCount;
         static uint8_t whiteButtonHoldCount;
 
-        static int decayRate;
+        static uint8_t decayRate;
 
         /**
          * Samples data to a circular buffer, and calculates envelope value 
@@ -141,7 +139,7 @@ class NeuroBoard {
          * 
          * @return void
         **/
-        void setDecayRate(const int& rate);
+        void setDecayRate(const uint8_t& rate);
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -277,4 +275,4 @@ class NeuroBoard {
 
 };
 
-#endif
+#endif // NEUROBOARD_HPP

@@ -71,7 +71,7 @@ Button NeuroBoard::whiteLongButtonTrigger = Button();
 uint8_t NeuroBoard::redButtonHoldCount = 0;
 uint8_t NeuroBoard::whiteButtonHoldCount = 0;
 
-int NeuroBoard::decayRate = 1;
+uint8_t NeuroBoard::decayRate = 1;
 
 // Buffer Variables //
 
@@ -240,7 +240,7 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 }
 
-void NeuroBoard::setDecayRate(const int& rate) {
+void NeuroBoard::setDecayRate(const uint8_t& rate) {
 
     // Check to ensure positive input, some users may interpret decay rate
     // as a negative value. This prevents that mistake.
