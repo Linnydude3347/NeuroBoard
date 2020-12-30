@@ -169,6 +169,10 @@ ISR (TIMER1_COMPA_vect) {
 
 void NeuroBoard::startMeasurements(void) {
 
+    // Start Serial //
+
+    Serial.begin(SERIAL_CAP);
+
     // Set pin modes for Stanislav's code //
 
     pinMode(14, OUTPUT); // MISO
@@ -203,10 +207,6 @@ void NeuroBoard::startMeasurements(void) {
 }
 
 void NeuroBoard::startCommunicaton(void) {
-
-    // Set serial to analog reading value //
-
-    Serial.begin(SERIAL_CAP);
 
     // Set bool to enable serial writing //
     

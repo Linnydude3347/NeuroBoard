@@ -12,7 +12,7 @@ NeuroBoard board;
 void setup() {
 
 	board.startMeasurements();
-	board.startCommunicaton();
+	board.setChannel(A0);
 
 }
 
@@ -21,11 +21,7 @@ void loop() {
 	int sample = board.getNewSample();
     int envelopeValue = board.getEnvelopeValue();
 
-	board.enableButtonPress(WHITE_BTN, [](){ Serial.println("Reached!"); }, 250);
-
-	if (board.wait(1000)) {
-		Serial.println("1 Second Passed!");
-	}
+	board.enableButtonPress(WHITE_BTN, [](){ Serial.println("White Button Pressed!"); }, 250);
 
 	Serial.println(sample);
     delay(25);

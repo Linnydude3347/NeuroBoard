@@ -274,7 +274,11 @@ class NeuroBoard {
          * Available channels to listen to. This is board specific.
          * Neuroduino (Arduino Leonardo).
         **/
-        int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11};
+        #ifdef ARDUINO_AVR_UNO
+            int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7};
+        #else
+            int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11};
+        #endif
 
 };
 
