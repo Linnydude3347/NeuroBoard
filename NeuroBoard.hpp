@@ -209,7 +209,8 @@ class NeuroBoard {
 
         /**
          * Custom delay function so our code can continue to run while the 
-         * user wants to delay.
+         * user wants to delay. This is non-blocking, so code will continue
+         * to run.
          * 
          * - Usable in setup: false
          * - Usable in loop: true
@@ -222,7 +223,8 @@ class NeuroBoard {
 
         /**
          * Custom delay function so our code can continue to run while the 
-         * user wants to delay.
+         * user wants to delay. This is non-blocking, so code will continue
+         * to run.
          * 
          * - Usable in setup: false
          * - Usable in loop: true
@@ -259,7 +261,7 @@ class NeuroBoard {
         unsigned long previousMilliseconds = 0;
 
         /**
-         * Counts how many milliseconds the button has been held
+         * Counts how many milliseconds the button has been held.
         **/
         int buttonHoldCount = 0;
 
@@ -269,7 +271,8 @@ class NeuroBoard {
         bool thresholdMet = false;
 
         /**
-         * Available channels to listen to
+         * Available channels to listen to. This is board specific.
+         * Neuroduino (Arduino Leonardo).
         **/
         int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11};
 

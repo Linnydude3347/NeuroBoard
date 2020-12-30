@@ -23,6 +23,10 @@ void loop() {
 
 	board.enableButtonPress(WHITE_BTN, [](){ Serial.println("Reached!"); }, 250);
 
+	if (board.wait(1000)) {
+		Serial.println("1 Second Passed!");
+	}
+
 	Serial.println(sample);
     delay(25);
 
