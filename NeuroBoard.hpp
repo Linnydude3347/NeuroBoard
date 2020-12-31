@@ -12,6 +12,8 @@
 
 #include "Arduino.h"
 
+// Defines //
+
 #define RED_BTN DD4
 #define WHITE_BTN DD7
 #define ON HIGH
@@ -19,6 +21,8 @@
 #define BUFFER_SIZE 20
 #define MAX_LEDS 8
 #define SERIAL_CAP 230400
+
+// Button Struct //
 
 typedef struct button {
 
