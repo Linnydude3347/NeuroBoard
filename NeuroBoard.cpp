@@ -309,7 +309,7 @@ bool NeuroBoard::wait(const uint8_t& milliseconds) {
         this->previousMilliseconds = ms;
     }
     return done;
-    
+
 }
 
 bool NeuroBoard::wait(const uint8_t& milliseconds, void (*callback)(void)) {

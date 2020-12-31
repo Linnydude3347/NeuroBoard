@@ -2,7 +2,24 @@
  * NeuroBoard Header File.
  * 
  * @author Ben Antonellis
- * @date Jully 5th, 2020
+ * @date July 5th, 2020
+**/
+
+/** Possible Implementions
+ * [] NOTE: Apply both button functions to one button.
+ * [] NOTE: Both buttons at the same time.
+ * [] NOTE: Baud Rate to 9600.
+ * [] NOTE: Possibly remove wait(time, callback) function.
+ * [] NOTE: Add functionality for relays and servo - email stanislav for advice.
+ * [] NOTE: Servo are 3 pins that connect to Neuroduino board.
+ * [] NOTE: Upon reaching certain threshold, it activates the relay for Human To Human interface/
+**/
+
+/** Fixes
+ * [] FIX: Fix enableButtonPress registering multiple times when held down.
+ * [] FIX: enableButtonLongPress not registering - look into wait function.
+ * [] FIX: Enable enableButtonPress and enableButtonLongPress on same button.
+ * [] FIX: Fix setTriggerOnEnvelope only working once.
 **/
 
 #pragma once
@@ -141,7 +158,7 @@ class NeuroBoard {
          * 
          * @param rate Integer representing the scale at which envelopeValue will be subtracted.
          * 
-         * @return void
+         * @return void.
         **/
         void setDecayRate(const uint8_t& rate);
 
