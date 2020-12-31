@@ -23,5 +23,6 @@
         "__config": "cpp",
         "__nullptr": "cpp",
         "ios": "cpp"
-    }
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

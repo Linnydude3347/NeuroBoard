@@ -279,7 +279,7 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const uint8_t& mil
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void), const uint8_t& secondFactor) {
+void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, const uint8_t& secondFactor, void (*callback)(void)) {
 
     if (envelopeValue >= threshold) {
         if (!this->thresholdMet) {
@@ -296,7 +296,7 @@ void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)
 
 void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void)) {
 
-    this->setTriggerOnEnvelope(threshold, callback, threshold - (threshold / 10));
+    this->setTriggerOnEnvelope(threshold, threshold - (threshold / 10), callback);
 
 }
 

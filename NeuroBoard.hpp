@@ -6,20 +6,21 @@
 **/
 
 /** Possible Implementions
- * [] NOTE: Apply both button functions to one button.
- * [] NOTE: Both buttons at the same time.
- * [] NOTE: Baud Rate to 9600.
- * [] NOTE: Possibly remove wait(time, callback) function.
- * [] NOTE: Add functionality for relays and servo - email stanislav for advice.
- * [] NOTE: Servo are 3 pins that connect to Neuroduino board.
- * [] NOTE: Upon reaching certain threshold, it activates the relay for Human To Human interface/
+ * [ ] NOTE: Apply both button functions to one button.
+ * [X] NOTE: Both buttons at the same time. (NOT POSSIBLE).
+ * [ ] NOTE: Baud Rate to 9600, look into this.
+ * [ ] NOTE: Possibly remove wait(time, callback) function.
+ * [ ] NOTE: Add functionality for relays and servo - email stanislav for advice.
+ * [ ] NOTE: Servo are 3 pins that connect to Neuroduino board. (Look on board too).
+ * [ ] NOTE: Upon reaching certain threshold, activate the relay for Human To Human interface.
 **/
 
 /** Fixes
- * [] FIX: Fix enableButtonPress registering multiple times when held down.
- * [] FIX: enableButtonLongPress not registering - look into wait function.
- * [] FIX: Enable enableButtonPress and enableButtonLongPress on same button.
- * [] FIX: Fix setTriggerOnEnvelope only working once.
+ * [ ] FIX: Fix enableButtonPress registering multiple times when held down.
+ * [ ] FIX: enableButtonLongPress not registering - look into wait function.
+ * [ ] FIX: Enable enableButtonPress and enableButtonLongPress on same button.
+ * [ ] FIX: Fix setTriggerOnEnvelope only working once.
+ * [ ] FIX: Make setTriggerOnEnvelope usable in setup function.
 **/
 
 #pragma once
@@ -36,8 +37,14 @@
 #define ON HIGH
 #define OFF LOW
 #define BUFFER_SIZE 20
-#define MAX_LEDS 8
 #define SERIAL_CAP 230400
+
+#ifdef ARDUINO_AVR_UNO
+    #define MAX_LEDS 6
+#endif
+#ifdef ARDUINO_AVR_LEONARDO
+    #define MAX_LEDS 8
+#endif
 
 // Button Struct //
 
@@ -215,11 +222,14 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void), const uint8_t& secondFactor);
+        void setTriggerOnEnvelope(const uint8_t& threshold, const uint8_t& secondFactor, void (*callback)(void));
 
         /**
          * Calls the passed function when the envelope value is greater
          * than the passed threshold.
+         * 
+         * - Usable in setup: false
+         * - Usable in loop: true
          * 
          * @param threshold Threshold for envelope value.
          * @param callback Function to call when threshold is reached.
@@ -297,8 +307,19 @@ class NeuroBoard {
         **/
         #ifdef ARDUINO_AVR_UNO
             int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7};
-        #else
+        #endif
+        #ifdef ARDUINO_AVR_LEONARDO
             int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11};
+        #endif
+
+        /**
+         * LED pins for different boards
+        **/
+        #ifdef ARDUINO_AVR_UNO
+            int ledPins[6] = {8, 9, 10, 11, 12, 13};
+        #endif
+        #ifdef ARDUINO_AVR_LEONARDO
+            int ledPins[8] = {0, 1, 2, 3, 4, 5, 6, 7};
         #endif
 
 };
