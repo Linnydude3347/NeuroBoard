@@ -370,14 +370,16 @@ void NeuroBoard::writeLEDs(byte outByte) {
 
 void NeuroBoard::writeLED(const int& led, const bool& state) {
 
+    const int LED = ledPins[led];
+
     byte bitMask = BITMASK_ONE;
-    if (!(0 < led < 7)) {
+    if (!(0 < LED < 7)) {
         return;
     }
     if (state) {
-        _shiftRegState |= bitMask << (7 - led);
+        _shiftRegState |= bitMask << (7 - LED);
     } else {
-        _shiftRegState &= ~(bitMask << (7 - led));
+        _shiftRegState &= ~(bitMask << (7 - LED));
     }
 
     writeLEDs();

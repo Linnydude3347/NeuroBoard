@@ -41,8 +41,7 @@
 
 #ifdef ARDUINO_AVR_UNO
     #define MAX_LEDS 6
-#endif
-#ifdef ARDUINO_AVR_LEONARDO
+#else // We must be dealing with a Leonardo
     #define MAX_LEDS 8
 #endif
 
@@ -217,8 +216,8 @@ class NeuroBoard {
          * - Usable in loop: true
          * 
          * @param threshold Threshold for envelope value.
-         * @param callback Function to call when threshold is reached.
          * @param secondFactor Optional parameter for the second threshold the data must pass.
+         * @param callback Function to call when threshold is reached.
          * 
          * @return void.
         **/
@@ -307,18 +306,16 @@ class NeuroBoard {
         **/
         #ifdef ARDUINO_AVR_UNO
             int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7};
-        #endif
-        #ifdef ARDUINO_AVR_LEONARDO
+        #else // We must be dealing with a Leonardo
             int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11};
         #endif
 
         /**
-         * LED pins for different boards
+         * LED pins for different boards.
         **/
         #ifdef ARDUINO_AVR_UNO
             int ledPins[6] = {8, 9, 10, 11, 12, 13};
-        #endif
-        #ifdef ARDUINO_AVR_LEONARDO
+        #else // We must be dealing with a Leonardo
             int ledPins[8] = {0, 1, 2, 3, 4, 5, 6, 7};
         #endif
 
