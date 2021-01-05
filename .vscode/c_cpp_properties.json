@@ -14,7 +14,10 @@
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/**",
                 "/Applications/Arduino.app/Contents/Java/libraries/pt/",
                 "/Applications/Arduino.app/Contents/Java/libraries/**",
-                "/Users/benantonellis/Documents/Arduino/libraries/**"
+                "/Users/benantonellis/Documents/Arduino/libraries/**",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/**",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/**",
+                "/Applications/Arduino.app/Contents/Java/tools/**"
             ],
             "defines": [
                 "USBCON"
@@ -32,7 +35,8 @@
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/io43u35x.h",
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iotn26.h",
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/interrupt.h",
-                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iotnx4.h"
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iotnx4.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Arduino.h"
             ]
         }
     ],

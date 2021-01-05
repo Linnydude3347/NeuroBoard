@@ -287,7 +287,7 @@ class NeuroBoard {
         /**
          * NeuroServo object.
         **/
-        NeuroServo servo;
+        //NeuroServo servo;
 
         /**
          * Delay Variables.
@@ -323,82 +323,6 @@ class NeuroBoard {
         #else // We must be dealing with a Leonardo
             int ledPins[8] = {0, 1, 2, 3, 4, 5, 6, 7};
         #endif
-
-};
-
-// ============================== //
-// ==========NERUOSERVO========== //
-// ============================== //
-
-/**
- * @author Stanislav Mircic.
- * @author Marcio Amorim.
- * 
- * - Updated and ported by Ben Antonellis.
-**/
-
-#include <Servo.h>
-
-#define RELAY_PIN 3                         // Pin for relay that controls TENS device
-#define RELAY_THRESHOLD 4                   // Defines sensitivity of relay
-#define GRIPPER_STATE_BUTTON_PIN 4          // Pin for button that switches defult state of the gripper (opened/closed)
-#define SERVO_PIN 2                         // Pin for servo motor
-#define SENSITIVITY_BUTTON_PIN 7            // Pin for button that selects sesitivity
-#define NUM_LED 6                           // Number of LEDs in LED bar
-#define GRIPPER_MINIMUM_STEP 5              // 5 degree dead zone (used to avoid aiming oscilation)
-#define OPEN_MODE 1                         // Default gripper state is opened
-#define CLOSED_MODE 2                       // Default gripper state is closed
-#define MINIMUM_SERVO_UPDATE_TIME 100       // Update servo position every 100ms
-
-/**
- * Class for interacting with the Servo connected
- * to the Neuroduino Board.
-**/
-class NeuroServo {
-
-    private:
-
-        Servo gripper;                                              // Servo for gripper
-
-        byte ledPins[6] = {8, 9, 10, 11, 12, 13};                   // Pins for LEDs in LED bar.
-        int sensitivities[6] = {200, 350, 520, 680, 840, 1024};     // EMG saturation values (lower == closed, higher == open).
-        int lastSensitivitiesIndex = 2;                             // Set initial sensitivity index.
-
-        int emgSaturationValue = 0;                                 // Selected sensitivity/EMG saturation value.
-        int analogReadings;                                         // Measured value for EMG.
-        byte ledbarHeight = 0;                                      // Temporary variable for led bar height.
-
-        unsigned long oldTime = 0;                                  // Timestamp of last servo angle update (milliseconds).
-        int oldDegrees = 0;                                         // Old value of angle for servo.
-        int newDegree;                                              // New value of angle for servo.
-
-        unsigned long debouncerTimer = 0;                           // Timer for button debouncer.
-        int gripperStateButtonValue = 0;                            // Temporary variable that stores state of the button.
-        int userReleasedButton = 0;                                 // Flag that is used to avoid multiple button events when user holds button.
-
-        int currentFunctionality = OPEN_MODE;                       // Current default position of claw.
-
-
-    public:
-
-        /**
-         * Sets up the servo, inputs and outputs.
-         * 
-         * @return void.
-        **/
-        void enable();
-
-        /**
-         * Increases the sensitivity for the servo.
-         * 
-         * @return void.
-        **/
-        void increaseSensitivity();
-
-        /**
-         * Decreases the sensitivity for the servo.
-        **/
-        void decreaseSensitivity();
 
 };
 
