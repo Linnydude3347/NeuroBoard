@@ -9,6 +9,10 @@
 
 NeuroBoard board;
 
+unsigned long oneSecond = 0;
+unsigned long twoSeconds = 0;
+unsigned long threeSeconds = 0;
+
 void setup() {
 
 	board.startMeasurements();
@@ -30,10 +34,14 @@ void setup() {
 
 void loop() {
 
-	int sample = board.getNewSample();
-    //int envelopeValue = board.getEnvelopeValue();
-
-	//Serial.println(sample);
-    //delay(25);
+	if (board.wait(1000, oneSecond)) {
+		Serial.println("One Second Passed.");
+	}
+	if (board.wait(2000, twoSeconds)) {
+		Serial.println("Two Seconds Passed.");
+	}
+	if (board.wait(3000, threeSeconds)) {
+		Serial.println("Three Seconds Passed.");
+	}
 
 }

@@ -309,16 +309,12 @@ void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(voi
 
 }
 
-bool NeuroBoard::wait(const int& milliseconds, unsigned long var) {
-
-    unsigned long long ms = millis();
+bool NeuroBoard::wait(const int& milliseconds, unsigned long& var) {
+    unsigned long ms = millis();
     bool done = (ms - var) >= milliseconds;
-
-    if (done) {
+    if (done)
         var = ms;
-    }
     return done;
-
 }
 
 /* ******************************************************* */

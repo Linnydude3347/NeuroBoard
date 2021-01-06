@@ -242,7 +242,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        bool wait(const int& milliseconds, unsigned long var);
+        bool wait(const int& milliseconds, unsigned long& var);
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
