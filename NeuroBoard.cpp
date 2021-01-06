@@ -53,6 +53,10 @@ Button whiteButtonTrigger = Button();
 Button redLongButtonTrigger = Button();
 Button whiteLongButtonTrigger = Button();
 
+// Trigger Variable //
+
+Trigger envelopeTrigger = Trigger();
+
 int NeuroBoard::decayRate = 1;
 
 // Buffer Variables //
@@ -177,6 +181,23 @@ ISR (TIMER3_COMPA_vect) {
         }
     }
 
+    // Check if envelope trigger is set
+
+    if (envelopeTrigger.enabled) {
+
+        if (envelopeValue >= envelopeTrigger.threshold) {
+            if (!envelopeTrigger.thresholdMet) {
+                envelopeTrigger.thresholdMet = true;
+                envelopeTrigger.callback();
+            }
+        } else {
+            if (envelopeValue <= envelopeTrigger.secondThreshold) {
+                envelopeTrigger.thresholdMet = false;
+            }
+        }
+
+    }
+
 }
 
 // PUBLIC METHODS //
@@ -295,16 +316,7 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& millise
 
 void NeuroBoard::setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void)) {
 
-    if (envelopeValue >= threshold) {
-        if (!this->thresholdMet) {
-            this->thresholdMet = true;
-            callback();
-        }
-    } else {
-        if (envelopeValue <= secondFactor) {
-            this->thresholdMet = false;
-        }
-    }
+    envelopeTrigger.set(threshold, secondFactor, callback, true, false);
 
 }
 

@@ -17,6 +17,7 @@ void setup() {
 
 	board.startMeasurements();
 	board.setChannel(A0);
+	board.setDecayRate(10);
 
 	board.enableButtonPress(RED_BTN, []() {
 		Serial.println("Red Button Pressed.");
@@ -37,23 +38,26 @@ void setup() {
 	board.setTriggerOnEnvelope(500, []() {
 		Serial.println("Threshold Reached!");
 	});
- 
+
 }
 
 void loop() {
 
 	// LED CODE
-	for (int i = 0; i < 8; i++) {
-		board.writeLED(i, ON);
-		delay(100);
-	}
-	for (int i = 0; i < 8; i++) {
-		board.writeLED(i, OFF);
-		delay(100);
-	}
+	//for (int i = 0; i < 8; i++) {
+	//	board.writeLED(i, ON);
+	//	delay(100);
+	//}
+	//for (int i = 0; i < 8; i++) {
+	//	board.writeLED(i, OFF);
+	//	delay(100);
+	//}
 	// LED CODE
 
 	int sample = board.getNewSample();
-	Serial.println(sample); // Remove LED code if you want realistic sampling time
+	int ev = board.getEnvelopeValue();
+	//Serial.println(sample); // Remove LED code if you want realistic sampling time
+	Serial.println(ev);
+	delay(10);
 
 }

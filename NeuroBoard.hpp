@@ -19,8 +19,8 @@
  * [X] FIX: Fix enableButtonPress registering multiple times when held down.
  * [X] FIX: enableButtonLongPress not registering - look into wait function.
  * [X] FIX: Enable enableButtonPress and enableButtonLongPress on same button. (NOT POSSIBLE).
- * [ ] FIX: Fix setTriggerOnEnvelope only working once.
- * [ ] FIX: Make setTriggerOnEnvelope usable in setup function.
+ * [X] FIX: Fix setTriggerOnEnvelope only working once.
+ * [X] FIX: Make setTriggerOnEnvelope usable in setup function.
  * [X] FIX: enableButtonLongPress registering multiple times when held down. Should be only once.
 **/
 
@@ -65,6 +65,28 @@ struct Button {
         interval = _interval;
         enabled = _enabled;
 
+    }
+
+};
+
+// Trigger Struct //
+
+struct Trigger {
+
+    int threshold;
+    int secondThreshold;
+    void (*callback)(void);
+    bool enabled;
+    bool thresholdMet;
+
+    Trigger(){};
+
+    void set(const int& _threshold, const int& _secondThreshold, void (*_callback)(void), const bool& _enabled, const bool& _thresholdMet) {
+        threshold = _threshold;
+        secondThreshold = _secondThreshold;
+        callback = _callback;
+        enabled = _enabled;
+        thresholdMet = _thresholdMet;
     }
 
 };
