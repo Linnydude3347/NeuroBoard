@@ -1,5 +1,5 @@
 /**
- * Simple program that prints when a threshold is reached.
+ * Simple program that demonstrates how to use the wait function.
  * 
  * MAC:
  * 	View Console: Shift + Command + M
@@ -29,12 +29,15 @@ unsigned long threeSeconds = 0;
 
 void loop() {
 
+	// Prints every one second (1000 milliseconds)
 	if (board.wait(1000, oneSecond)) {
 		Serial.println("One Second Passed.");
 	}
+	// Prints every two seconds (2000 milliseconds)
 	if (board.wait(2000, twoSeconds)) {
 		Serial.println("Two Seconds Passed.");
 	}
+	// Prints every three seconds (3000 milliseconds)
 	if (board.wait(3000, threeSeconds)) {
 		Serial.println("Three Seconds Passed.");
 	}
