@@ -238,10 +238,11 @@ class NeuroBoard {
          * - Usable in loop: true
          * 
          * @param milliseconds How many milliseconds the user wants to delay.
+         * @param var Variable to use to hold count.
          * 
          * @return void.
         **/
-        bool wait(const int& milliseconds);
+        bool wait(const int& milliseconds, unsigned long var);
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
@@ -260,22 +261,6 @@ class NeuroBoard {
         byte _shiftRegState = 0;
 
         /* ******************************************************* */
-
-        /**
-         * NeuroServo object.
-        **/
-        //NeuroServo servo;
-
-        /**
-         * Delay Variables.
-        **/
-        unsigned long previousMillisecondsCallback = 0;
-        unsigned long previousMilliseconds = 0;
-
-        /**
-         * Counts how many milliseconds the button has been held.
-        **/
-        int buttonHoldCount = 0;
 
         /**
          * Flag for when threshold is reached to only call function once.

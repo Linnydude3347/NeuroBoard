@@ -22,30 +22,16 @@
 
 /// PRIVATE FUNCTIONS ///
 
-unsigned long debouncingMilliseconds = 0;
-bool debounceWait(const uint8_t& interval) {
-    unsigned long ms = millis();
-    bool done = (ms - debouncingMilliseconds) >= interval;
-    if (done) 
-        debouncingMilliseconds = ms;
-    return done;
-}
-
 unsigned long redCount = 0;
-bool redHoldWait(const int& interval) {
-    unsigned long ms = millis();
-    bool done = (ms - redCount) >= interval;
-    if (done)
-        redCount = ms;
-    return done;
-}
-
 unsigned long whiteCount = 0;
-bool whiteHoldWait(const int& interval) {
+unsigned long redDebounceCount = 0;
+unsigned long whiteDebounceCount = 0;
+
+bool waitx(const int& interval, unsigned long& var) {
     unsigned long ms = millis();
-    bool done = (ms - whiteCount) >= interval;
+    bool done = (ms - var) >= interval;
     if (done)
-        whiteCount = ms;
+        var = ms;
     return done;
 }
 
@@ -137,7 +123,7 @@ ISR (TIMER1_COMPA_vect) {
 
     if (redButtonTrigger.enabled) {
         if (digitalRead(redButtonTrigger._button)) {
-            if (debounceWait(redButtonTrigger.interval) and redButtonHeld == 0) {
+            if (waitx(redButtonTrigger.interval, redDebounceCount) and redButtonHeld == 0) {
                 redButtonTrigger.callback();
             }
             redButtonHeld = 1;
@@ -149,7 +135,7 @@ ISR (TIMER1_COMPA_vect) {
 
     if (whiteButtonTrigger.enabled) {
         if (digitalRead(whiteButtonTrigger._button)) {
-            if (debounceWait(whiteButtonTrigger.interval) and whiteButtonHeld == 0) {
+            if (waitx(whiteButtonTrigger.interval, whiteDebounceCount) and whiteButtonHeld == 0) {
                 whiteButtonTrigger.callback();
             }
             whiteButtonHeld = 1;
@@ -161,7 +147,7 @@ ISR (TIMER1_COMPA_vect) {
     if (redLongButtonTrigger.enabled) {
 
         if (digitalRead(redLongButtonTrigger._button)) {
-            if (redHoldWait(redLongButtonTrigger.interval) and redLongButtonHeld == 1) {
+            if (waitx(redLongButtonTrigger.interval, redCount) and redLongButtonHeld == 1) {
                 redLongButtonTrigger.callback();
                 redLongButtonHeld = 0;
             }
@@ -175,7 +161,7 @@ ISR (TIMER1_COMPA_vect) {
     if (whiteLongButtonTrigger.enabled) {
 
         if (digitalRead(whiteLongButtonTrigger._button)) {
-            if (redHoldWait(whiteLongButtonTrigger.interval) and whiteLongButtonHeld == 1) {
+            if (waitx(whiteLongButtonTrigger.interval, whiteCount) and whiteLongButtonHeld == 1) {
                 whiteLongButtonTrigger.callback();
                 whiteLongButtonHeld = 0;
             }
@@ -323,13 +309,13 @@ void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(voi
 
 }
 
-bool NeuroBoard::wait(const int& milliseconds) {
+bool NeuroBoard::wait(const int& milliseconds, unsigned long var) {
 
     unsigned long long ms = millis();
-    bool done = (ms - this->previousMilliseconds) >= milliseconds;
+    bool done = (ms - var) >= milliseconds;
 
     if (done) {
-        this->previousMilliseconds = ms;
+        var = ms;
     }
     return done;
 
