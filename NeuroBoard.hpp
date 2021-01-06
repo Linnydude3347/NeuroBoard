@@ -6,19 +6,19 @@
 **/
 
 /** Possible Implementions
- * [ ] NOTE: Apply both button functions to one button.
+ * [X] NOTE: Apply both button functions to one button. (NOT POSSIBLE).
  * [X] NOTE: Both buttons at the same time. (NOT POSSIBLE).
- * [ ] NOTE: Baud Rate to 9600, look into this.
- * [ ] NOTE: Possibly remove wait(time, callback) function.
+ * [X] NOTE: Baud Rate to 9600, look into this.
+ * [X] NOTE: Possibly remove wait(time, callback) function.
  * [ ] NOTE: Add functionality for relays and servo - email stanislav for advice.
- * [ ] NOTE: Servo are 3 pins that connect to Neuroduino board. (Look on board too).
+ * [X] NOTE: Servo are 3 pins that connect to Neuroduino board. (Look on board too).
  * [ ] NOTE: Upon reaching certain threshold, activate the relay for Human To Human interface.
 **/
 
 /** Fixes
- * [ ] FIX: Fix enableButtonPress registering multiple times when held down.
- * [ ] FIX: enableButtonLongPress not registering - look into wait function.
- * [ ] FIX: Enable enableButtonPress and enableButtonLongPress on same button.
+ * [X] FIX: Fix enableButtonPress registering multiple times when held down.
+ * [X] FIX: enableButtonLongPress not registering - look into wait function.
+ * [X] FIX: Enable enableButtonPress and enableButtonLongPress on same button. (NOT POSSIBLE).
  * [ ] FIX: Fix setTriggerOnEnvelope only working once.
  * [ ] FIX: Make setTriggerOnEnvelope usable in setup function.
 **/
@@ -29,6 +29,7 @@
 #define NEUROBOARD_HPP
 
 #include "Arduino.h"
+#include <Servo.h>
 
 // Defines //
 
@@ -37,7 +38,7 @@
 #define ON HIGH
 #define OFF LOW
 #define BUFFER_SIZE 20
-#define SERIAL_CAP 230400
+#define SERIAL_CAP 9600
 
 #ifdef ARDUINO_AVR_UNO
     #define MAX_LEDS 6
@@ -47,16 +48,16 @@
 
 // Button Struct //
 
-typedef struct button {
+struct Button {
 
     uint8_t _button;
     void (*callback)(void);
     unsigned int interval;
     bool enabled;
 
-    button(){};
+    Button(){};
 
-    void set(uint8_t __button, void (*_callback)(void), const unsigned int& _interval, const bool& _enabled) {
+    void set(uint8_t __button, void (*_callback)(void), const int& _interval, const bool& _enabled) {
 
         _button = __button;
         callback = _callback;
@@ -65,7 +66,7 @@ typedef struct button {
 
     }
 
-} Button;
+};
 
 /**
  * Class for interacting with the Neuroduino Board.
@@ -83,10 +84,7 @@ class NeuroBoard {
         static Button redLongButtonTrigger;
         static Button whiteLongButtonTrigger;
 
-        static uint8_t redButtonHoldCount;
-        static uint8_t whiteButtonHoldCount;
-
-        static uint8_t decayRate;
+        static int decayRate;
 
         /**
          * Samples data to a circular buffer, and calculates envelope value 
@@ -166,7 +164,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setDecayRate(const uint8_t& rate);
+        void setDecayRate(const int& rate);
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -175,12 +173,12 @@ class NeuroBoard {
          * - Usable in loop: true
          * 
          * @param button Which button to map the passed function to.
-         * @param callback Function to call when button is pressed.
          * @param interval Delay between each button press to accept input.
+         * @param callback Function to call when button is pressed.
          * 
          * @return void.
         **/
-        void enableButtonPress(const uint8_t& button, void (*callback)(void), const uint8_t& interval);
+        void enableButtonPress(const uint8_t& button, const int& interval, void (*callback)(void));
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -206,7 +204,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonLongPress(const uint8_t& button, const uint8_t& milliseconds, void (*callback)(void));
+        void enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void));
 
         /**
          * Calls the passed function when the envelope value is greater 
@@ -221,7 +219,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const uint8_t& threshold, const uint8_t& secondFactor, void (*callback)(void));
+        void setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void));
 
         /**
          * Calls the passed function when the envelope value is greater
@@ -235,7 +233,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void));
+        void setTriggerOnEnvelope(const int& threshold, void (*callback)(void));
 
         /**
          * Custom delay function so our code can continue to run while the 
@@ -249,22 +247,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        bool wait(const uint8_t& milliseconds);
-
-        /**
-         * Custom delay function so our code can continue to run while the 
-         * user wants to delay. This is non-blocking, so code will continue
-         * to run.
-         * 
-         * - Usable in setup: false
-         * - Usable in loop: true
-         * 
-         * @param milliseconds How many milliseconds the user wants to delay.
-         * @param callback Function to call every time delay is done.
-         * 
-         * @return void.
-        **/
-        bool wait(const uint8_t& milliseconds, void (*callback)(void));
+        bool wait(const int& milliseconds);
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/

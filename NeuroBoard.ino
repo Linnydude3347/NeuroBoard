@@ -15,18 +15,22 @@ void setup() {
 	board.setChannel(A0);
 
 	board.enableButtonPress(RED_BTN, []() {
-		Serial.println("Red Button Pressed");
+		Serial.println("Red Button Pressed.");
 	});
 
-	board.enableButtonPress(WHITE_BTN, []() {
-		Serial.println("White Button Pressed");
+	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
+		Serial.println("White Button Pressed.");
 	});
 
+	board.setTriggerOnEnvelope(500, []() {
+		Serial.println("Threshold Reached!");
+	});
+ 
 }
 
 void loop() {
 
-	//int sample = board.getNewSample();
+	int sample = board.getNewSample();
     //int envelopeValue = board.getEnvelopeValue();
 
 	//Serial.println(sample);

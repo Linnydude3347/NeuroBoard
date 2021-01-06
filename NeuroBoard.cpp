@@ -23,23 +23,30 @@
 /// PRIVATE FUNCTIONS ///
 
 unsigned long debouncingMilliseconds = 0;
-/**
- * Private function to wait for the amount of time passed
- * to the enableButtonPress function.
- * 
- * @param interval Milliseconds to wait until next press.
- * 
- * @return bool.
-**/
 bool debounceWait(const uint8_t& interval) {
-
     unsigned long ms = millis();
     bool done = (ms - debouncingMilliseconds) >= interval;
-
     if (done) 
         debouncingMilliseconds = ms;
     return done;
+}
 
+unsigned long redCount = 0;
+bool redHoldWait(const int& interval) {
+    unsigned long ms = millis();
+    bool done = (ms - redCount) >= interval;
+    if (done)
+        redCount = ms;
+    return done;
+}
+
+unsigned long whiteCount = 0;
+bool whiteHoldWait(const int& interval) {
+    unsigned long ms = millis();
+    bool done = (ms - whiteCount) >= interval;
+    if (done)
+        whiteCount = ms;
+    return done;
 }
 
 /**
@@ -68,10 +75,7 @@ Button NeuroBoard::whiteButtonTrigger = Button();
 Button NeuroBoard::redLongButtonTrigger = Button();
 Button NeuroBoard::whiteLongButtonTrigger = Button();
 
-uint8_t NeuroBoard::redButtonHoldCount = 0;
-uint8_t NeuroBoard::whiteButtonHoldCount = 0;
-
-uint8_t NeuroBoard::decayRate = 1;
+int NeuroBoard::decayRate = 1;
 
 // Buffer Variables //
 
@@ -88,6 +92,14 @@ int envelopeValue;
 
 bool communicate = false;
 uint8_t NeuroBoard::channel = A0;
+
+// Variables for button holding //
+
+int redButtonHeld = 0;
+int whiteButtonHeld = 0;
+
+int redLongButtonHeld = 0;
+int whiteLongButtonHeld = 0;
 
 // ISR //
 
@@ -115,50 +127,61 @@ ISR (TIMER1_COMPA_vect) {
 
     if (communicate) {
 
-        const uint8_t outputFrameBuffer[2] = { (reading >> 7) | 0x80, reading & 0x7F };
+        //const uint8_t outputFrameBuffer[2] = { (reading >> 7) | 0x80, reading & 0x7F };
 
-        Serial.write(outputFrameBuffer, 2);
+        //Serial.write(outputFrameBuffer, 2);
 
     }
 
     // Check if buttons are enabled //
 
     if (NeuroBoard::redButtonTrigger.enabled) {
-
         if (digitalRead(NeuroBoard::redButtonTrigger._button)) {
-            if (debounceWait(NeuroBoard::redButtonTrigger.interval)) {
+            if (debounceWait(NeuroBoard::redButtonTrigger.interval) and redButtonHeld == 0) {
                 NeuroBoard::redButtonTrigger.callback();
             }
+            redButtonHeld = 1;
+        } else {
+            redButtonHeld = 0;
         }
 
     }
 
     if (NeuroBoard::whiteButtonTrigger.enabled) {
-
         if (digitalRead(NeuroBoard::whiteButtonTrigger._button)) {
-            if (debounceWait(NeuroBoard::whiteButtonTrigger.interval)) {
+            if (debounceWait(NeuroBoard::whiteButtonTrigger.interval) and whiteButtonHeld == 0) {
                 NeuroBoard::whiteButtonTrigger.callback();
             }
+            whiteButtonHeld = 1;
+        } else {
+            whiteButtonHeld = 0;
         }
-
     }
 
     if (NeuroBoard::redLongButtonTrigger.enabled) {
 
-        NeuroBoard::redButtonHoldCount = digitalRead(NeuroBoard::redLongButtonTrigger._button) ? (NeuroBoard::redButtonHoldCount + 1) : 0;
-        if (NeuroBoard::redButtonHoldCount == NeuroBoard::redLongButtonTrigger.interval) {
-            NeuroBoard::redButtonHoldCount = 0;
-            NeuroBoard::redLongButtonTrigger.callback();
+        if (digitalRead(NeuroBoard::redLongButtonTrigger._button)) {
+            if (redHoldWait(NeuroBoard::redLongButtonTrigger.interval) and redLongButtonHeld == 1) {
+                NeuroBoard::redLongButtonTrigger.callback();
+                redLongButtonHeld = 0;
+            }
+            redLongButtonHeld = 1;
+        } else {
+            redLongButtonHeld = 0;
         }
 
     }
 
     if (NeuroBoard::whiteLongButtonTrigger.enabled) {
 
-        NeuroBoard::whiteButtonHoldCount = digitalRead(NeuroBoard::whiteLongButtonTrigger._button) ? (NeuroBoard::whiteButtonHoldCount + 1) : 0;
-        if (NeuroBoard::whiteButtonHoldCount == NeuroBoard::whiteLongButtonTrigger.interval) {
-            NeuroBoard::whiteButtonHoldCount = 0;
-            NeuroBoard::whiteLongButtonTrigger.callback();
+        if (digitalRead(NeuroBoard::whiteLongButtonTrigger._button)) {
+            if (redHoldWait(NeuroBoard::whiteLongButtonTrigger.interval) and whiteLongButtonHeld == 1) {
+                NeuroBoard::whiteLongButtonTrigger.callback();
+                whiteLongButtonHeld = 0;
+            }
+            whiteLongButtonHeld = 1;
+        } else {
+            whiteLongButtonHeld = 0;
         }
 
     }
@@ -240,7 +263,7 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 }
 
-void NeuroBoard::setDecayRate(const uint8_t& rate) {
+void NeuroBoard::setDecayRate(const int& rate) {
 
     // Check to ensure positive input, some users may interpret decay rate
     // as a negative value. This prevents that mistake.
@@ -249,7 +272,7 @@ void NeuroBoard::setDecayRate(const uint8_t& rate) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void), const uint8_t& interval) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, const int& interval, void (*callback)(void)) {
 
     if (button == RED_BTN) {
         NeuroBoard::redButtonTrigger.set(button, callback, interval, true);
@@ -263,11 +286,11 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 
 void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) {
 
-    this->enableButtonPress(button, callback, 250);
+    this->enableButtonPress(button, 250, callback);
 
 }
 
-void NeuroBoard::enableButtonLongPress(const uint8_t& button, const uint8_t& milliseconds, void (*callback)(void)) {
+void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) {
 
     if (button == RED_BTN) {
         NeuroBoard::redLongButtonTrigger.set(button, callback, milliseconds, true);
@@ -279,7 +302,7 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const uint8_t& mil
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, const uint8_t& secondFactor, void (*callback)(void)) {
+void NeuroBoard::setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void)) {
 
     if (envelopeValue >= threshold) {
         if (!this->thresholdMet) {
@@ -294,32 +317,19 @@ void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, const uint8_t& s
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const uint8_t& threshold, void (*callback)(void)) {
+void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(void)) {
 
     this->setTriggerOnEnvelope(threshold, threshold - (threshold / 10), callback);
 
 }
 
-bool NeuroBoard::wait(const uint8_t& milliseconds) {
+bool NeuroBoard::wait(const int& milliseconds) {
 
     unsigned long long ms = millis();
     bool done = (ms - this->previousMilliseconds) >= milliseconds;
 
     if (done) {
         this->previousMilliseconds = ms;
-    }
-    return done;
-
-}
-
-bool NeuroBoard::wait(const uint8_t& milliseconds, void (*callback)(void)) {
-
-    unsigned long ms = millis();
-    bool done = (ms - this->previousMillisecondsCallback) >= milliseconds;
-
-    if (done) {
-        this->previousMillisecondsCallback = ms;
-        callback();
     }
     return done;
 
