@@ -22,11 +22,6 @@
 
 /// PRIVATE FUNCTIONS ///
 
-unsigned long redCount = 0;
-unsigned long whiteCount = 0;
-unsigned long redDebounceCount = 0;
-unsigned long whiteDebounceCount = 0;
-
 /**
  * Determines if the passed analog is valid to use on the
  * Neuroduino Board. This is private because only our
@@ -46,6 +41,13 @@ bool validAnalog(const uint8_t& newChannel) {
 
 }
 
+// Button Wait Variables //
+
+unsigned long redCount = 0;
+unsigned long whiteCount = 0;
+unsigned long redDebounceCount = 0;
+unsigned long whiteDebounceCount = 0;
+
 // Button Variables //
 
 Button redButtonTrigger = Button();
@@ -56,6 +58,11 @@ Button whiteLongButtonTrigger = Button();
 // Trigger Variable //
 
 Trigger envelopeTrigger = Trigger();
+
+// Servo Variable //
+
+NeuroServo servo = NeuroServo();
+bool servoEnabled = false;
 
 int NeuroBoard::decayRate = 1;
 
@@ -198,6 +205,42 @@ ISR (TIMER3_COMPA_vect) {
 
     }
 
+    // Servo Code //
+
+    if (servoEnabled) {
+
+        servo.analogReadings = reading;
+
+        // Turn ON relay if EMG is greater than threshold value (threshold is expressed in LED bar height units)
+        if (servo.ledbarHeight > RELAY_THRESHOLD) {
+            digitalWrite(RELAY_PIN, HIGH);
+            delay(50);
+        } else {
+            digitalWrite(RELAY_PIN, LOW);
+        }
+
+        // Set new angle if enough time passed
+        if (millis() - servo.oldTime > MINIMUM_SERVO_UPDATE_TIME) {
+              // Calculate new angle for servo
+              if (servo.currentFunctionality == OPEN_MODE) {  
+                servo.analogReadings = constrain(servo.analogReadings, 40, servo.emgSaturationValue);
+                servo.newDegree = map(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105); 
+              } else {
+                servo.analogReadings = constrain(servo.analogReadings, 120, servo.emgSaturationValue);
+                servo.newDegree = map(servo.analogReadings, 120 , servo.emgSaturationValue, 105, 190);
+              }
+          
+              // Check if we are in servo dead zone
+              if (abs(servo.newDegree - servo.oldDegrees) > GRIPPER_MINIMUM_STEP) {
+                 // Set new servo angle
+                 servo.Gripper.write(servo.newDegree); 
+              }
+              servo.oldTime = millis();
+              servo.oldDegrees = servo.newDegree;
+        }
+
+    }
+
 }
 
 // PUBLIC METHODS //
@@ -246,6 +289,87 @@ void NeuroBoard::startCommunicaton(void) {
     // Set bool to enable serial writing //
     
     communicate = true;
+
+}
+
+void NeuroBoard::startServo(void) {
+
+    // Attach servo to board
+    servo.Gripper.attach(SERVO_PIN);
+
+    // Init button pins to input                         
+    pinMode(RELAY_PIN, OUTPUT); 
+    digitalWrite(RELAY_PIN, OFF);
+
+    // Initialize all LED pins to output
+    for(int i = 0; i < NUM_LED; i++){ 
+        pinMode(ledPins[i], OUTPUT);
+    }
+
+    // Get current sensitivity
+    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
+    // Set servo enabled boolean
+    servoEnabled = true;
+
+}
+
+void NeuroBoard::endServo(void) {
+
+    // Detach servo
+    servo.Gripper.detach();
+
+    // Reset servo object to default values
+    servo = NeuroServo();
+
+}
+
+void NeuroBoard::increaseSensitivity(void) {
+
+    // Increment sensitivity index
+    if (servo.lastSensitivitiesIndex != NUM_LED) {
+        servo.lastSensitivitiesIndex++;
+    }
+
+    // Get current sensitivity value
+    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
+}
+
+void NeuroBoard::decreaseSensitivity(void) {
+
+    // Decrement sensitivity index
+    if (servo.lastSensitivitiesIndex != 0) {
+        servo.lastSensitivitiesIndex--;
+    }
+
+    // Get current sensitivity value
+    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
+
+}
+
+void NeuroBoard::setServoDefaultPosition(const int& position) {
+
+    servo.currentFunctionality = position;
+
+}
+
+void NeuroBoard::displayEMGStrength(void) {
+
+    // Turn OFF all LEDs on LED bar
+    for(int i = 0; i < NUM_LED; i++) {
+        digitalWrite(servo.ledPins[i], OFF);
+    }
+
+    // Calculate what LEDs should be turned ON on the LED bar
+    servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
+    servo.ledbarHeight = map(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
+
+    // Turn ON LEDs on the LED bar
+    for(int i = 0; i < servo.ledbarHeight; i++) {
+        digitalWrite(servo.ledPins[i], ON);
+    }
 
 }
 

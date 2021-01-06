@@ -1,5 +1,6 @@
 /**
  * NeuroBoard Test Implementation File.
+ * All code in this file is subject to change.
  * 
  * @author Ben Antonellis
  * @date October 15th, 2020
@@ -9,15 +10,12 @@
 
 NeuroBoard board;
 
-unsigned long oneSecond = 0;
-unsigned long twoSeconds = 0;
-unsigned long threeSeconds = 0;
-
 void setup() {
 
 	board.startMeasurements();
 	board.setChannel(A0);
 	board.setDecayRate(10);
+	board.startServo();
 
 	board.enableButtonPress(RED_BTN, []() {
 		Serial.println("Red Button Pressed.");
@@ -43,21 +41,8 @@ void setup() {
 
 void loop() {
 
-	// LED CODE
-	//for (int i = 0; i < 8; i++) {
-	//	board.writeLED(i, ON);
-	//	delay(100);
-	//}
-	//for (int i = 0; i < 8; i++) {
-	//	board.writeLED(i, OFF);
-	//	delay(100);
-	//}
-	// LED CODE
-
 	int sample = board.getNewSample();
 	int ev = board.getEnvelopeValue();
-	//Serial.println(sample); // Remove LED code if you want realistic sampling time
-	Serial.println(ev);
-	delay(10);
+	Serial.println(sample); // Remove LED code if you want realistic sampling time
 
 }

@@ -5,23 +5,18 @@
  * @date July 5th, 2020
 **/
 
-/** Possible Implementions
- * [X] NOTE: Apply both button functions to one button.
- * [X] NOTE: Both buttons at the same time. (NOT POSSIBLE).
- * [X] NOTE: Baud Rate to 9600, look into this.
- * [X] NOTE: Possibly remove wait(time, callback) function.
- * [ ] NOTE: Add functionality for relays and servo - email stanislav for advice (?).
- * [X] NOTE: Servo are 3 pins that connect to Neuroduino board. (Look on board too).
- * [ ] NOTE: Upon reaching certain threshold, activate the relay for Human To Human interface.
+/** Hours Worked
+ * Jan 1st: 2
+ * Jan 2nd: 1
+ * Jan 3rd: 4
+ * Jan 4th: 4
+ * Jan 5th: 3
+ * Jan 6th: 4
+ * Total: 18
 **/
 
-/** Fixes
- * [X] FIX: Fix enableButtonPress registering multiple times when held down.
- * [X] FIX: enableButtonLongPress not registering - look into wait function.
- * [X] FIX: Enable enableButtonPress and enableButtonLongPress on same button. (NOT POSSIBLE).
- * [X] FIX: Fix setTriggerOnEnvelope only working once.
- * [X] FIX: Make setTriggerOnEnvelope usable in setup function.
- * [X] FIX: enableButtonLongPress registering multiple times when held down. Should be only once.
+/** Possible Implementions
+ * NOTE: Upon reaching certain threshold, activate the relay for Human To Human interface.
 **/
 
 #pragma once
@@ -46,6 +41,52 @@
 #else // We must be dealing with a Leonardo
     #define MAX_LEDS 8
 #endif
+
+// Servo Code Start //
+
+/**
+  * Written by Marcio Amorim
+  * Updated by Stanislav Mircic
+  * Ported/Updated by Ben Antonellis
+**/
+
+#define RELAY_PIN 3                         // Pin for relay that controls TENS device
+#define RELAY_THRESHOLD 4                   // Defines sensitivity of relay
+#define SERVO_PIN 2                         // Pin for servo motor
+#define NUM_LED 6                           // Number of LEDs in LED bar
+#define GRIPPER_MINIMUM_STEP 5              // 5 degree dead zone (used to avoid aiming oscilation)
+#define OPEN_MODE 1                         // Default gripper state is opened
+#define CLOSED_MODE 2                       // Default gripper state is closed
+#define MINIMUM_SERVO_UPDATE_TIME 100       // Update servo position every 100ms
+
+struct NeuroServo {
+
+    NeuroServo(){};
+
+    Servo Gripper;                              // Servo for gripper
+    byte ledPins[6] = {8, 9, 10, 11, 12, 13};    // Pins for LEDs in LED bar
+    
+    //EMG saturation values (when EMG reaches this value the gripper will be fully opened/closed)
+    int sensitivities[6] = {200, 350, 520, 680, 840, 1024};
+    int lastSensitivitiesIndex = 2;             // Set initial sensitivity index
+    
+    int emgSaturationValue = 0;                 // Selected sensitivity/EMG saturation value
+    int analogReadings;                         // Measured value for EMG
+    byte ledbarHeight = 0;                      // Temporary variable for led bar height
+    
+    unsigned long oldTime = 0;                  // Timestamp of last servo angle update (ms)
+    int oldDegrees = 0;                         // Old value of angle for servo
+    int newDegree;                              // New value of angle for servo
+    
+    unsigned long debouncerTimer = 0;           // Timer for button debouncer         
+    int gripperStateButtonValue = 0;            // Temporary variable that stores state of button 
+    int userReleasedButton = 1;                 // Flag that is used to avoid multiple button events when user holds button
+    
+    int currentFunctionality = CLOSED_MODE;       // Current default position of claw
+
+};
+
+// Servo Code End //
 
 // Button Struct //
 
@@ -124,6 +165,63 @@ class NeuroBoard {
          * @return void.
         **/
         void startCommunicaton(void);
+
+        /**
+         * Sets up the servo for use with the NeuroBoard.
+         * 
+         * - Usable in setup: true
+         * - Usable in loop: false
+         * 
+         * @return void.
+        **/
+        void startServo(void);
+
+        /**
+         * Detaches the servo frmo the NeuroBoard, ending communication.
+         * 
+         * - Usable in setup: false
+         * - Usable in loop: true
+        **/
+        void endServo(void);
+
+        /**
+         * Increases sensitivity for the servo.
+         * 
+         * - Usable in setup: true
+         * - Usable in loop: true
+         * 
+         * @return void.
+        **/
+        void increaseSensitivity(void);
+
+        /**
+         * Decreases sensitivity for the servo.
+         * 
+         * - Usable in setup: true
+         * - Usable in loop: true
+         * 
+         * @return void.
+        **/
+        void decreaseSensitivity(void);
+
+        /**
+         * Toggles the servos default position, from open to closed.
+         * 
+         * @param position Either OPEN_MODE or CLOSED_MODE.
+         * 
+         * @return void.
+        **/
+        void setServoDefaultPosition(const int& position);
+
+        /**
+         * Displays the EMG strength of the board, via LEDs.
+         * 
+         * - Usable in setup: false
+         * - Usable in loop: true
+         * 
+         * @return void.
+        **/
+        void displayEMGStrength(void);
 
         /**
          * Returns the last measured sample from the channel.
