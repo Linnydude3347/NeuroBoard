@@ -79,9 +79,12 @@ int whiteButtonHeld = 0;
 int redLongButtonHeld = 0;
 int whiteLongButtonHeld = 0;
 
+int redLongCalled = 0;
+int whiteLongCalled = 0;
+
 // ISR //
 
-ISR (TIMER1_COMPA_vect) {
+ISR (TIMER3_COMPA_vect) {
 
     // Get reading from analog //
 
@@ -137,31 +140,41 @@ ISR (TIMER1_COMPA_vect) {
     }
 
     if (redLongButtonTrigger.enabled) {
-
         if (digitalRead(redLongButtonTrigger._button)) {
-            if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount) and redLongButtonHeld == 1) {
-                redLongButtonTrigger.callback();
-                redLongButtonHeld = 0;
+            if (redLongButtonHeld) {
+                if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount)) {
+                    if (!redLongCalled) {
+                        redLongButtonTrigger.callback();
+                        redLongButtonHeld = 0;
+                        redLongCalled = 1;
+                    }
+                }
             }
             redLongButtonHeld = 1;
         } else {
             redLongButtonHeld = 0;
+            redLongCalled = 0;
+            redCount = millis();
         }
-
     }
 
     if (whiteLongButtonTrigger.enabled) {
-
         if (digitalRead(whiteLongButtonTrigger._button)) {
-            if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount) and whiteLongButtonHeld == 1) {
-                whiteLongButtonTrigger.callback();
-                whiteLongButtonHeld = 0;
+            if (whiteLongButtonHeld) {
+                if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount)) {
+                    if (!whiteLongCalled) {
+                        whiteLongButtonTrigger.callback();
+                        whiteLongButtonHeld = 0;
+                        whiteLongCalled = 1;
+                    }
+                }
             }
             whiteLongButtonHeld = 1;
         } else {
             whiteLongButtonHeld = 0;
+            whiteLongCalled = 0;
+            whiteCount = millis();
         }
-
     }
 
 }
@@ -188,18 +201,18 @@ void NeuroBoard::startMeasurements(void) {
 
     // Set timer register flags //
 
-    TCCR1A = 0;
-    TCCR1B = 0;
-    TCNT1 = 0;
+    TCCR3A = 0;
+    TCCR3B = 0;
+    TCNT3 = 0;
 
     // Configure timer registers //
 
     // OCR1A = (16 * 10^6) / (hertz * prescalar) - 1
 
-    OCR1A = 31250;            // Compare match register 16MHz/256/2Hz
-    TCCR1B |= (1 << WGM11);   // CTC mode
-    TCCR1B |= (1 << CS01);    // Prescaler
-    TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt
+    OCR3A = 31250;            // Compare match register 16MHz/256/2Hz
+    TCCR3B |= (1 << WGM11);   // CTC mode
+    TCCR3B |= (1 << CS01);    // Prescaler
+    TIMSK3 |= (1 << OCIE1A);  // enable timer compare interrupt
 
     // Enable interrupts //
 

@@ -23,7 +23,15 @@ void setup() {
 	});
 
 	board.enableButtonLongPress(RED_BTN, 1000, []() {
-		Serial.println("Red Button Held Pressed.");
+		Serial.println("Red Button Held.");
+	});
+
+	board.enableButtonPress(WHITE_BTN, []() {
+		Serial.println("White Button Pressed.");
+	});
+
+	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
+		Serial.println("White Button Held.");
 	});
 
 	board.setTriggerOnEnvelope(500, []() {
@@ -34,14 +42,16 @@ void setup() {
 
 void loop() {
 
-	if (NeuroBoard::wait(1000, oneSecond)) {
-		Serial.println("One Second Passed.");
+	for (int i = 0; i < 8; i++) {
+		board.writeLED(i, ON);
+		delay(100);
 	}
-	if (NeuroBoard::wait(2000, twoSeconds)) {
-		Serial.println("Two Seconds Passed.");
+	for (int i = 0; i < 8; i++) {
+		board.writeLED(i, OFF);
+		delay(100);
 	}
-	if (NeuroBoard::wait(3000, threeSeconds)) {
-		Serial.println("Three Seconds Passed.");
-	}
+
+	int sample = board.getNewSample();
+	Serial.println(sample);
 
 }

@@ -10,7 +10,7 @@
  * [X] NOTE: Both buttons at the same time. (NOT POSSIBLE).
  * [X] NOTE: Baud Rate to 9600, look into this.
  * [X] NOTE: Possibly remove wait(time, callback) function.
- * [ ] NOTE: Add functionality for relays and servo - email stanislav for advice.
+ * [ ] NOTE: Add functionality for relays and servo - email stanislav for advice (?).
  * [X] NOTE: Servo are 3 pins that connect to Neuroduino board. (Look on board too).
  * [ ] NOTE: Upon reaching certain threshold, activate the relay for Human To Human interface.
 **/
@@ -21,6 +21,7 @@
  * [X] FIX: Enable enableButtonPress and enableButtonLongPress on same button. (NOT POSSIBLE).
  * [ ] FIX: Fix setTriggerOnEnvelope only working once.
  * [ ] FIX: Make setTriggerOnEnvelope usable in setup function.
+ * [X] FIX: enableButtonLongPress registering multiple times when held down. Should be only once.
 **/
 
 #pragma once
@@ -29,6 +30,7 @@
 #define NEUROBOARD_HPP
 
 #include "Arduino.h"
+#include <Servo.h>
 
 // Defines //
 
