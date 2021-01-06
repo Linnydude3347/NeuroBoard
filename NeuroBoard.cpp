@@ -224,16 +224,16 @@ ISR (TIMER3_COMPA_vect) {
               // Calculate new angle for servo
               if (servo.currentFunctionality == OPEN_MODE) {  
                 servo.analogReadings = constrain(servo.analogReadings, 40, servo.emgSaturationValue);
-                servo.newDegree = map(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105); 
+                servo.newDegree = map(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105);
               } else {
                 servo.analogReadings = constrain(servo.analogReadings, 120, servo.emgSaturationValue);
                 servo.newDegree = map(servo.analogReadings, 120 , servo.emgSaturationValue, 105, 190);
               }
-          
+
               // Check if we are in servo dead zone
               if (abs(servo.newDegree - servo.oldDegrees) > GRIPPER_MINIMUM_STEP) {
                  // Set new servo angle
-                 servo.Gripper.write(servo.newDegree); 
+                 servo.Gripper.write(servo.newDegree);
               }
               servo.oldTime = millis();
               servo.oldDegrees = servo.newDegree;
@@ -287,7 +287,7 @@ void NeuroBoard::startMeasurements(void) {
 void NeuroBoard::startCommunicaton(void) {
 
     // Set bool to enable serial writing //
-    
+
     communicate = true;
 
 }
