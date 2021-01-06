@@ -70,10 +70,10 @@ bool validAnalog(const uint8_t& newChannel) {
 
 // Button Variables //
 
-Button NeuroBoard::redButtonTrigger = Button();
-Button NeuroBoard::whiteButtonTrigger = Button();
-Button NeuroBoard::redLongButtonTrigger = Button();
-Button NeuroBoard::whiteLongButtonTrigger = Button();
+Button redButtonTrigger = Button();
+Button whiteButtonTrigger = Button();
+Button redLongButtonTrigger = Button();
+Button whiteLongButtonTrigger = Button();
 
 int NeuroBoard::decayRate = 1;
 
@@ -135,10 +135,10 @@ ISR (TIMER1_COMPA_vect) {
 
     // Check if buttons are enabled //
 
-    if (NeuroBoard::redButtonTrigger.enabled) {
-        if (digitalRead(NeuroBoard::redButtonTrigger._button)) {
-            if (debounceWait(NeuroBoard::redButtonTrigger.interval) and redButtonHeld == 0) {
-                NeuroBoard::redButtonTrigger.callback();
+    if (redButtonTrigger.enabled) {
+        if (digitalRead(redButtonTrigger._button)) {
+            if (debounceWait(redButtonTrigger.interval) and redButtonHeld == 0) {
+                redButtonTrigger.callback();
             }
             redButtonHeld = 1;
         } else {
@@ -147,10 +147,10 @@ ISR (TIMER1_COMPA_vect) {
 
     }
 
-    if (NeuroBoard::whiteButtonTrigger.enabled) {
-        if (digitalRead(NeuroBoard::whiteButtonTrigger._button)) {
-            if (debounceWait(NeuroBoard::whiteButtonTrigger.interval) and whiteButtonHeld == 0) {
-                NeuroBoard::whiteButtonTrigger.callback();
+    if (whiteButtonTrigger.enabled) {
+        if (digitalRead(whiteButtonTrigger._button)) {
+            if (debounceWait(whiteButtonTrigger.interval) and whiteButtonHeld == 0) {
+                whiteButtonTrigger.callback();
             }
             whiteButtonHeld = 1;
         } else {
@@ -158,11 +158,11 @@ ISR (TIMER1_COMPA_vect) {
         }
     }
 
-    if (NeuroBoard::redLongButtonTrigger.enabled) {
+    if (redLongButtonTrigger.enabled) {
 
-        if (digitalRead(NeuroBoard::redLongButtonTrigger._button)) {
-            if (redHoldWait(NeuroBoard::redLongButtonTrigger.interval) and redLongButtonHeld == 1) {
-                NeuroBoard::redLongButtonTrigger.callback();
+        if (digitalRead(redLongButtonTrigger._button)) {
+            if (redHoldWait(redLongButtonTrigger.interval) and redLongButtonHeld == 1) {
+                redLongButtonTrigger.callback();
                 redLongButtonHeld = 0;
             }
             redLongButtonHeld = 1;
@@ -172,11 +172,11 @@ ISR (TIMER1_COMPA_vect) {
 
     }
 
-    if (NeuroBoard::whiteLongButtonTrigger.enabled) {
+    if (whiteLongButtonTrigger.enabled) {
 
-        if (digitalRead(NeuroBoard::whiteLongButtonTrigger._button)) {
-            if (redHoldWait(NeuroBoard::whiteLongButtonTrigger.interval) and whiteLongButtonHeld == 1) {
-                NeuroBoard::whiteLongButtonTrigger.callback();
+        if (digitalRead(whiteLongButtonTrigger._button)) {
+            if (redHoldWait(whiteLongButtonTrigger.interval) and whiteLongButtonHeld == 1) {
+                whiteLongButtonTrigger.callback();
                 whiteLongButtonHeld = 0;
             }
             whiteLongButtonHeld = 1;
@@ -275,11 +275,11 @@ void NeuroBoard::setDecayRate(const int& rate) {
 void NeuroBoard::enableButtonPress(const uint8_t& button, const int& interval, void (*callback)(void)) {
 
     if (button == RED_BTN) {
-        NeuroBoard::redButtonTrigger.set(button, callback, interval, true);
+        redButtonTrigger.set(button, callback, interval, true);
     }
 
     if (button == WHITE_BTN) {
-        NeuroBoard::whiteButtonTrigger.set(button, callback, interval, true);
+        whiteButtonTrigger.set(button, callback, interval, true);
     }
 
 }
@@ -293,11 +293,11 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) {
 
     if (button == RED_BTN) {
-        NeuroBoard::redLongButtonTrigger.set(button, callback, milliseconds, true);
+        redLongButtonTrigger.set(button, callback, milliseconds, true);
     }
 
     if (button == WHITE_BTN) {
-        NeuroBoard::whiteLongButtonTrigger.set(button, callback, milliseconds, true);
+        whiteLongButtonTrigger.set(button, callback, milliseconds, true);
     }
 
 }

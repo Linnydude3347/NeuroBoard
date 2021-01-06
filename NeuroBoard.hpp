@@ -78,12 +78,6 @@ class NeuroBoard {
         // Static member variables //
 
         static uint8_t channel;
-
-        static Button redButtonTrigger;
-        static Button whiteButtonTrigger;
-        static Button redLongButtonTrigger;
-        static Button whiteLongButtonTrigger;
-
         static int decayRate;
 
         /**
