@@ -42,6 +42,7 @@ void setup() {
 
 void loop() {
 
+	// LED CODE
 	for (int i = 0; i < 8; i++) {
 		board.writeLED(i, ON);
 		delay(100);
@@ -50,8 +51,9 @@ void loop() {
 		board.writeLED(i, OFF);
 		delay(100);
 	}
+	// LED CODE
 
 	int sample = board.getNewSample();
-	Serial.println(sample);
+	Serial.println(sample); // Remove LED code if you want realistic sampling time
 
 }
