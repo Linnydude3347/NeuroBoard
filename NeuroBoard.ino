@@ -34,13 +34,13 @@ void setup() {
 
 void loop() {
 
-	if (board.wait(1000, oneSecond)) {
+	if (NeuroBoard::wait(1000, oneSecond)) {
 		Serial.println("One Second Passed.");
 	}
-	if (board.wait(2000, twoSeconds)) {
+	if (NeuroBoard::wait(2000, twoSeconds)) {
 		Serial.println("Two Seconds Passed.");
 	}
-	if (board.wait(3000, threeSeconds)) {
+	if (NeuroBoard::wait(3000, threeSeconds)) {
 		Serial.println("Three Seconds Passed.");
 	}
 

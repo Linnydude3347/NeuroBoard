@@ -27,14 +27,6 @@ unsigned long whiteCount = 0;
 unsigned long redDebounceCount = 0;
 unsigned long whiteDebounceCount = 0;
 
-bool waitx(const int& interval, unsigned long& var) {
-    unsigned long ms = millis();
-    bool done = (ms - var) >= interval;
-    if (done)
-        var = ms;
-    return done;
-}
-
 /**
  * Determines if the passed analog is valid to use on the
  * Neuroduino Board. This is private because only our
@@ -123,7 +115,7 @@ ISR (TIMER1_COMPA_vect) {
 
     if (redButtonTrigger.enabled) {
         if (digitalRead(redButtonTrigger._button)) {
-            if (waitx(redButtonTrigger.interval, redDebounceCount) and redButtonHeld == 0) {
+            if (NeuroBoard::wait(redButtonTrigger.interval, redDebounceCount) and redButtonHeld == 0) {
                 redButtonTrigger.callback();
             }
             redButtonHeld = 1;
@@ -135,7 +127,7 @@ ISR (TIMER1_COMPA_vect) {
 
     if (whiteButtonTrigger.enabled) {
         if (digitalRead(whiteButtonTrigger._button)) {
-            if (waitx(whiteButtonTrigger.interval, whiteDebounceCount) and whiteButtonHeld == 0) {
+            if (NeuroBoard::wait(whiteButtonTrigger.interval, whiteDebounceCount) and whiteButtonHeld == 0) {
                 whiteButtonTrigger.callback();
             }
             whiteButtonHeld = 1;
@@ -147,7 +139,7 @@ ISR (TIMER1_COMPA_vect) {
     if (redLongButtonTrigger.enabled) {
 
         if (digitalRead(redLongButtonTrigger._button)) {
-            if (waitx(redLongButtonTrigger.interval, redCount) and redLongButtonHeld == 1) {
+            if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount) and redLongButtonHeld == 1) {
                 redLongButtonTrigger.callback();
                 redLongButtonHeld = 0;
             }
@@ -161,7 +153,7 @@ ISR (TIMER1_COMPA_vect) {
     if (whiteLongButtonTrigger.enabled) {
 
         if (digitalRead(whiteLongButtonTrigger._button)) {
-            if (waitx(whiteLongButtonTrigger.interval, whiteCount) and whiteLongButtonHeld == 1) {
+            if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount) and whiteLongButtonHeld == 1) {
                 whiteLongButtonTrigger.callback();
                 whiteLongButtonHeld = 0;
             }
