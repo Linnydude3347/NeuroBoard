@@ -30,17 +30,12 @@ void setup() {
 
 	board.enableButtonLongPress(WHITE_BTN, 1000, [](){ Serial.println("White Button Held!"); });
 
-	// It should be noted that you cannot set a regular press and a long press
-	// for the same button. See below:
+	// You can also set a short and long press to one button.
 
-	// **************************************************************************************** //
+	board.enableButtonPress(RED_BTN, [](){ Serial.println("Red Button Pressed!"); });
+	board.enableButtonLongPress(RED_BTN, 1000, [](){ Serial.println("Red Button Held!"); });
 
-	// NOT ALLOWED
-
-	// board.enableButtonPress(RED_BTN, [](){ Serial.println("Red Button Pressed!"); });
-	// board.enableButtonLongPress(RED_BTN, 1000, [](){ Serial.println("Red Button Held!"); });
-
-	// **************************************************************************************** //
+	
 	
 }
 

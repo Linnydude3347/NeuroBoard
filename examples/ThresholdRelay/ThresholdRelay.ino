@@ -21,12 +21,24 @@ void setup() {
 
 	board.startMeasurements();
 
+	// Once the incoming sample reaches above set threshold (700 in this case), the
+	// function passed is called. Then, once the samples reached 9/10th of the passed
+	// threshold (630 in this case), the function will be allowed to call again.
+
+	board.setTriggerOnEnvelope(700, []() {
+		Serial.println("Threshold Reached!");
+	});
+
+	// You can also set your own second threshold
+
+	board.setTriggerOnEnvelope(600, 400, []() {
+		Serial.println("Threshold Reached!");
+	});
+
 }
 
 void loop() {
 
-	auto printLambda = []() { Serial.println("Threshold Reached!"); };
-
-	board.setTriggerOnEnvelope(700, printLambda);
+	// loop code here
 
 }
