@@ -6,7 +6,7 @@
 **/
 
 /** Possible Implementions
- * [X] NOTE: Apply both button functions to one button. (NOT POSSIBLE).
+ * [X] NOTE: Apply both button functions to one button.
  * [X] NOTE: Both buttons at the same time. (NOT POSSIBLE).
  * [X] NOTE: Baud Rate to 9600, look into this.
  * [X] NOTE: Possibly remove wait(time, callback) function.
@@ -29,7 +29,6 @@
 #define NEUROBOARD_HPP
 
 #include "Arduino.h"
-#include <Servo.h>
 
 // Defines //
 

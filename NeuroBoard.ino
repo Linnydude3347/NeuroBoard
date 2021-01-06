@@ -22,8 +22,8 @@ void setup() {
 		Serial.println("Red Button Pressed.");
 	});
 
-	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
-		Serial.println("White Button Pressed.");
+	board.enableButtonLongPress(RED_BTN, 1000, []() {
+		Serial.println("Red Button Held Pressed.");
 	});
 
 	board.setTriggerOnEnvelope(500, []() {
