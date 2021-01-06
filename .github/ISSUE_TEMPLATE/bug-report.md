@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Reporting an issue with NeuroBoard.
+about: Report an issue with NeuroBoard.
 title: ''
 labels: bug
 assignees: ''
