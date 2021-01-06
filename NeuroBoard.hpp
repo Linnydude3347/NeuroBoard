@@ -187,7 +187,7 @@ class NeuroBoard {
          * Calls the passed function when the specified button is pressed.
          * 
          * - Usable in setup: true
-         * - Usable in loop: true
+         * - Usable in loop: false
          * 
          * @param button Which button to map the passed function to.
          * @param interval Delay between each button press to accept input.
@@ -201,7 +201,7 @@ class NeuroBoard {
          * Calls the passed function when the specified button is pressed.
          * 
          * - Usable in setup: true
-         * - Usable in loop: true
+         * - Usable in loop: false
          * 
          * @param button Which button to map the passed function to.
          * @param callback Function to call when button is pressed.
@@ -213,7 +213,7 @@ class NeuroBoard {
          * See `longPressThreshold` for exact millisecond timing.
          * 
          * - Usable in setup: true
-         * - Usable in loop: true
+         * - Usable in loop: false
          * 
          * @param button Which button to map the passed function to.
          * @param milliseconds How many milliseconds the user should hold button for to execute function.
@@ -228,7 +228,7 @@ class NeuroBoard {
          * than the passed threshold.
          * 
          * - Usable in setup: false
-         * - Usable in loop: true
+         * - Usable in loop: false
          * 
          * @param threshold Threshold for envelope value.
          * @param secondFactor Optional parameter for the second threshold the data must pass.
@@ -243,7 +243,7 @@ class NeuroBoard {
          * than the passed threshold.
          * 
          * - Usable in setup: false
-         * - Usable in loop: true
+         * - Usable in loop: false
          * 
          * @param threshold Threshold for envelope value.
          * @param callback Function to call when threshold is reached.
