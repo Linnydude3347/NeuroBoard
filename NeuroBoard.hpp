@@ -59,6 +59,9 @@
 #define CLOSED_MODE 2                       // Default gripper state is closed
 #define MINIMUM_SERVO_UPDATE_TIME 100       // Update servo position every 100ms
 
+/**
+ * Struct for maintaining the servo during its usage.
+**/
 struct NeuroServo {
 
     NeuroServo(){};
@@ -86,32 +89,32 @@ struct NeuroServo {
 
 };
 
-// Servo Code End //
-
-// Button Struct //
-
+/**
+ * Struct for better handling of buttons and their callbacks.
+**/
 struct Button {
 
-    uint8_t _button;
+    uint8_t button;
     void (*callback)(void);
     unsigned int interval;
     bool enabled;
 
     Button(){};
 
-    void set(uint8_t __button, void (*_callback)(void), const int& _interval, const bool& _enabled) {
+    void set(uint8_t button, void (*callback)(void), const int& interval, const bool& enabled) {
 
-        _button = __button;
-        callback = _callback;
-        interval = _interval;
-        enabled = _enabled;
+        this->button = button;
+        this->callback = callback;
+        this->interval = interval;
+        this->enabled = enabled;
 
     }
 
 };
 
-// Trigger Struct //
-
+/**
+ * Struct for handling trigger events.
+**/
 struct Trigger {
 
     int threshold;
@@ -156,11 +159,7 @@ class NeuroBoard {
         void startMeasurements(void);
 
         /**
-         * Enables periodic sending from buffer to SpikeRecorder. Waits for 
-         * SpikeRecorder commands and responds.
-         * 
-         * - Usable in setup: true
-         * - Usable in loop: false
+         * Orphan function, yet to be implemented. DO NOT USE.
          * 
          * @return void.
         **/

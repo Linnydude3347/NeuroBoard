@@ -84,8 +84,13 @@ uint8_t NeuroBoard::channel = A0;
 
 // Variables for button holding //
 
-int redButtonHeld = 0;
-int whiteButtonHeld = 0;
+int RBD = 0;                // Red Button Down
+unsigned long RBT = 0;      // Red Button Time
+int RBC = 0;                // Red Button Collected
+
+int WBD = 0;                // White Button Down
+unsigned long WBT = 0;      // White Button Time
+int WBC = 0;                // White Button Collected
 
 int redLongButtonHeld = 0;
 int whiteLongButtonHeld = 0;
@@ -115,43 +120,46 @@ ISR (TIMER3_COMPA_vect) {
     head = (head + 1) % BUFFER_SIZE;
     full = head == tail;
 
-    // Check if communication is turned on //
-
-    if (communicate) {
-
-        //const uint8_t outputFrameBuffer[2] = { (reading >> 7) | 0x80, reading & 0x7F };
-
-        //Serial.write(outputFrameBuffer, 2);
-
-    }
-
     // Check if buttons are enabled //
 
     if (redButtonTrigger.enabled) {
-        if (digitalRead(redButtonTrigger._button)) {
-            if (NeuroBoard::wait(redButtonTrigger.interval, redDebounceCount) and redButtonHeld == 0) {
-                redButtonTrigger.callback();
+        if (digitalRead(redButtonTrigger.button)) {
+            RBD = 1;
+            if (!RBC) {
+                RBT = millis();
+                RBC = 1;
             }
-            redButtonHeld = 1;
         } else {
-            redButtonHeld = 0;
+            if (RBD) {
+                if ((millis() - RBT) <= 250) {
+                    redButtonTrigger.callback();
+                }
+                RBD = 0;
+                RBC = 0;
+            }
         }
-
     }
 
     if (whiteButtonTrigger.enabled) {
-        if (digitalRead(whiteButtonTrigger._button)) {
-            if (NeuroBoard::wait(whiteButtonTrigger.interval, whiteDebounceCount) and whiteButtonHeld == 0) {
-                whiteButtonTrigger.callback();
+        if (digitalRead(whiteButtonTrigger.button)) {
+            WBD = 1;
+            if (!WBC) {
+                WBT = millis();
+                WBC = 1;
             }
-            whiteButtonHeld = 1;
         } else {
-            whiteButtonHeld = 0;
+            if (WBD) {
+                if ((millis() - WBT) <= 250) {
+                    whiteButtonTrigger.callback();
+                }
+                WBD = 0;
+                WBC = 0;
+            }
         }
     }
 
     if (redLongButtonTrigger.enabled) {
-        if (digitalRead(redLongButtonTrigger._button)) {
+        if (digitalRead(redLongButtonTrigger.button)) {
             if (redLongButtonHeld) {
                 if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount)) {
                     if (!redLongCalled) {
@@ -170,7 +178,7 @@ ISR (TIMER3_COMPA_vect) {
     }
 
     if (whiteLongButtonTrigger.enabled) {
-        if (digitalRead(whiteLongButtonTrigger._button)) {
+        if (digitalRead(whiteLongButtonTrigger.button)) {
             if (whiteLongButtonHeld) {
                 if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount)) {
                     if (!whiteLongCalled) {
@@ -188,7 +196,7 @@ ISR (TIMER3_COMPA_vect) {
         }
     }
 
-    // Check if envelope trigger is set
+    // Check if envelope trigger is set //
 
     if (envelopeTrigger.enabled) {
 
@@ -221,22 +229,23 @@ ISR (TIMER3_COMPA_vect) {
 
         // Set new angle if enough time passed
         if (millis() - servo.oldTime > MINIMUM_SERVO_UPDATE_TIME) {
-              // Calculate new angle for servo
-              if (servo.currentFunctionality == OPEN_MODE) {  
+            // Calculate new angle for servo
+            if (servo.currentFunctionality == OPEN_MODE) {  
                 servo.analogReadings = constrain(servo.analogReadings, 40, servo.emgSaturationValue);
                 servo.newDegree = map(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105);
-              } else {
+            } else {
                 servo.analogReadings = constrain(servo.analogReadings, 120, servo.emgSaturationValue);
                 servo.newDegree = map(servo.analogReadings, 120 , servo.emgSaturationValue, 105, 190);
-              }
+            }
 
-              // Check if we are in servo dead zone
-              if (abs(servo.newDegree - servo.oldDegrees) > GRIPPER_MINIMUM_STEP) {
-                 // Set new servo angle
-                 servo.Gripper.write(servo.newDegree);
-              }
-              servo.oldTime = millis();
-              servo.oldDegrees = servo.newDegree;
+            // Check if we are in servo dead zone
+            if (abs(servo.newDegree - servo.oldDegrees) > GRIPPER_MINIMUM_STEP) {
+                // Set new servo angle
+                servo.Gripper.write(servo.newDegree);
+            }
+            // Set old time and degrees for new calculation
+            servo.oldTime = millis();
+            servo.oldDegrees = servo.newDegree;
         }
 
     }
@@ -284,68 +293,82 @@ void NeuroBoard::startMeasurements(void) {
 
 }
 
-void NeuroBoard::startCommunicaton(void) {
-
-    // Set bool to enable serial writing //
-
-    communicate = true;
-
-}
-
 void NeuroBoard::startServo(void) {
 
-    // Attach servo to board
-    servo.Gripper.attach(SERVO_PIN);
+    // Ensure servo isn't already enabled before starting
+    if (!servoEnabled) {
 
-    // Init button pins to input                         
-    pinMode(RELAY_PIN, OUTPUT); 
-    digitalWrite(RELAY_PIN, OFF);
+        // Attach servo to board
+        servo.Gripper.attach(SERVO_PIN);
 
-    // Initialize all LED pins to output
-    for(int i = 0; i < NUM_LED; i++){ 
-        pinMode(ledPins[i], OUTPUT);
+        // Init button pins to input                         
+        pinMode(RELAY_PIN, OUTPUT); 
+        digitalWrite(RELAY_PIN, OFF);
+
+        // Initialize all LED pins to output
+        for(int i = 0; i < NUM_LED; i++){
+            pinMode(ledPins[i], OUTPUT);
+        }
+
+        // Get current sensitivity
+        servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
+        // Set servo enabled boolean
+        servoEnabled = true;
+
     }
-
-    // Get current sensitivity
-    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
-
-    // Set servo enabled boolean
-    servoEnabled = true;
 
 }
 
 void NeuroBoard::endServo(void) {
 
-    // Detach servo
-    servo.Gripper.detach();
+    // Ensure servo is enabled before disabling
+    if (servoEnabled) {
 
-    // Reset servo object to default values
-    servo = NeuroServo();
+        // Set servo boolean value to false
+        servoEnabled = false;
+
+        // Detach servo
+        servo.Gripper.detach();
+
+        // Reset servo object to default values
+        servo = NeuroServo();
+
+    }
 
 }
 
 void NeuroBoard::increaseSensitivity(void) {
 
-    // Increment sensitivity index
-    if (servo.lastSensitivitiesIndex != NUM_LED) {
-        servo.lastSensitivitiesIndex++;
-    }
+    // Ensure servo is enabled before modifying sensitivity value
+    if (servoEnabled) {
 
-    // Get current sensitivity value
-    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+        // Increment sensitivity index
+        if (servo.lastSensitivitiesIndex != NUM_LED) {
+            servo.lastSensitivitiesIndex++;
+        }
+
+        // Get current sensitivity value
+        servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
+    }
 
 }
 
 void NeuroBoard::decreaseSensitivity(void) {
 
-    // Decrement sensitivity index
-    if (servo.lastSensitivitiesIndex != 0) {
-        servo.lastSensitivitiesIndex--;
+    // Ensure servo is enabled before modifying sensitivity value
+    if (servoEnabled) {
+
+        // Decrement sensitivity index
+        if (servo.lastSensitivitiesIndex != 0) {
+            servo.lastSensitivitiesIndex--;
+        }
+
+        // Get current sensitivity value
+        servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
     }
-
-    // Get current sensitivity value
-    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
-
 
 }
 
@@ -357,18 +380,23 @@ void NeuroBoard::setServoDefaultPosition(const int& position) {
 
 void NeuroBoard::displayEMGStrength(void) {
 
-    // Turn OFF all LEDs on LED bar
-    for(int i = 0; i < NUM_LED; i++) {
-        digitalWrite(servo.ledPins[i], OFF);
-    }
+    // Ensure servo is enabled before displaying strength
+    if (servoEnabled) {
 
-    // Calculate what LEDs should be turned ON on the LED bar
-    servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
-    servo.ledbarHeight = map(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
+        // Turn OFF all LEDs on LED bar
+        for(int i = 0; i < NUM_LED; i++) {
+            digitalWrite(servo.ledPins[i], OFF);
+        }
 
-    // Turn ON LEDs on the LED bar
-    for(int i = 0; i < servo.ledbarHeight; i++) {
-        digitalWrite(servo.ledPins[i], ON);
+        // Calculate what LEDs should be turned ON on the LED bar
+        servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
+        servo.ledbarHeight = map(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
+
+        // Turn ON LEDs on the LED bar
+        for(int i = 0; i < servo.ledbarHeight; i++) {
+            digitalWrite(servo.ledPins[i], ON);
+        }
+    
     }
 
 }
@@ -408,21 +436,15 @@ void NeuroBoard::setDecayRate(const int& rate) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, const int& interval, void (*callback)(void)) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) {
 
     if (button == RED_BTN) {
-        redButtonTrigger.set(button, callback, interval, true);
+        redButtonTrigger.set(button, callback, 0, true);
     }
 
     if (button == WHITE_BTN) {
-        whiteButtonTrigger.set(button, callback, interval, true);
+        whiteButtonTrigger.set(button, callback, 0, true);
     }
-
-}
-
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) {
-
-    this->enableButtonPress(button, 250, callback);
 
 }
 

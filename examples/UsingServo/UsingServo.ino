@@ -19,12 +19,42 @@ NeuroBoard board;
 
 void setup() {
 
+	// **************************************** //
+
 	board.startMeasurements();
 	board.startServo();
+
+	// **************************************** //
+
+	// Alternatively, we could set the servo based on a button pressed //
+
+	board.enableButtonPress(WHITE_BTN, []() {
+		board.startServo();
+	});
+
+	// **************************************** //
+
+	// We could also start the servo, and set sensitivity calls to the buttons //
+
+	board.startServo();
+
+	board.enableButtonPress(RED_BTN, []() {
+		board.increaseSensitivity();
+	});
+
+	board.enableButtonPress(WHITE_BTN, []() {
+		board.decreaseSensitivity();
+	});
+
+	// **************************************** //
 
 }
 
 void loop() {
+
+	// If we want a visual representation of EMB strength, we can call the below function //
+
+	board.displayEMGStrength();
 
 	// loop code here
 

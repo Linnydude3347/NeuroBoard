@@ -15,26 +15,21 @@ void setup() {
 	board.startMeasurements();
 	board.setChannel(A0);
 	board.setDecayRate(10);
-	board.startServo();
-
-	board.enableButtonPress(RED_BTN, []() {
-		Serial.println("Red Button Pressed.");
-	});
-
-	board.enableButtonLongPress(RED_BTN, 1000, []() {
-		Serial.println("Red Button Held.");
-	});
 
 	board.enableButtonPress(WHITE_BTN, []() {
-		Serial.println("White Button Pressed.");
+    	Serial.println("white press");
+	});
+
+	board.enableButtonPress(RED_BTN, []() {
+    	Serial.println("red press");
 	});
 
 	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
-		Serial.println("White Button Held.");
+    	Serial.println("white long press");
 	});
 
-	board.setTriggerOnEnvelope(500, []() {
-		Serial.println("Threshold Reached!");
+	board.enableButtonLongPress(RED_BTN, 1000, []() {
+    	Serial.println("red long press");
 	});
 
 }
@@ -43,6 +38,6 @@ void loop() {
 
 	int sample = board.getNewSample();
 	int ev = board.getEnvelopeValue();
-	Serial.println(sample); // Remove LED code if you want realistic sampling time
+	//Serial.println(sample); // Remove LED code if you want realistic sampling time
 
 }
