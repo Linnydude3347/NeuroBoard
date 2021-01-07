@@ -3,7 +3,7 @@
  * All code in this file is subject to change.
  * 
  * @author Ben Antonellis
- * @date October 15th, 2020
+ * @date January 7th, 2021
 **/
 
 #include "NeuroBoard.hpp"

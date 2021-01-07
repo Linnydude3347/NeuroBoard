@@ -11,7 +11,7 @@
  *  View Plotter: Control + Shift + L
  * 
  * @author Ben Antonellis
- * @date September 24th, 2020
+ * @date January 7th, 2021
 **/
 
 #include "NeuroBoard.hpp"
@@ -20,6 +20,7 @@ NeuroBoard board;
 
 void setup() {
 
+	// Required to start receiving samples from the board //
 	board.startMeasurements();
 
 }

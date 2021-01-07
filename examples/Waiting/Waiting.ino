@@ -10,7 +10,7 @@
  *  View Plotter: Control + Shift + L
  * 
  * @author Ben Antonellis
- * @date January 5th, 2021
+ * @date January 7th, 2021
 **/
 
 #include "NeuroBoard.hpp"
@@ -19,9 +19,12 @@ NeuroBoard board;
 
 void setup() {
 
+	// Required to start receiving samples from the board //
 	board.startMeasurements();
 
 }
+
+// Define variables to hold the count of the wait functions
 
 unsigned long oneSecond = 0;
 unsigned long twoSeconds = 0;

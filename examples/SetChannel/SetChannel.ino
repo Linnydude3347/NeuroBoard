@@ -10,7 +10,7 @@
  *  View Plotter: Control + Shift + L
  * 
  * @author Ben Antonellis
- * @date December 26th, 2020
+ * @date January 7th, 2021
 **/
 
 #include "NeuroBoard.hpp"
@@ -19,6 +19,7 @@ NeuroBoard board;
 
 void setup() {
 
+	// Required to start receiving samples from the board //
 	board.startMeasurements();
 
 	// There are a couple ways to set the channel to listen on. This is because
@@ -26,18 +27,18 @@ void setup() {
 
 	// To those unfamiliar with the Arduino and their analog naming
 	// system, you can set the channel like so:
-
+	
 	board.setChannel(0); // Listens on A0, which is the 1st analog.
 	board.setChannel(11); // Listens on A11, which is the 12th analog.
-
+	
 	// Any number N, where 0 <= N <= 11, will work.
 
 	// To those who are familiar with Arduino's analog names, you can pass them
 	// directly in to the function.
-
+	
 	board.setChannel(A0); // Listens on A0, which is the 1st analog.
 	board.setChannel(A11); // Listens on A11, which is the 12th analog.
-
+	
 	// Any AN, where 0 <= N <= 11, will work.
 
 }

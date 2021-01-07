@@ -2,7 +2,7 @@
  * NeuroBoard Header File.
  * 
  * @author Ben Antonellis
- * @date July 5th, 2020
+ * @date January 7th, 2021
 **/
 
 /** Hours Worked
@@ -12,11 +12,8 @@
  * Jan 4th: 4
  * Jan 5th: 3
  * Jan 6th: 4
- * Total: 18
-**/
-
-/** Possible Implementions
- * NOTE: Upon reaching certain threshold, activate the relay for Human To Human interface.
+ * Jan 7th: 3
+ * Total: 21
 **/
 
 #pragma once

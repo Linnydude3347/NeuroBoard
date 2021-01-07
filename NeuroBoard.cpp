@@ -2,7 +2,7 @@
  * NeuroBoard Implementation File.
  * 
  * @author Ben Antonellis
- * @date July 5th, 2020
+ * @date January 7th, 2021
 **/
 
 #include "NeuroBoard.hpp"

@@ -10,7 +10,7 @@
  *  View Plotter: Control + Shift + L
  * 
  * @author Ben Antonellis
- * @date January 6th, 2021
+ * @date January 7th, 2021
 **/
 
 #include "NeuroBoard.hpp"
@@ -19,12 +19,18 @@ NeuroBoard board;
 
 void setup() {
 
-	// **************************************** //
-
+	// Required to start receiving samples from the board //
 	board.startMeasurements();
+
+	// **************************************** //
+	// OPTION 1 //
+
+	// You can start the servo by simplying typing this line in the setup function
+
 	board.startServo();
 
 	// **************************************** //
+	// OPTION 2 //
 
 	// Alternatively, we could set the servo based on a button pressed //
 
@@ -33,6 +39,7 @@ void setup() {
 	});
 
 	// **************************************** //
+	// OPTION 3 //
 
 	// We could also start the servo, and set sensitivity calls to the buttons //
 
