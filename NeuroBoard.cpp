@@ -41,6 +41,26 @@ bool validAnalog(const uint8_t& newChannel) {
 
 }
 
+int fasterMap(int value, int fromLow, int fromHigh, int toLow, int toHigh) {
+
+    int first = value - fromLow;
+    int second = toHigh - toLow;
+    int combined = 0;
+    while (second != 0) {                   // Avoid usage of * operator
+        combined = combined + first;
+        second--;
+    }
+    int third = fromHigh - fromLow;
+    int count = 0;
+    while (combined >= third) {             // Avoid usage of / operator
+        combined = combined - third;
+        count++;
+    }
+    count = count + toLow;
+    return count;
+
+}
+
 // Button Wait Variables //
 
 unsigned long redCount = 0;
@@ -98,13 +118,25 @@ int whiteLongButtonHeld = 0;
 int redLongCalled = 0;
 int whiteLongCalled = 0;
 
+int reading;
+
 // ISR //
+
+int samples = 0;
+unsigned long sampleCount = 0;
 
 ISR (TIMER3_COMPA_vect) {
 
+    samples++;
+
+    if (NeuroBoard::wait(1000, sampleCount)) {
+        //Serial.println(samples);
+        samples = 0;
+    }
+
     // Get reading from analog //
 
-    int reading = analogRead(NeuroBoard::channel);
+    reading = analogRead(NeuroBoard::channel);
 
     // Calculate envelope value here //
 
@@ -115,10 +147,55 @@ ISR (TIMER3_COMPA_vect) {
     buffer[head] = reading;
 
     if (full) {
-        tail = (tail + 1) % BUFFER_SIZE;
+        tail = (tail == BUFFER_SIZE) ? 0 : tail + 1;
     }
-    head = (head + 1) % BUFFER_SIZE;
+    head = (head == BUFFER_SIZE) ? 0 : head + 1;
     full = head == tail;
+
+}
+
+// PUBLIC METHODS //
+
+void NeuroBoard::startMeasurements(void) {
+
+    // Start Serial //
+
+    Serial.begin(SERIAL_CAP);
+
+    // Set pin modes for Stanislav's code //
+
+    pinMode(14, OUTPUT); // MISO
+    pinMode(15, OUTPUT); // SCK
+    pinMode(16, OUTPUT); // MOSI
+
+    // Initialize timer //
+
+    // Disable interrupts //
+
+    noInterrupts();
+
+    // Set timer register flags //
+
+    TCCR3A = 0;
+    TCCR3B = 0;
+    TCNT3 = 0;
+
+    // Configure timer registers //
+
+    // Performance Upgrade //
+    // 35 samples/second => 245 samples/second
+
+    OCR3A = 31250;
+    TCCR3B = (TCCR3B & 0xF8) | 0x01;
+    TIMSK3 |= (1 << OCIE1A);
+
+    // Enable interrupts //
+
+    interrupts();
+
+}
+
+void NeuroBoard::handleInputs(void) {
 
     // Check if buttons are enabled //
 
@@ -222,7 +299,6 @@ ISR (TIMER3_COMPA_vect) {
         // Turn ON relay if EMG is greater than threshold value (threshold is expressed in LED bar height units)
         if (servo.ledbarHeight > RELAY_THRESHOLD) {
             digitalWrite(RELAY_PIN, HIGH);
-            delay(50);
         } else {
             digitalWrite(RELAY_PIN, LOW);
         }
@@ -232,10 +308,10 @@ ISR (TIMER3_COMPA_vect) {
             // Calculate new angle for servo
             if (servo.currentFunctionality == OPEN_MODE) {  
                 servo.analogReadings = constrain(servo.analogReadings, 40, servo.emgSaturationValue);
-                servo.newDegree = map(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105);
+                servo.newDegree = fasterMap(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105);
             } else {
                 servo.analogReadings = constrain(servo.analogReadings, 120, servo.emgSaturationValue);
-                servo.newDegree = map(servo.analogReadings, 120 , servo.emgSaturationValue, 105, 190);
+                servo.newDegree = fasterMap(servo.analogReadings, 120 , servo.emgSaturationValue, 105, 190);
             }
 
             // Check if we are in servo dead zone
@@ -249,47 +325,6 @@ ISR (TIMER3_COMPA_vect) {
         }
 
     }
-
-}
-
-// PUBLIC METHODS //
-
-void NeuroBoard::startMeasurements(void) {
-
-    // Start Serial //
-
-    Serial.begin(SERIAL_CAP);
-
-    // Set pin modes for Stanislav's code //
-
-    pinMode(14, OUTPUT); // MISO
-    pinMode(15, OUTPUT); // SCK
-    pinMode(16, OUTPUT); // MOSI
-
-    // Initialize timer //
-
-    // Disable interrupts //
-
-    noInterrupts();
-
-    // Set timer register flags //
-
-    TCCR3A = 0;
-    TCCR3B = 0;
-    TCNT3 = 0;
-
-    // Configure timer registers //
-
-    // OCR1A = (16 * 10^6) / (hertz * prescalar) - 1
-
-    OCR3A = 31250;            // Compare match register 16MHz/256/2Hz
-    TCCR3B |= (1 << WGM11);   // CTC mode
-    TCCR3B |= (1 << CS01);    // Prescaler
-    TIMSK3 |= (1 << OCIE1A);  // enable timer compare interrupt
-
-    // Enable interrupts //
-
-    interrupts();
 
 }
 
@@ -390,7 +425,7 @@ void NeuroBoard::displayEMGStrength(void) {
 
         // Calculate what LEDs should be turned ON on the LED bar
         servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
-        servo.ledbarHeight = map(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
+        servo.ledbarHeight = fasterMap(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
 
         // Turn ON LEDs on the LED bar
         for(int i = 0; i < servo.ledbarHeight; i++) {
@@ -405,7 +440,7 @@ int NeuroBoard::getNewSample(void) {
 
     int value = buffer[tail]; // Can't just return this because tail is changed below //
     full = false;
-    tail = (tail + 1) % BUFFER_SIZE;
+    tail = (tail == BUFFER_SIZE) ? 0 : tail + 1;
 
     return value;
 

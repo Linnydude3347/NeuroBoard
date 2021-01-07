@@ -48,6 +48,9 @@ void setup() {
 
 void loop() {
 
+	// Required if any button/envelopeTrigger/servo is enabled
+	board.handleInputs();
+
 	// loop code here
 
 }

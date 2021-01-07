@@ -59,6 +59,9 @@ void setup() {
 
 void loop() {
 
+	// Required if any button/envelopeTrigger/servo is enabled
+	board.handleInputs();
+
 	// If we want a visual representation of EMB strength, we can call the below function //
 
 	board.displayEMGStrength();

@@ -15,13 +15,16 @@ void setup() {
 	board.startMeasurements();
 	board.setChannel(A0);
 	board.setDecayRate(10);
+  	board.startServo();
 
 	board.enableButtonPress(WHITE_BTN, []() {
     	Serial.println("white press");
+		board.increaseSensitivity();
 	});
 
 	board.enableButtonPress(RED_BTN, []() {
     	Serial.println("red press");
+		board.decreaseSensitivity();
 	});
 
 	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
@@ -36,8 +39,10 @@ void setup() {
 
 void loop() {
 
+	board.handleInputs();
+
 	int sample = board.getNewSample();
-	int ev = board.getEnvelopeValue();
+	//int ev = board.getEnvelopeValue();
 	//Serial.println(sample); // Remove LED code if you want realistic sampling time
 
 }

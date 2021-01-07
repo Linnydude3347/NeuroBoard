@@ -16,6 +16,14 @@
  * Total: 21
 **/
 
+/** Stanislav Code Review Notes
+ * [X] NOTE: Replace % operators with if statements. It's much faster.
+ * [X] NOTE: Move any non-ISR code to new function.
+ * [X] NOTE: Remove any "delay" as it significantly slows the code.
+ * [ ] NOTE: Read from registers instead of analogRead/digitalRead
+ * [X] NOTE: Don't use "map", too slow. Look into viable alternative.
+**/
+
 #pragma once
 
 #ifndef NEUROBOARD_HPP
@@ -31,7 +39,7 @@
 #define ON HIGH
 #define OFF LOW
 #define BUFFER_SIZE 20
-#define SERIAL_CAP 9600
+#define SERIAL_CAP 230400
 
 #ifdef ARDUINO_AVR_UNO
     #define MAX_LEDS 6
@@ -161,6 +169,14 @@ class NeuroBoard {
          * @return void.
         **/
         void startCommunicaton(void);
+
+        /**
+         * Special function to handle all button triggers, envelope triggers, and
+         * servo pings.
+         * 
+         * @return void.
+        **/
+        void handleInputs(void);
 
         /**
          * Sets up the servo for use with the NeuroBoard.
