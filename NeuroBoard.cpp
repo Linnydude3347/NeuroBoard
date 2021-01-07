@@ -122,17 +122,7 @@ int reading;
 
 // ISR //
 
-int samples = 0;
-unsigned long sampleCount = 0;
-
 ISR (TIMER3_COMPA_vect) {
-
-    samples++;
-
-    if (NeuroBoard::wait(1000, sampleCount)) {
-        //Serial.println(samples);
-        samples = 0;
-    }
 
     // Get reading from analog //
 
@@ -173,6 +163,12 @@ void NeuroBoard::startMeasurements(void) {
     // Disable interrupts //
 
     noInterrupts();
+
+    // Set prescale to 16 for analogRead
+
+    sbi(ADCSRA, ADPS2);
+    cbi(ADCSRA, ADPS1);
+    cbi(ADCSRA, ADPS0);
 
     // Set timer register flags //
 
