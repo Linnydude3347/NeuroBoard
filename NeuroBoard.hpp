@@ -47,6 +47,10 @@
     #define MAX_LEDS 8
 #endif
 
+// DigitalWrite macros //
+
+#define _BV(bit) (1 << (bit))
+
 // Servo Code Start //
 
 /**

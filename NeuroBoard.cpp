@@ -41,20 +41,20 @@ bool validAnalog(const uint8_t& newChannel) {
 
 }
 
-int fasterMap(int value, int fromLow, int fromHigh, int toLow, int toHigh) {
+long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
 
-    int first = value - fromLow;
-    int second = toHigh - toLow;
-    int combined = 0;
-    while (second != 0) {                   // Avoid usage of * operator
+    long first = value - fromLow;
+    long second = toHigh - toLow;
+    long combined = 0;
+    while (second != 0) {
         combined = combined + first;
-        second--;
+        second = second - 1;
     }
-    int third = fromHigh - fromLow;
-    int count = 0;
+    long third = fromHigh - fromLow;
+    long count = 0;
     while (combined >= third) {             // Avoid usage of / operator
         combined = combined - third;
-        count++;
+        count = count + 1;
     }
     count = count + toLow;
     return count;
@@ -298,15 +298,17 @@ void NeuroBoard::handleInputs(void) {
 
         // Turn ON relay if EMG is greater than threshold value (threshold is expressed in LED bar height units)
         if (servo.ledbarHeight > RELAY_THRESHOLD) {
+            //PORTB = PORTB & ~(_BV(0));
             digitalWrite(RELAY_PIN, HIGH);
         } else {
+            //PORTB = PORTB | _BV(0);
             digitalWrite(RELAY_PIN, LOW);
         }
 
         // Set new angle if enough time passed
         if (millis() - servo.oldTime > MINIMUM_SERVO_UPDATE_TIME) {
             // Calculate new angle for servo
-            if (servo.currentFunctionality == OPEN_MODE) {  
+            if (servo.currentFunctionality == OPEN_MODE) {
                 servo.analogReadings = constrain(servo.analogReadings, 40, servo.emgSaturationValue);
                 servo.newDegree = fasterMap(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105);
             } else {
