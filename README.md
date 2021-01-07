@@ -11,11 +11,12 @@ An API for the Neuroduino Board.
 - Wrote all documentation for class, functions and structs.
 - Github repository maintainer.
 - Ported servo code from inital file to NeuroBoard files.
-- 
+- Wrote micro-optimizations to reduce CPU usage.
 
 **Stanislav Mircic**
 
 - Helped debug, wrote initial code to control LEDs.
+- Helped in early development in NeuroBoard.
 - Updated servo code written by Marcio.
 
 **Marcio Amorim**
