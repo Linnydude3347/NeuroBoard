@@ -298,11 +298,9 @@ void NeuroBoard::handleInputs(void) {
 
         // Turn ON relay if EMG is greater than threshold value (threshold is expressed in LED bar height units)
         if (servo.ledbarHeight > RELAY_THRESHOLD) {
-            //PORTB = PORTB & ~(_BV(0));
-            digitalWrite(RELAY_PIN, HIGH);
+            PORTB = PORTB & ~(_BV(0));
         } else {
-            //PORTB = PORTB | _BV(0);
-            digitalWrite(RELAY_PIN, LOW);
+            PORTB = PORTB | _BV(0);
         }
 
         // Set new angle if enough time passed
