@@ -85,7 +85,7 @@ struct NeuroServo {
     NeuroServo(){};
 
     Servo Gripper;                              // Servo for gripper
-    byte ledPins[6] = {8, 9, 10, 11, 12, 13};    // Pins for LEDs in LED bar
+    byte ledPins[6] = {8, 9, 10, 11, 12, 13};   // Pins for LEDs in LED bar
     
     //EMG saturation values (when EMG reaches this value the gripper will be fully opened/closed)
     int sensitivities[6] = {200, 350, 520, 680, 840, 1024};

@@ -41,12 +41,15 @@ bool validAnalog(const uint8_t& newChannel) {
 
 }
 
+/**
+ * Faster version of map() that doesn't user multiplication or division.
+**/
 long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
 
     long first = value - fromLow;
     long second = toHigh - toLow;
     long combined = 0;
-    while (second != 0) {
+    while (second != 0) {                   // Avoid usage of * operator
         combined = combined + first;
         second = second - 1;
     }
