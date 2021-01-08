@@ -39,10 +39,15 @@ void setup() {
 
 void loop() {
 
+	// Servo testing //
+
 	board.handleInputs();
 
+	// Sample testing //
+
 	int sample = board.getNewSample();
-	//int ev = board.getEnvelopeValue();
-	//Serial.println(sample); // Remove LED code if you want realistic sampling time
+	int ev = board.getEnvelopeValue();
+	Serial.println(sample);
+
 
 }

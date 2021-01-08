@@ -42,7 +42,7 @@ bool validAnalog(const uint8_t& newChannel) {
 }
 
 /**
- * Faster version of map() that doesn't user multiplication or division.
+ * Faster version of map() that doesn't use multiplication or division.
 **/
 long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
 
