@@ -49,13 +49,13 @@ long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh)
     long first = value - fromLow;
     long second = toHigh - toLow;
     long combined = 0;
-    while (second != 0) {                   // Avoid usage of * operator
+    while (second > 0) {                   // Avoid usage of * operator
         combined = combined + first;
         second = second - 1;
     }
     long third = fromHigh - fromLow;
     long count = 0;
-    while (combined >= third) {             // Avoid usage of / operator
+    while (combined >= third) {            // Avoid usage of / operator
         combined = combined - third;
         count = count + 1;
     }
@@ -120,6 +120,8 @@ int whiteLongButtonHeld = 0;
 
 int redLongCalled = 0;
 int whiteLongCalled = 0;
+
+// Sample variable //
 
 int reading;
 
@@ -194,12 +196,16 @@ void NeuroBoard::startMeasurements(void) {
 
 }
 
+bool redPressed() { return (PIND >> DD4 & B00010000 >> DD4); }
+
 void NeuroBoard::handleInputs(void) {
 
     // Check if buttons are enabled //
 
     if (redButtonTrigger.enabled) {
-        if (digitalRead(redButtonTrigger.button)) {
+
+        // Read PIND register for Red Button Press
+        if (redPressed()) {
             RBD = 1;
             if (!RBC) {
                 RBT = millis();
@@ -217,6 +223,8 @@ void NeuroBoard::handleInputs(void) {
     }
 
     if (whiteButtonTrigger.enabled) {
+
+        // Read PIND register for White Button Press
         if (digitalRead(whiteButtonTrigger.button)) {
             WBD = 1;
             if (!WBC) {
@@ -235,7 +243,7 @@ void NeuroBoard::handleInputs(void) {
     }
 
     if (redLongButtonTrigger.enabled) {
-        if (digitalRead(redLongButtonTrigger.button)) {
+        if (redPressed()) {
             if (redLongButtonHeld) {
                 if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount)) {
                     if (!redLongCalled) {
@@ -409,29 +417,6 @@ void NeuroBoard::decreaseSensitivity(void) {
 void NeuroBoard::setServoDefaultPosition(const int& position) {
 
     servo.currentFunctionality = position;
-
-}
-
-void NeuroBoard::displayEMGStrength(void) {
-
-    // Ensure servo is enabled before displaying strength
-    if (servoEnabled) {
-
-        // Turn OFF all LEDs on LED bar
-        for(int i = 0; i < NUM_LED; i++) {
-            digitalWrite(servo.ledPins[i], OFF);
-        }
-
-        // Calculate what LEDs should be turned ON on the LED bar
-        servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
-        servo.ledbarHeight = fasterMap(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
-
-        // Turn ON LEDs on the LED bar
-        for(int i = 0; i < servo.ledbarHeight; i++) {
-            digitalWrite(servo.ledPins[i], ON);
-        }
-    
-    }
 
 }
 

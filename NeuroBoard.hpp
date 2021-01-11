@@ -5,23 +5,9 @@
  * @date January 7th, 2021
 **/
 
-/** Hours Worked
- * Jan 1st: 2
- * Jan 2nd: 1
- * Jan 3rd: 4
- * Jan 4th: 4
- * Jan 5th: 3
- * Jan 6th: 4
- * Jan 7th: 3
- * Total: 21
-**/
-
 /** Stanislav Code Review Notes
- * [X] NOTE: Replace % operators with if statements. It's much faster.
- * [X] NOTE: Move any non-ISR code to new function.
- * [X] NOTE: Remove any "delay" as it significantly slows the code.
- * [ ] NOTE: Read from registers instead of analogRead/digitalRead
- * [X] NOTE: Don't use "map", too slow. Look into viable alternative.
+ * [ ] NOTE: Read from registers instead of analogRead
+ * [ ] NOTE: Read from registers instead of digitalRead
 **/
 
 #pragma once
@@ -46,10 +32,6 @@
 #else // We must be dealing with a Leonardo
     #define MAX_LEDS 8
 #endif
-
-// digitalWrite macro //
-
-#define _BV(b) (1 << (b))
 
 // analogRead macros //
 
@@ -82,7 +64,7 @@
 **/
 struct NeuroServo {
 
-    NeuroServo(){};
+    NeuroServo() {};
 
     Servo Gripper;                              // Servo for gripper
     byte ledPins[6] = {8, 9, 10, 11, 12, 13};   // Pins for LEDs in LED bar
@@ -103,9 +85,11 @@ struct NeuroServo {
     int gripperStateButtonValue = 0;            // Temporary variable that stores state of button 
     int userReleasedButton = 1;                 // Flag that is used to avoid multiple button events when user holds button
     
-    int currentFunctionality = CLOSED_MODE;       // Current default position of claw
+    int currentFunctionality = CLOSED_MODE;     // Current default position of claw
 
 };
+
+// Servo Code End //
 
 /**
  * Struct for better handling of buttons and their callbacks.
@@ -117,7 +101,7 @@ struct Button {
     unsigned int interval;
     bool enabled;
 
-    Button(){};
+    Button() {};
 
     void set(uint8_t button, void (*callback)(void), const int& interval, const bool& enabled) {
 
@@ -141,14 +125,14 @@ struct Trigger {
     bool enabled;
     bool thresholdMet;
 
-    Trigger(){};
+    Trigger() {};
 
-    void set(const int& _threshold, const int& _secondThreshold, void (*_callback)(void), const bool& _enabled, const bool& _thresholdMet) {
-        threshold = _threshold;
-        secondThreshold = _secondThreshold;
-        callback = _callback;
-        enabled = _enabled;
-        thresholdMet = _thresholdMet;
+    void set(const int& threshold, const int& secondThreshold, void (*callback)(void), const bool& enabled, const bool& thresholdMet) {
+        this->threshold = threshold;
+        this->secondThreshold = secondThreshold;
+        this->callback = callback;
+        this->enabled = enabled;
+        this->thresholdMet = thresholdMet;
     }
 
 };
@@ -237,16 +221,6 @@ class NeuroBoard {
          * @return void.
         **/
         void setServoDefaultPosition(const int& position);
-
-        /**
-         * Displays the EMG strength of the board, via LEDs.
-         * 
-         * - Usable in setup: false
-         * - Usable in loop: true
-         * 
-         * @return void.
-        **/
-        void displayEMGStrength(void);
 
         /**
          * Returns the last measured sample from the channel.

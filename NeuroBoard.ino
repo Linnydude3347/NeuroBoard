@@ -16,17 +16,15 @@ void setup() {
 	board.setChannel(A0);
 	board.setDecayRate(10);
   	board.startServo();
-
+	
 	board.enableButtonPress(WHITE_BTN, []() {
-    	Serial.println("white press");
-		board.increaseSensitivity();
+		Serial.println("white press");
 	});
-
+	
 	board.enableButtonPress(RED_BTN, []() {
-    	Serial.println("red press");
-		board.decreaseSensitivity();
+		Serial.println("red press");
 	});
-
+	
 	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
     	Serial.println("white long press");
 	});
@@ -34,6 +32,7 @@ void setup() {
 	board.enableButtonLongPress(RED_BTN, 1000, []() {
     	Serial.println("red long press");
 	});
+	
 
 }
 
@@ -47,7 +46,7 @@ void loop() {
 
 	int sample = board.getNewSample();
 	int ev = board.getEnvelopeValue();
-	Serial.println(sample);
+	//Serial.println(sample);
 
 
 }
