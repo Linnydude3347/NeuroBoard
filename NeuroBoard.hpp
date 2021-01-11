@@ -96,16 +96,13 @@ struct NeuroServo {
 **/
 struct Button {
 
-    uint8_t button;
     void (*callback)(void);
     unsigned int interval;
     bool enabled;
 
     Button() {};
 
-    void set(uint8_t button, void (*callback)(void), const int& interval, const bool& enabled) {
-
-        this->button = button;
+    void set(void (*callback)(void), const int& interval, const bool& enabled) {
         this->callback = callback;
         this->interval = interval;
         this->enabled = enabled;

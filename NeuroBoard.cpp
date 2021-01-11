@@ -225,7 +225,7 @@ void NeuroBoard::handleInputs(void) {
     if (whiteButtonTrigger.enabled) {
 
         // Read PIND register for White Button Press
-        if (digitalRead(whiteButtonTrigger.button)) {
+        if (digitalRead(WHITE_BTN)) {
             WBD = 1;
             if (!WBC) {
                 WBT = millis();
@@ -262,7 +262,7 @@ void NeuroBoard::handleInputs(void) {
     }
 
     if (whiteLongButtonTrigger.enabled) {
-        if (digitalRead(whiteLongButtonTrigger.button)) {
+        if (digitalRead(WHITE_BTN)) {
             if (whiteLongButtonHeld) {
                 if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount)) {
                     if (!whiteLongCalled) {
@@ -458,11 +458,11 @@ void NeuroBoard::setDecayRate(const int& rate) {
 void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) {
 
     if (button == RED_BTN) {
-        redButtonTrigger.set(button, callback, 0, true);
+        redButtonTrigger.set(callback, 0, true);
     }
 
     if (button == WHITE_BTN) {
-        whiteButtonTrigger.set(button, callback, 0, true);
+        whiteButtonTrigger.set(callback, 0, true);
     }
 
 }
@@ -470,11 +470,11 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) {
 
     if (button == RED_BTN) {
-        redLongButtonTrigger.set(button, callback, milliseconds, true);
+        redLongButtonTrigger.set(callback, milliseconds, true);
     }
 
     if (button == WHITE_BTN) {
-        whiteLongButtonTrigger.set(button, callback, milliseconds, true);
+        whiteLongButtonTrigger.set(callback, milliseconds, true);
     }
 
 }
