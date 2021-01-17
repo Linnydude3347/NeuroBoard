@@ -5,9 +5,11 @@
  * @date January 7th, 2021
 **/
 
-/** Stanislav Code Review Notes
- * [ ] NOTE: Read from registers instead of analogRead
- * [ ] NOTE: Read from registers instead of digitalRead
+/** Meeting Notes
+ * [ ] NOTE: Look into experiments used for Neuroduino to port to NeuroBoard.
+ * [ ] NOTE: Think about meeting time with Nestor.
+ * [ ] NOTE: Upload NeuroBoard to Arduino.cc
+ * [ ] NOTE: New experiment that uses all the features of the library, with extensive documentation.
 **/
 
 #pragma once
@@ -35,6 +37,9 @@
 
 // analogRead macros //
 
+#ifndef _BV
+    #define _BV(bit) (1 << (bit))
+#endif
 #ifndef cbi
     #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
