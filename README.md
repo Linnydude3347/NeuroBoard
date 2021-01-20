@@ -12,7 +12,7 @@ An API for the Neuroduino Board.
 - Github repository maintainer.
 - Ported servo code from inital file to NeuroBoard files.
 - Wrote micro-optimizations to reduce CPU usage.
-- Wrote port manipulation for faster button readings.
+- Wrote port manipulation code for faster button readings.
 
 **Stanislav Mircic**
 
