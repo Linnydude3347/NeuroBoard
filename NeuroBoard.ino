@@ -15,7 +15,7 @@ void setup() {
 	board.startMeasurements();
 	board.setChannel(A0);
 	board.setDecayRate(10);
-  	board.startServo();
+  	//board.startServo();
 	
 	board.enableButtonPress(WHITE_BTN, []() {
 		Serial.println("white press");
@@ -32,6 +32,9 @@ void setup() {
 	board.enableButtonLongPress(RED_BTN, 1000, []() {
     	Serial.println("red long press");
 	});
+
+	board.setServoDefaultPosition(CLOSED_MODE);
+	board.displayEMGStrength();
 	
 
 }
@@ -46,7 +49,7 @@ void loop() {
 
 	int sample = board.getNewSample();
 	int ev = board.getEnvelopeValue();
-	//Serial.println(sample);
+	Serial.println(sample);
 
 
 }

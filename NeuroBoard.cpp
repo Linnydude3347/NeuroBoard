@@ -86,6 +86,7 @@ Trigger envelopeTrigger = Trigger();
 
 NeuroServo servo = NeuroServo();
 bool servoEnabled = false;
+bool emgStrengthEnabled = false;
 
 int NeuroBoard::decayRate = 1;
 
@@ -197,7 +198,7 @@ void NeuroBoard::startMeasurements(void) {
 }
 
 bool redPressed() { return PIND & B00010000; }
-bool whitePressed() { return *portInputRegister(5) & B01000000; }
+bool whitePressed() { return PINE & B01000000; }
 
 void NeuroBoard::handleInputs(void) {
 
@@ -205,7 +206,6 @@ void NeuroBoard::handleInputs(void) {
 
     if (redButtonTrigger.enabled) {
 
-        // Read PIND register for Red Button Press
         if (redPressed()) {
             RBD = 1;
             if (!RBC) {
@@ -225,7 +225,6 @@ void NeuroBoard::handleInputs(void) {
 
     if (whiteButtonTrigger.enabled) {
 
-        // Read PIND register for White Button Press
         if (whitePressed()) {
             WBD = 1;
             if (!WBC) {
@@ -333,6 +332,32 @@ void NeuroBoard::handleInputs(void) {
             servo.oldTime = millis();
             servo.oldDegrees = servo.newDegree;
         }
+
+    }
+
+    // EMG Strength Code //
+
+    if (emgStrengthEnabled) {
+
+        // Turn OFF all LEDs on LED bar
+        for(int i = 0; i < MAX_LEDS; i++) {
+            this->writeLED(this->ledPins[i], OFF);
+        }
+
+        // Calculate what LEDs should be turned ON on the LED bar
+        int readings = constrain(reading, 30, servo.emgSaturationValue);
+        servo.ledbarHeight = fasterMap(readings, 30, servo.emgSaturationValue, 0, MAX_LEDS);
+
+        // Display fix for when servo is disabled, but user still wants visual feedback
+        // Last check is for a Leonardo Board. Not tested with a Uno yet.
+        if(!servoEnabled and servo.ledbarHeight == 7 and MAX_LEDS == 8) {
+            servo.ledbarHeight++;
+        }
+
+        // Turn ON LEDs on the LED bar		
+        for(int i = 0; i < servo.ledbarHeight; i++) {
+            this->writeLED(this->ledPins[i], ON);
+        }		
 
     }
 
@@ -495,25 +520,8 @@ void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(voi
 }
 
 void NeuroBoard::displayEMGStrength(void) {		
-
-    // Ensure servo is enabled before displaying strength
-    if (servoEnabled) {
-
-        // Turn OFF all LEDs on LED bar
-        for(int i = 0; i < NUM_LED; i++) {
-            digitalWrite(servo.ledPins[i], OFF);
-        }
-
-        // Calculate what LEDs should be turned ON on the LED bar
-        servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
-        servo.ledbarHeight = fasterMap(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
-
-        // Turn ON LEDs on the LED bar		
-        for(int i = 0; i < servo.ledbarHeight; i++) {
-            digitalWrite(servo.ledPins[i], ON);
-        }		
-
-    }
+    
+    emgStrengthEnabled = true;
 
 }
 

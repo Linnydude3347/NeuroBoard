@@ -5,20 +5,20 @@
  * @date January 7th, 2021
 **/
 
-/** Meeting Notes
+/** Nestor Meeting Notes
  * [ ] NOTE: Look into experiments used for Neuroduino to port to NeuroBoard.
- * [ ] NOTE: Think about meeting time with Nestor.
+ * [X] NOTE: Think about meeting time with Nestor.
  * [ ] NOTE: Upload NeuroBoard to Arduino.cc
  * [ ] NOTE: New experiment that uses all the features of the library, with extensive documentation.
 **/
 
 /** January 18th Meeting
- * [ ] NOTE: Enable method to switch.
- * [ ] NOTE: Look into EnableButton example.
- * [ ] NOTE: Look into controlling the relay (Wenbo graphic) (makes a clicking noise?)
- * [ ] NOTE: Look into implementing EMGStrength in general to display strength of readings.
- * [ ] NOTE: Analogs only from A0 - A5, 0 - 5.
- * [ ] NOTE: Continue testing whitePressed function.
+ * [X] NOTE: Enable method to switch between default open and default close.
+ * [X] NOTE: Look into EnableButton example.
+ * [ ] NOTE: Look into controlling the relay (Wenbo graphic) (makes a clicking noise?).
+ * [X] NOTE: Look into implementing EMGStrength in general to display strength of readings.
+ * [X] NOTE: Analogs only from A0 - A5, 0 - 5.
+ * [X] NOTE: Continue testing whitePressed function.
 **/
 
 #pragma once
@@ -87,9 +87,9 @@ struct NeuroServo {
     
     //EMG saturation values (when EMG reaches this value the gripper will be fully opened/closed)
     int sensitivities[6] = {200, 350, 520, 680, 840, 1024};
-    int lastSensitivitiesIndex = 2;             // Set initial sensitivity index
+    int lastSensitivitiesIndex = 4;             // Set initial sensitivity index
     
-    int emgSaturationValue = 0;                 // Selected sensitivity/EMG saturation value
+    int emgSaturationValue = 1024;                 // Selected sensitivity/EMG saturation value
     int analogReadings;                         // Measured value for EMG
     byte ledbarHeight = 0;                      // Temporary variable for led bar height
     
@@ -363,8 +363,8 @@ class NeuroBoard {
         void setTriggerOnEnvelope(const int& threshold, void (*callback)(void));
 
         /**
-         * Displays a visual representation with the LEDs with how open the servo
-         * is.
+         * Sets a flag to display the current strength of the readings using the
+         * LED bar.
          * 
          * - Usable in setup: false
          * - Usable in loop: true
