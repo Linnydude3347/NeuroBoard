@@ -12,6 +12,15 @@
  * [ ] NOTE: New experiment that uses all the features of the library, with extensive documentation.
 **/
 
+/** January 18th Meeting
+ * [ ] NOTE: Enable method to switch.
+ * [ ] NOTE: Look into EnableButton example.
+ * [ ] NOTE: Look into controlling the relay (Wenbo graphic) (makes a clicking noise?)
+ * [ ] NOTE: Look into implementing EMGStrength in general to display strength of readings.
+ * [ ] NOTE: Analogs only from A0 - A5, 0 - 5.
+ * [ ] NOTE: Continue testing whitePressed function.
+**/
+
 #pragma once
 
 #ifndef NEUROBOARD_HPP
@@ -34,6 +43,8 @@
 #else // We must be dealing with a Leonardo
     #define MAX_LEDS 8
 #endif
+
+typedef unsigned long ulong;
 
 // analogRead macros //
 
@@ -82,11 +93,11 @@ struct NeuroServo {
     int analogReadings;                         // Measured value for EMG
     byte ledbarHeight = 0;                      // Temporary variable for led bar height
     
-    unsigned long oldTime = 0;                  // Timestamp of last servo angle update (ms)
+    ulong oldTime = 0;                  // Timestamp of last servo angle update (ms)
     int oldDegrees = 0;                         // Old value of angle for servo
     int newDegree;                              // New value of angle for servo
     
-    unsigned long debouncerTimer = 0;           // Timer for button debouncer         
+    ulong debouncerTimer = 0;           // Timer for button debouncer         
     int gripperStateButtonValue = 0;            // Temporary variable that stores state of button 
     int userReleasedButton = 1;                 // Flag that is used to avoid multiple button events when user holds button
     
@@ -352,6 +363,17 @@ class NeuroBoard {
         void setTriggerOnEnvelope(const int& threshold, void (*callback)(void));
 
         /**
+         * Displays a visual representation with the LEDs with how open the servo
+         * is.
+         * 
+         * - Usable in setup: false
+         * - Usable in loop: true
+         * 
+         * @return void.
+        **/
+        void displayEMGStrength(void);
+
+        /**
          * Custom delay function so our code can continue to run while the 
          * user wants to delay. This is non-blocking, so code will continue
          * to run.
@@ -360,11 +382,11 @@ class NeuroBoard {
          * - Usable in loop: true
          * 
          * @param milliseconds How many milliseconds the user wants to delay.
-         * @param var Variable to use to hold count.
+         * @param variable Variable to use to hold count.
          * 
          * @return void.
         **/
-        static bool wait(const int& milliseconds, unsigned long& var);
+        //static bool wait(const int& milliseconds, ulong& variable);
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
@@ -409,5 +431,7 @@ class NeuroBoard {
         #endif
 
 };
+
+bool wait(const int& milliseconds, ulong& variable);
 
 #endif // NEUROBOARD_HPP

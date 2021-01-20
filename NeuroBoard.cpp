@@ -66,10 +66,10 @@ long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh)
 
 // Button Wait Variables //
 
-unsigned long redCount = 0;
-unsigned long whiteCount = 0;
-unsigned long redDebounceCount = 0;
-unsigned long whiteDebounceCount = 0;
+ulong redCount = 0;
+ulong whiteCount = 0;
+ulong redDebounceCount = 0;
+ulong whiteDebounceCount = 0;
 
 // Button Variables //
 
@@ -108,11 +108,11 @@ uint8_t NeuroBoard::channel = A0;
 // Variables for button holding //
 
 int RBD = 0;                // Red Button Down
-unsigned long RBT = 0;      // Red Button Time
+ulong RBT = 0;              // Red Button Time
 int RBC = 0;                // Red Button Collected
 
 int WBD = 0;                // White Button Down
-unsigned long WBT = 0;      // White Button Time
+ulong WBT = 0;              // White Button Time
 int WBC = 0;                // White Button Collected
 
 int redLongButtonHeld = 0;
@@ -196,7 +196,8 @@ void NeuroBoard::startMeasurements(void) {
 
 }
 
-bool redPressed() { return (PIND >> DD4 & B00010000 >> DD4); }
+bool redPressed() { return PIND & B00010000; }
+bool whitePressed() { return *portInputRegister(5) & B01000000; }
 
 void NeuroBoard::handleInputs(void) {
 
@@ -225,7 +226,7 @@ void NeuroBoard::handleInputs(void) {
     if (whiteButtonTrigger.enabled) {
 
         // Read PIND register for White Button Press
-        if (digitalRead(WHITE_BTN)) {
+        if (whitePressed()) {
             WBD = 1;
             if (!WBC) {
                 WBT = millis();
@@ -245,7 +246,8 @@ void NeuroBoard::handleInputs(void) {
     if (redLongButtonTrigger.enabled) {
         if (redPressed()) {
             if (redLongButtonHeld) {
-                if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount)) {
+                if (wait(redLongButtonTrigger.interval, redCount)) {
+                //if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount)) {
                     if (!redLongCalled) {
                         redLongButtonTrigger.callback();
                         redLongButtonHeld = 0;
@@ -262,9 +264,10 @@ void NeuroBoard::handleInputs(void) {
     }
 
     if (whiteLongButtonTrigger.enabled) {
-        if (digitalRead(WHITE_BTN)) {
+        if (whitePressed()) {
             if (whiteLongButtonHeld) {
-                if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount)) {
+                if (wait(whiteLongButtonTrigger.interval, whiteCount)) {
+                //if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount)) {
                     if (!whiteLongCalled) {
                         whiteLongButtonTrigger.callback();
                         whiteLongButtonHeld = 0;
@@ -491,11 +494,35 @@ void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(voi
 
 }
 
-bool NeuroBoard::wait(const int& milliseconds, unsigned long& var) {
-    unsigned long ms = millis();
-    bool done = (ms - var) >= milliseconds;
+void NeuroBoard::displayEMGStrength(void) {		
+
+    // Ensure servo is enabled before displaying strength
+    if (servoEnabled) {
+
+        // Turn OFF all LEDs on LED bar
+        for(int i = 0; i < NUM_LED; i++) {
+            digitalWrite(servo.ledPins[i], OFF);
+        }
+
+        // Calculate what LEDs should be turned ON on the LED bar
+        servo.analogReadings = constrain(servo.analogReadings, 30, servo.emgSaturationValue);
+        servo.ledbarHeight = fasterMap(servo.analogReadings, 30, servo.emgSaturationValue, 0, NUM_LED);
+
+        // Turn ON LEDs on the LED bar		
+        for(int i = 0; i < servo.ledbarHeight; i++) {
+            digitalWrite(servo.ledPins[i], ON);
+        }		
+
+    }
+
+}
+
+//bool NeuroBoard::wait(const int& milliseconds, unsigned long& variable) {
+bool wait(const int& milliseconds, ulong& variable) {
+    ulong ms = millis();
+    bool done = (ms - variable) >= milliseconds;
     if (done)
-        var = ms;
+        variable = ms;
     return done;
 }
 

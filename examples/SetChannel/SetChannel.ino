@@ -27,19 +27,23 @@ void setup() {
 
 	// To those unfamiliar with the Arduino and their analog naming
 	// system, you can set the channel like so:
-	
+
 	board.setChannel(0); // Listens on A0, which is the 1st analog.
-	board.setChannel(11); // Listens on A11, which is the 12th analog.
-	
+	board.setChannel(5); // Listens on A5, which is the 6th analog.
+
 	// Any number N, where 0 <= N <= 11, will work.
 
 	// To those who are familiar with Arduino's analog names, you can pass them
 	// directly in to the function.
 	
 	board.setChannel(A0); // Listens on A0, which is the 1st analog.
-	board.setChannel(A11); // Listens on A11, which is the 12th analog.
+	board.setChannel(A5); // Listens on A5, which is the 6th analog.
 	
 	// Any AN, where 0 <= N <= 11, will work.
+
+	// For most experiments however, you will want to use A0
+
+	board.setChannel(A0);
 
 }
 
