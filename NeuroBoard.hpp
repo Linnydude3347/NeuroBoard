@@ -52,10 +52,10 @@ typedef unsigned long ulong;
     #define _BV(bit) (1 << (bit))
 #endif
 #ifndef cbi
-    #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+    #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit)) // Clear bit.
 #endif
 #ifndef sbi
-    #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+    #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit)) // Set bit.
 #endif
 
 // Servo Code Start //
@@ -83,7 +83,6 @@ struct NeuroServo {
     NeuroServo() {};
 
     Servo Gripper;                              // Servo for gripper
-    byte ledPins[6] = {8, 9, 10, 11, 12, 13};   // Pins for LEDs in LED bar
     
     //EMG saturation values (when EMG reaches this value the gripper will be fully opened/closed)
     int sensitivities[6] = {200, 350, 520, 680, 840, 1024};
@@ -418,7 +417,7 @@ class NeuroBoard {
         #ifdef ARDUINO_AVR_UNO
             int channels[8] = {A0, A1, A2, A3, A4, A5, A6, A7};
         #else // We must be dealing with a Leonardo
-            int channels[12] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11};
+            int channels[6] = {A0, A1, A2, A3, A4, A5};
         #endif
 
         /**

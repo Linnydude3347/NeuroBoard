@@ -246,7 +246,6 @@ void NeuroBoard::handleInputs(void) {
         if (redPressed()) {
             if (redLongButtonHeld) {
                 if (wait(redLongButtonTrigger.interval, redCount)) {
-                //if (NeuroBoard::wait(redLongButtonTrigger.interval, redCount)) {
                     if (!redLongCalled) {
                         redLongButtonTrigger.callback();
                         redLongButtonHeld = 0;
@@ -266,7 +265,6 @@ void NeuroBoard::handleInputs(void) {
         if (whitePressed()) {
             if (whiteLongButtonHeld) {
                 if (wait(whiteLongButtonTrigger.interval, whiteCount)) {
-                //if (NeuroBoard::wait(whiteLongButtonTrigger.interval, whiteCount)) {
                     if (!whiteLongCalled) {
                         whiteLongButtonTrigger.callback();
                         whiteLongButtonHeld = 0;
@@ -377,7 +375,7 @@ void NeuroBoard::startServo(void) {
 
         // Initialize all LED pins to output
         for(int i = 0; i < NUM_LED; i++){
-            pinMode(ledPins[i], OUTPUT);
+            pinMode(this->ledPins[i], OUTPUT);
         }
 
         // Get current sensitivity
@@ -525,7 +523,6 @@ void NeuroBoard::displayEMGStrength(void) {
 
 }
 
-//bool NeuroBoard::wait(const int& milliseconds, unsigned long& variable) {
 bool wait(const int& milliseconds, ulong& variable) {
     ulong ms = millis();
     bool done = (ms - variable) >= milliseconds;
@@ -579,7 +576,7 @@ void NeuroBoard::writeLEDs(byte outByte) {
 
 void NeuroBoard::writeLED(const int& led, const bool& state) {
 
-    const int LED = ledPins[led];
+    const int LED = this->ledPins[led];
 
     byte bitMask = BITMASK_ONE;
     if (!(0 < LED < 7)) {
