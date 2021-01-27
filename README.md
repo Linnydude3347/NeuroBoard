@@ -14,12 +14,12 @@ An API for the Neuroduino Board.
 - Wrote micro-optimizations to reduce CPU usage.
 - Wrote port manipulation code for faster button readings.
 
-**Stanislav Mircic**
+**Stanislav Mircic**.
 
 - Helped debug, wrote initial code to control LEDs.
 - Helped in early development in NeuroBoard.
 - Updated servo code written by Marcio.
 
-**Marcio Amorim**
+**Marcio Amorim**.
 
 - Wrote initial servo code.
