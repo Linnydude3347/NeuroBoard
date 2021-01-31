@@ -164,6 +164,10 @@ void NeuroBoard::startMeasurements(void) {
     pinMode(15, OUTPUT); // SCK
     pinMode(16, OUTPUT); // MOSI
 
+    // Set relay pin //
+
+    pinMode(RELAY_PIN, OUTPUT); // Relay
+
     // Initialize timer //
 
     // Disable interrupts //
@@ -288,10 +292,12 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
+                digitalWrite(RELAY_PIN, ON);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
                 envelopeTrigger.thresholdMet = false;
+                digitalWrite(RELAY_PIN, OFF);
             }
         }
 
@@ -302,13 +308,6 @@ void NeuroBoard::handleInputs(void) {
     if (servoEnabled) {
 
         servo.analogReadings = reading;
-
-        // Turn ON relay if EMG is greater than threshold value (threshold is expressed in LED bar height units)
-        if (servo.ledbarHeight > RELAY_THRESHOLD) {
-            PORTB = PORTB & ~(_BV(0));
-        } else {
-            PORTB = PORTB | _BV(0);
-        }
 
         // Set new angle if enough time passed
         if (millis() - servo.oldTime > MINIMUM_SERVO_UPDATE_TIME) {

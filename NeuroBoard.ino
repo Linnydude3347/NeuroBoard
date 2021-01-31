@@ -33,6 +33,10 @@ void setup() {
     	Serial.println("red long press");
 	});
 
+	board.setTriggerOnEnvelope(800, [](){
+		Serial.println("Relay Activated!");
+	});
+
 	board.setServoDefaultPosition(CLOSED_MODE);
 	board.displayEMGStrength();
 	
@@ -41,15 +45,12 @@ void setup() {
 
 void loop() {
 
-	// Servo testing //
-
 	board.handleInputs();
 
 	// Sample testing //
 
 	int sample = board.getNewSample();
 	int ev = board.getEnvelopeValue();
-	Serial.println(sample);
 
 
 }

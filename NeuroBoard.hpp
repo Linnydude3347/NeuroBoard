@@ -21,6 +21,11 @@
  * [X] NOTE: Continue testing whitePressed function.
 **/
 
+/** January 27th Meeting
+ * [ ] NOTE: Visual feedback for sensitivity changes.
+ * [ ] NOTE: Once the threshold for setTriggerOnEnvelope is reached, set digital pin for relay HIGH. Once it drops, set to LOW.
+**/
+
 #pragma once
 
 #ifndef NEUROBOARD_HPP
@@ -66,14 +71,14 @@ typedef unsigned long ulong;
   * Ported/Updated by Ben Antonellis
 **/
 
-#define RELAY_PIN 3                         // Pin for relay that controls TENS device
-#define RELAY_THRESHOLD 4                   // Defines sensitivity of relay
-#define SERVO_PIN 2                         // Pin for servo motor
-#define NUM_LED 6                           // Number of LEDs in LED bar
-#define GRIPPER_MINIMUM_STEP 5              // 5 degree dead zone (used to avoid aiming oscilation)
-#define OPEN_MODE 1                         // Default gripper state is opened
-#define CLOSED_MODE 2                       // Default gripper state is closed
-#define MINIMUM_SERVO_UPDATE_TIME 100       // Update servo position every 100ms
+#define RELAY_PIN 3                             // Pin for relay that controls TENS device
+#define RELAY_THRESHOLD 4                       // Defines sensitivity of relay
+#define SERVO_PIN 2                             // Pin for servo motor
+#define NUM_LED 6                               // Number of LEDs in LED bar
+#define GRIPPER_MINIMUM_STEP 5                  // 5 degree dead zone (used to avoid aiming oscilation)
+#define OPEN_MODE 1                             // Default gripper state is opened
+#define CLOSED_MODE 2                           // Default gripper state is closed
+#define MINIMUM_SERVO_UPDATE_TIME 100           // Update servo position every 100ms
 
 /**
  * Struct for maintaining the servo during its usage.
@@ -88,15 +93,15 @@ struct NeuroServo {
     int sensitivities[6] = {200, 350, 520, 680, 840, 1024};
     int lastSensitivitiesIndex = 4;             // Set initial sensitivity index
     
-    int emgSaturationValue = 1024;                 // Selected sensitivity/EMG saturation value
+    int emgSaturationValue = 1024;              // Selected sensitivity/EMG saturation value
     int analogReadings;                         // Measured value for EMG
     byte ledbarHeight = 0;                      // Temporary variable for led bar height
     
-    ulong oldTime = 0;                  // Timestamp of last servo angle update (ms)
+    ulong oldTime = 0;                          // Timestamp of last servo angle update (ms)
     int oldDegrees = 0;                         // Old value of angle for servo
     int newDegree;                              // New value of angle for servo
     
-    ulong debouncerTimer = 0;           // Timer for button debouncer         
+    ulong debouncerTimer = 0;                   // Timer for button debouncer         
     int gripperStateButtonValue = 0;            // Temporary variable that stores state of button 
     int userReleasedButton = 1;                 // Flag that is used to avoid multiple button events when user holds button
     
@@ -431,6 +436,9 @@ class NeuroBoard {
 
 };
 
+/**
+ * 
+**/
 bool wait(const int& milliseconds, ulong& variable);
 
 #endif // NEUROBOARD_HPP
