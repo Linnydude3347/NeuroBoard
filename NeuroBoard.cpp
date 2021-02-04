@@ -152,6 +152,13 @@ ISR (TIMER3_COMPA_vect) {
 
 // PUBLIC METHODS //
 
+void NeuroBoard::getSamples(int* arr[], const int& size) {
+	*arr = new int[size];
+	for (int i = 0; i < size; i++) {
+		(*arr)[i] = this->getNewSample();
+	}
+}
+
 void NeuroBoard::startMeasurements(void) {
 
     // Start Serial //
@@ -209,7 +216,6 @@ void NeuroBoard::handleInputs(void) {
     // Check if buttons are enabled //
 
     if (redButtonTrigger.enabled) {
-
         if (redPressed()) {
             RBD = 1;
             if (!RBC) {
@@ -228,7 +234,6 @@ void NeuroBoard::handleInputs(void) {
     }
 
     if (whiteButtonTrigger.enabled) {
-
         if (whitePressed()) {
             WBD = 1;
             if (!WBC) {

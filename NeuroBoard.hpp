@@ -6,24 +6,15 @@
 **/
 
 /** Nestor Meeting Notes
- * [ ] NOTE: Look into experiments used for Neuroduino to port to NeuroBoard.
+ * [X] NOTE: Look into experiments used for Neuroduino to port to NeuroBoard.
  * [X] NOTE: Think about meeting time with Nestor.
  * [ ] NOTE: Upload NeuroBoard to Arduino.cc
  * [ ] NOTE: New experiment that uses all the features of the library, with extensive documentation.
 **/
 
-/** January 18th Meeting
- * [X] NOTE: Enable method to switch between default open and default close.
- * [X] NOTE: Look into EnableButton example.
- * [ ] NOTE: Look into controlling the relay (Wenbo graphic) (makes a clicking noise?).
- * [X] NOTE: Look into implementing EMGStrength in general to display strength of readings.
- * [X] NOTE: Analogs only from A0 - A5, 0 - 5.
- * [X] NOTE: Continue testing whitePressed function.
-**/
-
 /** January 27th Meeting
  * [ ] NOTE: Visual feedback for sensitivity changes.
- * [ ] NOTE: Once the threshold for setTriggerOnEnvelope is reached, set digital pin for relay HIGH. Once it drops, set to LOW.
+ * [X] NOTE: Once the threshold for setTriggerOnEnvelope is reached, set digital pin for relay HIGH. Once it drops, set to LOW.
 **/
 
 #pragma once
@@ -33,15 +24,16 @@
 
 #include "Arduino.h"
 #include <Servo.h>
+#include <Stepper.h>
 
 // Defines //
 
-#define RED_BTN DD4
-#define WHITE_BTN DD7
-#define ON HIGH
-#define OFF LOW
-#define BUFFER_SIZE 20
-#define SERIAL_CAP 230400
+#define RED_BTN         DD4
+#define WHITE_BTN       DD7
+#define ON              HIGH
+#define OFF             LOW
+#define BUFFER_SIZE     20
+#define SERIAL_CAP      230400
 
 #ifdef ARDUINO_AVR_UNO
     #define MAX_LEDS 6
@@ -248,6 +240,31 @@ class NeuroBoard {
          * @return int - Last measured sample.
         **/
         int getNewSample(void);
+
+		/**
+		 * Returns "size" samples to the passed array.
+		 * 
+		 * - Usable in setup: false
+		 * - Usable in loop: true
+		 * 
+		 * Example Code:
+		 * 
+		 * // setup code omitted
+		 * 
+		 * int* samples = new int[10];
+		 * 
+		 * void loop() {
+		 * 
+		 * 	   board.getSamples(&samples, 10);
+		 * 
+		 * }
+		 * 
+		 * @param arr - Array to modify.
+		 * @param size - Number of samples to add (should be same size as arr).
+		 * 
+		 * @return void.
+		**/
+		void getSamples(int* arr[], const int& size);
 
         /**
          * Returns the envelope value of the channel.

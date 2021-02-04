@@ -26,6 +26,9 @@ void setup() {
 	// function passed is called. Then, once the samples reached 9/10th of the passed
 	// threshold (630 in this case), the function will be allowed to call again.
 
+	// Once the threshold is met, the relay is turned on. It is only turned off when
+	// the incoming samples are below the second threshold.
+
 	board.setTriggerOnEnvelope(700, []() {
 		Serial.println("Threshold Reached!");
 	});

@@ -43,14 +43,21 @@ void setup() {
 
 }
 
+int* samples = new int[10];
+
 void loop() {
 
 	board.handleInputs();
 
 	// Sample testing //
 
-	int sample = board.getNewSample();
-	int ev = board.getEnvelopeValue();
+	//int sample = board.getNewSample();
+	//int ev = board.getEnvelopeValue();
 
+	board.getSamples(&samples, 10);
+	for (int i = 0; i < 10; i++) {
+		Serial.println(samples[i]);
+	}
+	delay(2000);
 
 }

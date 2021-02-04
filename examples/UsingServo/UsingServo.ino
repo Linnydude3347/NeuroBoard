@@ -1,5 +1,5 @@
 /**
- * Simple program that prints when a threshold is reached.
+ * Simple program that controls the servo with analog readings.
  * 
  * MAC:
  * 	View Console: Shift + Command + M
