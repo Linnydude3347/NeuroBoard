@@ -39,7 +39,6 @@ void setup() {
 
 	board.setServoDefaultPosition(CLOSED_MODE);
 	board.displayEMGStrength();
-	
 
 }
 
@@ -51,8 +50,8 @@ void loop() {
 
 	// Sample testing //
 
-	//int sample = board.getNewSample();
-	//int ev = board.getEnvelopeValue();
+	int sample = board.getNewSample();
+	int ev = board.getEnvelopeValue();
 
 	board.getSamples(&samples, 10);
 	for (int i = 0; i < 10; i++) {

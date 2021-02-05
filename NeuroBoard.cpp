@@ -23,25 +23,6 @@
 /// PRIVATE FUNCTIONS ///
 
 /**
- * Determines if the passed analog is valid to use on the
- * Neuroduino Board. This is private because only our
- * function needs to use it.
- * 
- * @param newChannel The new analog channel to listen on.
- * 
- * @return bool.
-**/
-bool validAnalog(const uint8_t& newChannel) {
-
-    return !(
-        newChannel < 0 or                       // Any value less than 0 cannot be an analog.
-        (newChannel > 11 and newChannel < 18)   // Allows integer input while also allowing A(N) input.
-        or newChannel > 29                      // Anything bigger than 29 (A11) cannot be an analog.
-    );
-
-}
-
-/**
  * Faster version of map() that doesn't use multiplication or division.
 **/
 long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
@@ -136,28 +117,21 @@ ISR (TIMER3_COMPA_vect) {
 
     // Calculate envelope value here //
 
-    envelopeValue = (reading >= envelopeValue) ? reading : envelopeValue - NeuroBoard::decayRate;
+    envelopeValue = (reading >= envelopeValue) ? (reading) : (envelopeValue - NeuroBoard::decayRate);
 
     // Place new reading in buffer //
 
     buffer[head] = reading;
 
     if (full) {
-        tail = (tail == BUFFER_SIZE) ? 0 : tail + 1;
+        tail = (tail == BUFFER_SIZE) ? (0) : (tail + 1);
     }
-    head = (head == BUFFER_SIZE) ? 0 : head + 1;
+    head = (head == BUFFER_SIZE) ? (0) : (head + 1);
     full = head == tail;
 
 }
 
 // PUBLIC METHODS //
-
-void NeuroBoard::getSamples(int* arr[], const int& size) {
-	*arr = new int[size];
-	for (int i = 0; i < size; i++) {
-		(*arr)[i] = this->getNewSample();
-	}
-}
 
 void NeuroBoard::startMeasurements(void) {
 
@@ -342,7 +316,7 @@ void NeuroBoard::handleInputs(void) {
     if (emgStrengthEnabled) {
 
         // Turn OFF all LEDs on LED bar
-        for(int i = 0; i < MAX_LEDS; i++) {
+        for (int i = 0; i < MAX_LEDS; i++) {
             this->writeLED(this->ledPins[i], OFF);
         }
 
@@ -352,12 +326,12 @@ void NeuroBoard::handleInputs(void) {
 
         // Display fix for when servo is disabled, but user still wants visual feedback
         // Last check is for a Leonardo Board. Not tested with a Uno yet.
-        if(!servoEnabled and servo.ledbarHeight == 7 and MAX_LEDS == 8) {
+        if (!servoEnabled and servo.ledbarHeight == 7 and MAX_LEDS == 8) {
             servo.ledbarHeight++;
         }
 
         // Turn ON LEDs on the LED bar		
-        for(int i = 0; i < servo.ledbarHeight; i++) {
+        for (int i = 0; i < servo.ledbarHeight; i++) {
             this->writeLED(this->ledPins[i], ON);
         }		
 
@@ -373,12 +347,11 @@ void NeuroBoard::startServo(void) {
         // Attach servo to board
         servo.Gripper.attach(SERVO_PIN);
 
-        // Init button pins to input                         
-        pinMode(RELAY_PIN, OUTPUT); 
+        // Init button pins to input
         digitalWrite(RELAY_PIN, OFF);
 
         // Initialize all LED pins to output
-        for(int i = 0; i < NUM_LED; i++){
+        for (int i = 0; i < MAX_LEDS; i++) {
             pinMode(this->ledPins[i], OUTPUT);
         }
 
@@ -454,10 +427,17 @@ int NeuroBoard::getNewSample(void) {
 
     int value = buffer[tail]; // Can't just return this because tail is changed below //
     full = false;
-    tail = (tail == BUFFER_SIZE) ? 0 : tail + 1;
+    tail = (tail == BUFFER_SIZE) ? (0) : (tail + 1);
 
     return value;
 
+}
+
+void NeuroBoard::getSamples(int* arr[], const int& size) {
+	*arr = new int[size];
+	for (int i = 0; i < size; i++) {
+		(*arr)[i] = this->getNewSample();
+	}
 }
 
 int NeuroBoard::getEnvelopeValue(void) {
@@ -468,11 +448,7 @@ int NeuroBoard::getEnvelopeValue(void) {
 
 void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
-    if (!validAnalog(newChannel)) {
-        NeuroBoard::channel = this->channels[newChannel];
-    } else {
-        NeuroBoard::channel = newChannel;
-    }
+	NeuroBoard::channel = newChannel;
 
 }
 
