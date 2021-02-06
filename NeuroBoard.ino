@@ -15,7 +15,7 @@ void setup() {
 	board.startMeasurements();
 	board.setChannel(A0);
 	board.setDecayRate(10);
-  	//board.startServo();
+  	board.startServo();
 	
 	board.enableButtonPress(WHITE_BTN, []() {
 		Serial.println("white press");
@@ -42,8 +42,6 @@ void setup() {
 
 }
 
-int* samples = new int[10];
-
 void loop() {
 
 	board.handleInputs();
@@ -53,10 +51,14 @@ void loop() {
 	int sample = board.getNewSample();
 	int ev = board.getEnvelopeValue();
 
-	board.getSamples(&samples, 10);
-	for (int i = 0; i < 10; i++) {
-		Serial.println(samples[i]);
-	}
-	delay(2000);
+	Serial.println(sample);
+
+	//int* samples = new int[10];
+	//board.getSamples(&samples, 10);
+	//for (int i = 0; i < 10; i++) {
+	//	Serial.println(samples[i]);
+	//}
+	//delete[] samples; // Free memory for reallocation. REQUIRED.
+	//delay(2000);
 
 }

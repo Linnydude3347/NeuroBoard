@@ -272,11 +272,12 @@ void NeuroBoard::handleInputs(void) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
                 digitalWrite(RELAY_PIN, ON);
+				delay(1);
+				digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
                 envelopeTrigger.thresholdMet = false;
-                digitalWrite(RELAY_PIN, OFF);
             }
         }
 
@@ -389,7 +390,7 @@ void NeuroBoard::increaseSensitivity(void) {
     if (servoEnabled) {
 
         // Increment sensitivity index
-        if (servo.lastSensitivitiesIndex != NUM_LED) {
+        if (servo.emgSaturationValue < 1024) { // 1024 indicates max emg saturation value
             servo.lastSensitivitiesIndex++;
         }
 
