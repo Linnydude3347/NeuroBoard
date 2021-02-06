@@ -10,13 +10,13 @@
 /* ******************************************************* */
 /** @author Stanislav Mircic **/
 
-#define SHIFT_LATCH_PIN B00000100                        // latch pin for shift register RCK - PB2
-#define I_SHIFT_LATCH_PIN B11111011
-#define SHIFT_CLOCK_PIN B00000010                        // clock pin for shift register PB1
-#define I_SHIFT_CLOCK_PIN B11111101
-#define SHIFT_DATA_PIN  B00001000                        // serial data pin for shift register SER - PB3
-#define I_SHIFT_DATA_PIN  B11110111
-#define BITMASK_ONE B00000001
+#define SHIFT_LATCH_PIN    B00000100                        // latch pin for shift register RCK - PB2
+#define I_SHIFT_LATCH_PIN  B11111011
+#define SHIFT_CLOCK_PIN    B00000010                        // clock pin for shift register PB1
+#define I_SHIFT_CLOCK_PIN  B11111101
+#define SHIFT_DATA_PIN     B00001000                        // serial data pin for shift register SER - PB3
+#define I_SHIFT_DATA_PIN   B11110111
+#define BITMASK_ONE        B00000001
 
 /* ******************************************************* */
 
