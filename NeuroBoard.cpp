@@ -343,77 +343,69 @@ void NeuroBoard::handleInputs(void) {
 void NeuroBoard::startServo(void) {
 
     // Ensure servo isn't already enabled before starting
-    if (!servoEnabled) {
+	if (servoEnabled) return;
 
-        // Attach servo to board
-        servo.Gripper.attach(SERVO_PIN);
+    // Attach servo to board
+    servo.Gripper.attach(SERVO_PIN);
 
-        PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
+    PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
 
-        // Initialize all LED pins to output
-        for (int i = 0; i < MAX_LEDS; i++) {
-            pinMode(this->ledPins[i], OUTPUT);
-        }
-
-        // Get current sensitivity
-        servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
-
-        // Set servo enabled boolean
-        servoEnabled = true;
-
+    // Initialize all LED pins to output
+    for (int i = 0; i < MAX_LEDS; i++) {
+        pinMode(this->ledPins[i], OUTPUT);
     }
+
+    // Get current sensitivity
+    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
+
+    // Set servo enabled boolean
+    servoEnabled = true;
 
 }
 
 void NeuroBoard::endServo(void) {
 
     // Ensure servo is enabled before disabling
-    if (servoEnabled) {
+	if (!servoEnabled) return;
 
-        // Set servo boolean value to false
-        servoEnabled = false;
+    // Set servo boolean value to false
+    servoEnabled = false;
 
-        // Detach servo
-        servo.Gripper.detach();
+    // Detach servo
+    servo.Gripper.detach();
 
-        // Reset servo object to default values
-        servo = NeuroServo();
-
-    }
+    // Reset servo object to default values
+    servo = NeuroServo();
 
 }
 
 void NeuroBoard::increaseSensitivity(void) {
 
     // Ensure servo is enabled before modifying sensitivity value
-    if (servoEnabled) {
+	if (!servoEnabled) return;
 
-        // Increment sensitivity index
-        if (servo.emgSaturationValue < 1024) { // 1024 indicates max emg saturation value
-            servo.lastSensitivitiesIndex++;
-        }
-
-        // Get current sensitivity value
-        servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
-
+    // Increment sensitivity index
+    if (servo.emgSaturationValue < 1024) { // 1024 indicates max emg saturation value
+        servo.lastSensitivitiesIndex++;
     }
+
+    // Get current sensitivity value
+    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
 
 }
 
 void NeuroBoard::decreaseSensitivity(void) {
 
     // Ensure servo is enabled before modifying sensitivity value
-    if (servoEnabled) {
+	if (!servoEnabled) return;
 
-        // Decrement sensitivity index
-        if (servo.lastSensitivitiesIndex != 0) {
-            servo.lastSensitivitiesIndex--;
-        }
-
-        // Get current sensitivity value
-        servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
-
+    // Decrement sensitivity index
+    if (servo.lastSensitivitiesIndex != 0) {
+        servo.lastSensitivitiesIndex--;
     }
+
+    // Get current sensitivity value
+    servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
 
 }
 
@@ -559,9 +551,7 @@ void NeuroBoard::writeLED(const int& led, const bool& state) {
     const int LED = this->ledPins[led];
 
     byte bitMask = BITMASK_ONE;
-    if (!(0 < LED < 7)) {
-        return;
-    }
+    if (!(0 < LED < 7)) return;
     if (state) {
         _shiftRegState |= bitMask << (7 - LED);
     } else {
