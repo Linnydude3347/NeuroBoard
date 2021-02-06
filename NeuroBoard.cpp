@@ -343,7 +343,7 @@ void NeuroBoard::handleInputs(void) {
 void NeuroBoard::startServo(void) {
 
     // Ensure servo isn't already enabled before starting
-	if (servoEnabled) return;
+    if (servoEnabled) return;
 
     // Attach servo to board
     servo.Gripper.attach(SERVO_PIN);
@@ -366,7 +366,7 @@ void NeuroBoard::startServo(void) {
 void NeuroBoard::endServo(void) {
 
     // Ensure servo is enabled before disabling
-	if (!servoEnabled) return;
+    if (!servoEnabled) return;
 
     // Set servo boolean value to false
     servoEnabled = false;
@@ -382,7 +382,7 @@ void NeuroBoard::endServo(void) {
 void NeuroBoard::increaseSensitivity(void) {
 
     // Ensure servo is enabled before modifying sensitivity value
-	if (!servoEnabled) return;
+    if (!servoEnabled) return;
 
     // Increment sensitivity index
     if (servo.emgSaturationValue < 1024) { // 1024 indicates max emg saturation value
@@ -397,7 +397,7 @@ void NeuroBoard::increaseSensitivity(void) {
 void NeuroBoard::decreaseSensitivity(void) {
 
     // Ensure servo is enabled before modifying sensitivity value
-	if (!servoEnabled) return;
+    if (!servoEnabled) return;
 
     // Decrement sensitivity index
     if (servo.lastSensitivitiesIndex != 0) {
