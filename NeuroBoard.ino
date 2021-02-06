@@ -53,7 +53,7 @@ void loop() {
 
 	Serial.println(sample);
 
-	//int* samples = new int[10];
+	//int* samples;
 	//board.getSamples(&samples, 10);
 	//for (int i = 0; i < 10; i++) {
 	//	Serial.println(samples[i]);

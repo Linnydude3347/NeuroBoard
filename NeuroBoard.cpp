@@ -272,7 +272,7 @@ void NeuroBoard::handleInputs(void) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
                 PORTD = PORTD | B00000001; // digitalWrite(RELAY_PIN, ON);
-                delay(1);
+                delay(1);                  // Wait 1 ms to register relay pin as ON.
                 PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
             }
         } else {

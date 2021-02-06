@@ -249,13 +249,17 @@ class NeuroBoard {
 		 * 
 		 * Example Code:
 		 * 
-		 * // setup code omitted
+		 * void setup() {
 		 * 
-		 * int* samples = new int[10];
+		 *     board.startMeasurements();
+		 * 
+		 * }
 		 * 
 		 * void loop() {
 		 * 
-		 * 	   board.getSamples(&samples, 10);
+		 *     int* samples;
+		 *     board.getSamples(&samples, 10);
+		 *     delete[] samples; // Frees memory for reallocation. REQUIRED.
 		 * 
 		 * }
 		 * 
