@@ -113,7 +113,7 @@ ISR (TIMER3_COMPA_vect) {
 
     // Get reading from analog //
 
-    reading = analogRead(NeuroBoard::channel);
+	reading = analogRead(NeuroBoard::channel);
 
     // Calculate envelope value here //
 
@@ -147,7 +147,7 @@ void NeuroBoard::startMeasurements(void) {
 
     // Set relay pin //
 
-    pinMode(RELAY_PIN, OUTPUT); // Relay
+    pinMode(RELAY_PIN, OUTPUT);
 
     // Initialize timer //
 
@@ -271,9 +271,9 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
-                digitalWrite(RELAY_PIN, ON);
+				PORTD = PORTD | B00000001;
 				delay(1);
-				digitalWrite(RELAY_PIN, OFF);
+				PORTD = PORTD & B11111110;
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
@@ -348,8 +348,8 @@ void NeuroBoard::startServo(void) {
         // Attach servo to board
         servo.Gripper.attach(SERVO_PIN);
 
-        // Init button pins to input
-        digitalWrite(RELAY_PIN, OFF);
+        // Init button pins to input (turns off relay pin)
+		PORTD = PORTD & B11111110;
 
         // Initialize all LED pins to output
         for (int i = 0; i < MAX_LEDS; i++) {
