@@ -1,6 +1,6 @@
 /**
  * NeuroBoard Implementation File.
- * 
+ *
  * @author Ben Antonellis
  * @date January 7th, 2021
 **/
@@ -11,11 +11,11 @@
 /** @author Stanislav Mircic **/
 
 #define SHIFT_LATCH_PIN B00000100                        // latch pin for shift register RCK - PB2
-#define I_SHIFT_LATCH_PIN B11111011 
+#define I_SHIFT_LATCH_PIN B11111011
 #define SHIFT_CLOCK_PIN B00000010                        // clock pin for shift register PB1
-#define I_SHIFT_CLOCK_PIN B11111101 
+#define I_SHIFT_CLOCK_PIN B11111101
 #define SHIFT_DATA_PIN  B00001000                        // serial data pin for shift register SER - PB3
-#define I_SHIFT_DATA_PIN  B11110111 
+#define I_SHIFT_DATA_PIN  B11110111
 #define BITMASK_ONE B00000001
 
 /* ******************************************************* */
@@ -271,9 +271,9 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
-				PORTD = PORTD | B00000001; // digitalWrite(RELAY_PIN, ON);
-				delay(1);
-				PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
+                PORTD = PORTD | B00000001; // digitalWrite(RELAY_PIN, ON);
+                delay(1);
+                PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
@@ -331,10 +331,10 @@ void NeuroBoard::handleInputs(void) {
             servo.ledbarHeight++;
         }
 
-        // Turn ON LEDs on the LED bar		
+        // Turn ON LEDs on the LED bar
         for (int i = 0; i < servo.ledbarHeight; i++) {
             this->writeLED(this->ledPins[i], ON);
-        }		
+        }
 
     }
 
@@ -348,7 +348,7 @@ void NeuroBoard::startServo(void) {
         // Attach servo to board
         servo.Gripper.attach(SERVO_PIN);
 
-		PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
+        PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
 
         // Initialize all LED pins to output
         for (int i = 0; i < MAX_LEDS; i++) {
@@ -497,8 +497,8 @@ void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(voi
 
 }
 
-void NeuroBoard::displayEMGStrength(void) {		
-    
+void NeuroBoard::displayEMGStrength(void) {
+
     emgStrengthEnabled = true;
 
 }
@@ -547,7 +547,7 @@ void NeuroBoard::writeLEDs(byte outByte) {
         //pulse the clock for shift
         PORTB |= SHIFT_CLOCK_PIN;
         PORTB &= I_SHIFT_CLOCK_PIN;
-        tempBitmask <<= 1;  
+        tempBitmask <<= 1;
 
     }
 
