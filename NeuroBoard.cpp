@@ -272,8 +272,6 @@ void NeuroBoard::handleInputs(void) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
                 digitalWrite(RELAY_PIN, ON);
-		delay(1);
-		digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
