@@ -54,6 +54,21 @@ void setup() {
 	});
 
 	// **************************************** //
+	// OPTION 4 //
+
+	// We could start the servo, and set the buttons to change the default servo mode //
+
+	board.startServo();
+
+	board.enableButtonPress(RED_BTN, []() {
+		board.setServoDefaultPosition(OPEN_MODE);
+	});
+
+	board.enableButtonPress(WHITE_BTN, []() {
+		board.setServoDefaultPosition(CLOSED_MODE);
+	});
+
+	// **************************************** //
 
 }
 
