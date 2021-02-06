@@ -271,9 +271,9 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
-				PORTD = PORTD | B00000001;
+				PORTD = PORTD | B00000001; // digitalWrite(RELAY_PIN, ON);
 				delay(1);
-				PORTD = PORTD & B11111110;
+				PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
@@ -348,8 +348,7 @@ void NeuroBoard::startServo(void) {
         // Attach servo to board
         servo.Gripper.attach(SERVO_PIN);
 
-        // Init button pins to input (turns off relay pin)
-		PORTD = PORTD & B11111110;
+		PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
 
         // Initialize all LED pins to output
         for (int i = 0; i < MAX_LEDS; i++) {
