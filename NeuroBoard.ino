@@ -52,6 +52,7 @@ void loop() {
 	int ev = board.getEnvelopeValue();
 
 	Serial.println(sample);
+	delay(5);
 
 	//int* samples;
 	//board.getSamples(&samples, 10);

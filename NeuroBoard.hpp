@@ -188,16 +188,16 @@ class NeuroBoard {
          * Sets up the servo for use with the NeuroBoard.
          * 
          * - Usable in setup: true
-         * - Usable in loop: false
+         * - Usable in loop: true
          * 
          * @return void.
         **/
         void startServo(void);
 
         /**
-         * Detaches the servo frmo the NeuroBoard, ending communication.
+         * Detaches the servo from the NeuroBoard, ending communication.
          * 
-         * - Usable in setup: false
+         * - Usable in setup: true
          * - Usable in loop: true
         **/
         void endServo(void);
@@ -263,8 +263,8 @@ class NeuroBoard {
 		 * 
 		 * }
 		 * 
-		 * @param arr - Array to modify.
-		 * @param size - Number of samples to add (should be same size as arr).
+		 * @param arr Array to modify.
+		 * @param size Number of samples to add (should be same size as arr).
 		 * 
 		 * @return void.
 		**/

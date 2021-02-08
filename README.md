@@ -7,12 +7,14 @@ An API for the Neuroduino Board.
 
 - Wrote main implementation and all ISR code.
 - Wrote examples.
+- Wrote site_examples.
 - Wrote structs to manage buttons/triggers/servo.
 - Wrote all documentation for class, functions and structs.
 - Github repository maintainer.
 - Ported servo code from inital file to NeuroBoard files.
 - Wrote micro-optimizations to reduce CPU usage.
-- Wrote port manipulation code for faster button readings.
+- Wrote port manipulation code for faster button readings and digital writes.
+- Ported experiments from website to examples using this library.
 
 **Stanislav Mircic**.
 
