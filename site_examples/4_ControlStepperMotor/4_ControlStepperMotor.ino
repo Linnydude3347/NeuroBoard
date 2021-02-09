@@ -5,6 +5,7 @@
  * Ported By: Ben Antonellis
  * Date: February 4th, 2021
 **/
+#include <Stepper.h>
 
 #include "NeuroBoard.hpp"
 

@@ -24,16 +24,16 @@
 
 #include "Arduino.h"
 #include <Servo.h>
-#include <Stepper.h>
 
 // Defines //
 
-#define RED_BTN         DD4
-#define WHITE_BTN       DD7
-#define ON              HIGH
-#define OFF             LOW
-#define BUFFER_SIZE     20
-#define SERIAL_CAP      230400
+#define NEUROBOARD_VERSION 	0
+#define RED_BTN         	DD4
+#define WHITE_BTN       	DD7
+#define ON              	HIGH
+#define OFF             	LOW
+#define BUFFER_SIZE     	20
+#define SERIAL_CAP      	230400
 
 #ifdef ARDUINO_AVR_UNO
     #define MAX_LEDS 6
