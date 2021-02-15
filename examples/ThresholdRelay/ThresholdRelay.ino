@@ -33,7 +33,9 @@ void setup() {
 		Serial.println("Threshold Reached!");
 	});
 
-	// You can also set your own second threshold
+	// You can also set your own second threshold. The following code executes the function once
+	// 600 is reached. Once the samples drop to 400 or below, only then will the functon be able
+	// to be called again once hitting 600.
 
 	board.setTriggerOnEnvelope(600, 400, []() {
 		Serial.println("Threshold Reached!");

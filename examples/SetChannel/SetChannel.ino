@@ -41,7 +41,7 @@ void setup() {
 	
 	// Any AN, where 0 <= N <= 11, will work.
 
-	// For most experiments however, you will want to use A0
+	// For the best results, I recommend sticking with the A0 - A5 instead of using just 0 - 5.
 
 	board.setChannel(A0);
 

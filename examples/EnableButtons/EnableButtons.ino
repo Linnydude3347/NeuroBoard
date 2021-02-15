@@ -33,11 +33,11 @@ void setup() {
 	});
 	
 	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
-    	Serial.println("White Button Held!");
+    	Serial.println("White Button Held For 1 Second!");
 	});
 
 	board.enableButtonLongPress(RED_BTN, 1000, []() {
-    	Serial.println("Red Button Held!");
+    	Serial.println("Red Button Held For 1 Second!");
 	});
 	
 }
