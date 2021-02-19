@@ -5,18 +5,6 @@
  * @date January 7th, 2021
 **/
 
-/** Nestor Meeting Notes
- * [X] NOTE: Look into experiments used for Neuroduino to port to NeuroBoard.
- * [X] NOTE: Think about meeting time with Nestor.
- * [ ] NOTE: Upload NeuroBoard to Arduino.cc
- * [ ] NOTE: New experiment that uses all the features of the library, with extensive documentation.
-**/
-
-/** January 27th Meeting
- * [ ] NOTE: Visual feedback for sensitivity changes.
- * [X] NOTE: Once the threshold for setTriggerOnEnvelope is reached, set digital pin for relay HIGH. Once it drops, set to LOW.
-**/
-
 #pragma once
 
 #ifndef NEUROBOARD_HPP

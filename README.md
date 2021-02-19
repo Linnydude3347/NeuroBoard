@@ -4,7 +4,7 @@ An API for the Neuroduino Board.
 # Using examples / site_examples
 
 If you want to use any examples in the "examples" or "site_examples" folder, copy paste the .ino code
-into the NeuroBoard.ino file.
+into the NeuroBoard.ino file. Or, you can add the NeuroBoard library to your Arduino libraries folder.
 
 # Authors
 

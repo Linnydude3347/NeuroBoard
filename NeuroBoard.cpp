@@ -449,7 +449,7 @@ void NeuroBoard::setDecayRate(const int& rate) {
     // Check to ensure positive input, some users may interpret decay rate
     // as a negative value. This prevents that mistake.
 
-    NeuroBoard::decayRate = (rate < 0) ? abs(rate) : rate;
+    NeuroBoard::decayRate = (rate < 0) ? -rate : rate;
 
 }
 
