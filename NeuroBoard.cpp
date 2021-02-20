@@ -551,7 +551,13 @@ void NeuroBoard::writeLED(const int& led, const bool& state) {
     const int LED = this->ledPins[led];
 
     byte bitMask = BITMASK_ONE;
-    if (!(0 < LED < 7)) return;
+
+	#ifdef ARDUINO_AVR_UNO
+		if (!(8 < LED < 13)) return;
+	#else // We must be dealing with a Leonardo
+		if (!(0 < LED < 7)) return;
+	#endif
+
     if (state) {
         _shiftRegState |= bitMask << (7 - LED);
     } else {

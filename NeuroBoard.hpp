@@ -386,21 +386,6 @@ class NeuroBoard {
         **/
         void displayEMGStrength(void);
 
-        /**
-         * Custom delay function so our code can continue to run while the 
-         * user wants to delay. This is non-blocking, so code will continue
-         * to run.
-         * 
-         * - Usable in setup: false
-         * - Usable in loop: true
-         * 
-         * @param milliseconds How many milliseconds the user wants to delay.
-         * @param variable Variable to use to hold count.
-         * 
-         * @return void.
-        **/
-        //static bool wait(const int& milliseconds, ulong& variable);
-
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
 
@@ -446,7 +431,17 @@ class NeuroBoard {
 };
 
 /**
+ * Custom delay function so our code can continue to run while the 
+ * user wants to delay. This is non-blocking, so code will continue
+ * to run.
  * 
+ * - Usable in setup: false
+ * - Usable in loop: true
+ * 
+ * @param milliseconds How many milliseconds the user wants to delay.
+ * @param variable Variable to use to hold count.
+ * 
+ * @return void.
 **/
 bool wait(const int& milliseconds, ulong& variable);
 
