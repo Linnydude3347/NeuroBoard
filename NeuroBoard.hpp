@@ -15,7 +15,7 @@
 
 // Defines //
 
-#define NEUROBOARD_VERSION 	0
+#define NEUROBOARD_VERSION 	0.7
 #define RED_BTN         	DD4
 #define WHITE_BTN       	DD7
 #define ON              	HIGH
@@ -51,13 +51,13 @@ typedef unsigned long ulong;
   * Ported/Updated by Ben Antonellis
 **/
 
-#define RELAY_PIN 3                             // Pin for relay that controls TENS device
-#define RELAY_THRESHOLD 4                       // Defines sensitivity of relay
-#define SERVO_PIN 2                             // Pin for servo motor
-#define NUM_LED 6                               // Number of LEDs in LED bar
-#define GRIPPER_MINIMUM_STEP 5                  // 5 degree dead zone (used to avoid aiming oscilation)
-#define OPEN_MODE 1                             // Default gripper state is opened
-#define CLOSED_MODE 2                           // Default gripper state is closed
+#define RELAY_PIN                 3             // Pin for relay that controls TENS device
+#define RELAY_THRESHOLD           4             // Defines sensitivity of relay
+#define SERVO_PIN                 2             // Pin for servo motor
+#define NUM_LED                   6             // Number of LEDs in LED bar
+#define GRIPPER_MINIMUM_STEP      5             // 5 degree dead zone (used to avoid aiming oscilation)
+#define OPEN_MODE                 1             // Default gripper state is opened
+#define CLOSED_MODE               2             // Default gripper state is closed
 #define MINIMUM_SERVO_UPDATE_TIME 100           // Update servo position every 100ms
 
 /**
@@ -106,7 +106,6 @@ struct Button {
         this->callback = callback;
         this->interval = interval;
         this->enabled = enabled;
-
     }
 
 };

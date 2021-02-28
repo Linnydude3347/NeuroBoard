@@ -428,6 +428,7 @@ int NeuroBoard::getNewSample(void) {
 void NeuroBoard::getSamples(int* arr[], const int& size) {
 	*arr = new int[size];
 	for (int i = 0; i < size; i++) {
+		// We can't just access the buffer directly because we need to modify it once retrieving a value.
 		(*arr)[i] = this->getNewSample();
 	}
 }
