@@ -26,7 +26,7 @@
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/interrupt.h",
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iotnx4.h",
                 "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Arduino.h",
-                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iocanxx.h",
+                "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include/avr/iocanxx.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++17",
