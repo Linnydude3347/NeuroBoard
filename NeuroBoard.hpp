@@ -272,16 +272,11 @@ class NeuroBoard {
         int getEnvelopeValue(void);
 
         /**
-         * Sets the current channel to listen on. Works with A0, A1, A2 etc and for
-         * regular integer values. So if setChannel(0) is called, then A0 will be set.
-         * If setChannel(7) is called, A7 will be set, and so on.
-         * 
-         * Boundries for regular integers:
-         *      setChannel(n) where:
-         *          0 <= n <= 11
+         * Sets the current channel to listen on. Works with A0, A1, A2 etc.
+		 * 
          * Boundries for built in analogs:
          *      setChannel(n) where:
-         *          A0 <= n <= A11
+         *          A0 <= n <= A5
          * 
          * - Usable in setup: true
          * - Usable in loop: true
@@ -332,7 +327,6 @@ class NeuroBoard {
 
         /**
          * Calls a function when a button is pressed for a long time.
-         * See `longPressThreshold` for exact millisecond timing.
          * 
          * - Usable in setup: true
          * - Usable in loop: false

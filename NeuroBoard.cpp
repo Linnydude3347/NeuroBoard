@@ -17,6 +17,7 @@
 #define SHIFT_DATA_PIN     B00001000                        // serial data pin for shift register SER - PB3
 #define I_SHIFT_DATA_PIN   B11110111
 #define BITMASK_ONE        B00000001
+#define I_BITMASK_ONE      B11111110
 
 /* ******************************************************* */
 
@@ -271,9 +272,9 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
-                PORTD = PORTD | B00000001; // digitalWrite(RELAY_PIN, ON);
-                delay(1);                  // Wait 1 ms to register relay pin as ON.
-                PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
+                PORTD = PORTD | BITMASK_ONE;   // digitalWrite(RELAY_PIN, ON);
+                delay(1);                      // Wait 1 ms to register relay pin as ON.
+                PORTD = PORTD & I_BITMASK_ONE; // digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
@@ -348,7 +349,7 @@ void NeuroBoard::startServo(void) {
     // Attach servo to board
     servo.Gripper.attach(SERVO_PIN);
 
-    PORTD = PORTD & B11111110; // digitalWrite(RELAY_PIN, OFF);
+    PORTD = PORTD & I_BITMASK_ONE; // digitalWrite(RELAY_PIN, OFF);
 
     // Initialize all LED pins to output
     for (int i = 0; i < MAX_LEDS; i++) {
@@ -426,11 +427,13 @@ int NeuroBoard::getNewSample(void) {
 }
 
 void NeuroBoard::getSamples(int* arr[], const int& size) {
+
 	*arr = new int[size];
 	for (int i = 0; i < size; i++) {
 		// We can't just access the buffer directly because we need to modify it once retrieving a value.
 		(*arr)[i] = this->getNewSample();
 	}
+
 }
 
 int NeuroBoard::getEnvelopeValue(void) {
@@ -492,16 +495,18 @@ void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(voi
 
 void NeuroBoard::displayEMGStrength(void) {
 
-    emgStrengthEnabled = true;
+    emgStrengthEnabled = !emgStrengthEnabled;
 
 }
 
 bool wait(const int& milliseconds, ulong& variable) {
+
     ulong ms = millis();
     bool done = (ms - variable) >= milliseconds;
     if (done)
         variable = ms;
     return done;
+	
 }
 
 /* ******************************************************* */
