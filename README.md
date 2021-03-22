@@ -20,6 +20,7 @@ into the NeuroBoard.ino file. Or, you can add the NeuroBoard library to your Ard
 - Wrote micro-optimizations to reduce CPU usage.
 - Wrote port manipulation code for faster button readings and digital writes.
 - Ported experiments from website to examples using this library.
+- Wrote documentation for the entire NeuroBoard library.
 
 **Stanislav Mircic**.
 
