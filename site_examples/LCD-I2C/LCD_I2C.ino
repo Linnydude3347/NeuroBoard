@@ -22,7 +22,6 @@ void setup(){
 	lcd.backlight();
 }
 
-
 void loop(){
 
 	finalReading = board.getNewSample(); 			// Reads in the Amplified EMG
