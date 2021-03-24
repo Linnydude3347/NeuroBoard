@@ -1,5 +1,5 @@
 /**
-	NeuroBoard - A library for interacting with the Neuroduino Board.
+	NeuroBoard.cpp - A library for interacting with the Neuroduino Board.
     Copyright (C) 2021 Backyard Brains
 
     This library is free software; you can redistribute it and/or
