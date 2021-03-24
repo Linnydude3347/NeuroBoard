@@ -15,7 +15,7 @@ void setup() {
 	board.startMeasurements();
 	board.setChannel(A0);
 	board.setDecayRate(10);
-  	board.startServo();
+	board.startServo();
 	
 	board.enableButtonPress(WHITE_BTN, []() {
 		Serial.println("white press");
@@ -26,11 +26,11 @@ void setup() {
 	});
 	
 	board.enableButtonLongPress(WHITE_BTN, 1000, []() {
-    	Serial.println("white long press");
+		Serial.println("white long press");
 	});
 
 	board.enableButtonLongPress(RED_BTN, 1000, []() {
-    	Serial.println("red long press");
+		Serial.println("red long press");
 	});
 
 	board.setTriggerOnEnvelope(800, [](){
