@@ -1,5 +1,6 @@
 # NeuroBoard
 An API for the Neuroduino Board.
+Copyright (C) 2021 Backyard Brains.
 
 # Using examples / site_examples
 
