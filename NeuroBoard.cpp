@@ -1,6 +1,6 @@
 /**
     NeuroBoard.cpp - A library for interacting with the Neuroduino Board.
-    Copyright (C) 2021 Backyard Brains
+    Copyright (C) 2021 Backyard Brains.
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -15,13 +15,13 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
-    USA
+    USA.
     
     Backyard Brains hereby disclaims all copyright interest in the library
     `NeuroBoard` (a library for interacting with the Neuroduino Board) written
     by Benjamin Antonellis.
 
-    Backyard Brains, March 2021
+    Backyard Brains, March 2021.
 **/
 
 /**

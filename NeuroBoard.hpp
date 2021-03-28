@@ -1,5 +1,5 @@
 /**
-    NeuroBoard.cpp - A library for interacting with the Neuroduino Board.
+    NeuroBoard.hpp - A library for interacting with the Neuroduino Board.
     Copyright (C) 2021 Backyard Brains
 
     This library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
     `NeuroBoard` (a library for interacting with the Neuroduino Board) written
     by Benjamin Antonellis.
 
-    Backyard Brains, March 2021
+    Backyard Brains, March 2021.
 **/
 
 /**
@@ -41,7 +41,7 @@
 
 // Defines //
 
-#define NEUROBOARD_VERSION 	0.7
+#define NEUROBOARD_VERSION 	0.8
 #define RED_BTN         	DD4
 #define WHITE_BTN       	DD7
 #define ON              	HIGH
@@ -422,11 +422,6 @@ class NeuroBoard {
         byte _shiftRegState = 0;
 
         /* ******************************************************* */
-
-        /**
-         * Flag for when threshold is reached to only call function once.
-        **/
-        bool thresholdMet = false;
 
         /**
          * Available channels to listen to. This is board specific.
