@@ -6,15 +6,15 @@
 **/
 
 #include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include <NeuroBoard.hpp>
+#include "LiquidCrystal_I2C.h"
+//#include "NeuroBoard.hpp"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2); 				// Set the LCD address to 0x27 for a 16 chars and 2 line display
 #define MAX 800 									// Maximum possible reading. TWEAK THIS VALUE!!
 
 int finalReading;
 int Lit_Bank;
-NeuroBoard board;
+//NeuroBoard board;
 
 void setup(){
 	Serial.begin(9600); 							// Begin serial communications
@@ -24,7 +24,7 @@ void setup(){
 
 void loop(){
 
-	finalReading = board.getNewSample(); 			// Reads in the Amplified EMG
+	finalReading = analogRead(A0); 			// Reads in the Amplified EMG
 	delay(10); 										// 10 ms delay
 	lcd.clear(); 									// initialize the lcd
 
