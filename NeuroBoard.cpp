@@ -318,13 +318,14 @@ void NeuroBoard::handleInputs(void) {
 
         // Set new angle if enough time passed
         if (millis() - servo.oldTime > MINIMUM_SERVO_UPDATE_TIME) {
+
             // Calculate new angle for servo
             if (servo.currentFunctionality == OPEN_MODE) {
                 servo.analogReadings = constrain(servo.analogReadings, 40, servo.emgSaturationValue);
-                servo.newDegree = fasterMap(servo.analogReadings, 40 , servo.emgSaturationValue, 190, 105);
+                servo.newDegree = fasterMap(servo.analogReadings, 40, servo.emgSaturationValue, 190, 105);
             } else {
                 servo.analogReadings = constrain(servo.analogReadings, 120, servo.emgSaturationValue);
-                servo.newDegree = fasterMap(servo.analogReadings, 120 , servo.emgSaturationValue, 105, 190);
+                servo.newDegree = fasterMap(servo.analogReadings, 120, servo.emgSaturationValue, 105, 190);
             }
 
             // Check if we are in servo dead zone
@@ -332,9 +333,11 @@ void NeuroBoard::handleInputs(void) {
                 // Set new servo angle
                 servo.Gripper.write(servo.newDegree);
             }
+
             // Set old time and degrees for new calculation
             servo.oldTime = millis();
             servo.oldDegrees = servo.newDegree;
+
         }
 
     }
