@@ -140,7 +140,7 @@ ISR (TIMER3_COMPA_vect) {
 
     // Get reading from analog //
 
-	reading = analogRead(NeuroBoard::channel);
+    reading = analogRead(NeuroBoard::channel);
 
     // Calculate envelope value here //
 
@@ -353,7 +353,7 @@ void NeuroBoard::handleInputs(void) {
         servo.ledbarHeight = fasterMap(readings, 30, servo.emgSaturationValue, 0, MAX_LEDS);
 
         // Display fix for when servo is disabled, but user still wants visual feedback
-        // Last check is for a Leonardo Board. Not tested with a Uno yet.
+        // Last check is for a Leonardo Board. Not tested with an Arduino Uno yet.
         if (!servoEnabled and servo.ledbarHeight == 7 and MAX_LEDS == 8) {
             servo.ledbarHeight++;
         }
@@ -409,12 +409,10 @@ void NeuroBoard::endServo(void) {
 void NeuroBoard::increaseSensitivity(void) {
 
     // Ensure servo is enabled before modifying sensitivity value
-    if (!servoEnabled) return;
+    if (!servoEnabled || servo.lastSensitivitiesIndex == 5) return; // 5 equals end of sensitivity array
 
     // Increment sensitivity index
-    if (servo.emgSaturationValue < 1024) { // 1024 indicates max emg saturation value
-        servo.lastSensitivitiesIndex++;
-    }
+    servo.lastSensitivitiesIndex++;
 
     // Get current sensitivity value
     servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
@@ -424,12 +422,10 @@ void NeuroBoard::increaseSensitivity(void) {
 void NeuroBoard::decreaseSensitivity(void) {
 
     // Ensure servo is enabled before modifying sensitivity value
-    if (!servoEnabled) return;
+    if (!servoEnabled || servo.lastSensitivitiesIndex == 0) return;
 
     // Decrement sensitivity index
-    if (servo.lastSensitivitiesIndex != 0) {
-        servo.lastSensitivitiesIndex--;
-    }
+    servo.lastSensitivitiesIndex--;
 
     // Get current sensitivity value
     servo.emgSaturationValue = servo.sensitivities[servo.lastSensitivitiesIndex];
@@ -454,11 +450,11 @@ int NeuroBoard::getNewSample(void) {
 
 void NeuroBoard::getSamples(int* arr[], const int& size) {
 
-	*arr = new int[size];
-	for (int i = 0; i < size; i++) {
-		// We can't just access the buffer directly because we need to modify it once retrieving a value.
-		(*arr)[i] = this->getNewSample();
-	}
+    *arr = new int[size];
+    for (int i = 0; i < size; i++) {
+        // We can't just access the buffer directly because we need to modify it once retrieving a value.
+        (*arr)[i] = this->getNewSample();
+    }
 
 }
 
@@ -470,7 +466,7 @@ int NeuroBoard::getEnvelopeValue(void) {
 
 void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
-	NeuroBoard::channel = newChannel;
+    NeuroBoard::channel = newChannel;
 
 }
 
@@ -532,7 +528,7 @@ bool wait(const int& milliseconds, ulong& variable) {
     if (done)
         variable = ms;
     return done;
-	
+
 }
 
 /* ******************************************************* */
@@ -584,11 +580,11 @@ void NeuroBoard::writeLED(const int& led, const bool& state) {
 
     byte bitMask = BITMASK_ONE;
 
-	#ifdef ARDUINO_AVR_UNO
-		if (!(8 < LED < 13)) return;
-	#else // We must be dealing with a Leonardo
-		if (!(0 < LED < 7)) return;
-	#endif
+    #ifdef ARDUINO_AVR_UNO
+        if (!(8 < LED < 13)) return;
+    #else // We must be dealing with a Leonardo
+        if (!(0 < LED < 7)) return;
+    #endif
 
     if (state) {
         _shiftRegState |= bitMask << (7 - LED);
