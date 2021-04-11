@@ -75,7 +75,9 @@
 		"concepts": "cpp",
 		"memory_resource": "cpp",
 		"stop_token": "cpp",
-		"cinttypes": "cpp"
+		"cinttypes": "cpp",
+		"twi.h": "c",
+		"inttypes.h": "c"
 	},
     "C_Cpp.dimInactiveRegions": false
 }

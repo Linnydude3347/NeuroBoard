@@ -183,13 +183,6 @@ class NeuroBoard {
         void startMeasurements(void);
 
         /**
-         * Orphan function, yet to be implemented. DO NOT USE.
-         * 
-         * @return void.
-        **/
-        void startCommunicaton(void);
-
-        /**
          * Special function to handle all button triggers, envelope triggers, and
          * servo pings.
          * 
