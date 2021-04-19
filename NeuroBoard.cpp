@@ -160,7 +160,7 @@ ISR (TIMER3_COMPA_vect) {
 
 // PUBLIC METHODS //
 
-void NeuroBoard::startMeasurements(void) {
+void NeuroBoard::startMeasurements(void) const {
 
     // Start Serial //
 
@@ -370,7 +370,7 @@ void NeuroBoard::handleInputs(void) {
 
 }
 
-void NeuroBoard::startServo(void) {
+void NeuroBoard::startServo(void) const {
 
     // Ensure servo isn't already enabled before starting
     if (servoEnabled) return;
@@ -393,7 +393,7 @@ void NeuroBoard::startServo(void) {
 
 }
 
-void NeuroBoard::endServo(void) {
+void NeuroBoard::endServo(void) const {
 
     // Ensure servo is enabled before disabling
     if (!servoEnabled) return;
@@ -409,7 +409,7 @@ void NeuroBoard::endServo(void) {
 
 }
 
-void NeuroBoard::increaseSensitivity(void) {
+void NeuroBoard::increaseSensitivity(void) const {
 
     // Ensure servo is enabled before modifying sensitivity value
     if (!servoEnabled || servo.lastSensitivitiesIndex == 5) return; // 5 equals end of sensitivity array
@@ -422,7 +422,7 @@ void NeuroBoard::increaseSensitivity(void) {
 
 }
 
-void NeuroBoard::decreaseSensitivity(void) {
+void NeuroBoard::decreaseSensitivity(void) const {
 
     // Ensure servo is enabled before modifying sensitivity value
     if (!servoEnabled || servo.lastSensitivitiesIndex == 0) return;
@@ -435,13 +435,13 @@ void NeuroBoard::decreaseSensitivity(void) {
 
 }
 
-void NeuroBoard::setServoDefaultPosition(const int& position) {
+void NeuroBoard::setServoDefaultPosition(const int& position) const {
 
     servo.currentFunctionality = position;
 
 }
 
-int NeuroBoard::getNewSample(void) {
+int NeuroBoard::getNewSample(void) const {
 
     int value = buffer[tail]; // Can't just return this because tail is changed below //
     full = false;
@@ -451,7 +451,7 @@ int NeuroBoard::getNewSample(void) {
 
 }
 
-void NeuroBoard::getSamples(int* arr[], const int& size) {
+void NeuroBoard::getSamples(int* arr[], const int& size) const {
 
     *arr = new int[size];
     for (int i = 0; i < size; i++) {
@@ -461,7 +461,7 @@ void NeuroBoard::getSamples(int* arr[], const int& size) {
 
 }
 
-int NeuroBoard::getEnvelopeValue(void) {
+int NeuroBoard::getEnvelopeValue(void) const {
 
     return envelopeValue;
 
@@ -482,7 +482,7 @@ void NeuroBoard::setDecayRate(const int& rate) {
 
 }
 
-void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) {
+void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) const {
 
     if (button == RED_BTN) {
         redButtonTrigger.set(callback, 0, true);
@@ -494,7 +494,7 @@ void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)
 
 }
 
-void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) {
+void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) const {
 
     if (button == RED_BTN) {
         redLongButtonTrigger.set(callback, milliseconds, true);
@@ -506,19 +506,19 @@ void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& millise
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void)) {
+void NeuroBoard::setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void)) const {
 
     envelopeTrigger.set(threshold, secondFactor, callback, true, false);
 
 }
 
-void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(void)) {
+void NeuroBoard::setTriggerOnEnvelope(const int& threshold, void (*callback)(void)) const {
 
     this->setTriggerOnEnvelope(threshold, threshold - (threshold / 10), callback);
 
 }
 
-void NeuroBoard::displayEMGStrength(void) {
+void NeuroBoard::displayEMGStrength(void) const {
 
     emgStrengthEnabled = !emgStrengthEnabled;
 
@@ -538,7 +538,7 @@ bool wait(const int& milliseconds, ulong& variable) {
 /** @author Stanislav Mircic **/
 /** Simplified by Ben Antonellis **/
 
-void NeuroBoard::writeLEDs(void) {
+void NeuroBoard::writeLEDs(void) const {
 
     PORTB &= I_SHIFT_LATCH_PIN;
     byte tempBitmask = BITMASK_ONE;

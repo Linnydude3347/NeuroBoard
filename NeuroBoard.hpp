@@ -180,7 +180,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void startMeasurements(void);
+        void startMeasurements(void) const;
 
         /**
          * Special function to handle all button triggers, envelope triggers, and
@@ -198,7 +198,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void startServo(void);
+        void startServo(void) const;
 
         /**
          * Detaches the servo from the NeuroBoard, ending communication.
@@ -206,7 +206,7 @@ class NeuroBoard {
          * - Usable in setup: true
          * - Usable in loop: true
         **/
-        void endServo(void);
+        void endServo(void) const;
 
         /**
          * Increases sensitivity for the servo.
@@ -216,7 +216,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void increaseSensitivity(void);
+        void increaseSensitivity(void) const;
 
         /**
          * Decreases sensitivity for the servo.
@@ -226,7 +226,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void decreaseSensitivity(void);
+        void decreaseSensitivity(void) const;
 
         /**
          * Toggles the servos default position, from open to closed.
@@ -235,7 +235,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setServoDefaultPosition(const int& position);
+        void setServoDefaultPosition(const int& position) const;
 
         /**
          * Returns the last measured sample from the channel.
@@ -245,7 +245,7 @@ class NeuroBoard {
          * 
          * @return int - Last measured sample.
         **/
-        int getNewSample(void);
+        int getNewSample(void) const;
 
 		/**
 		 * Returns "size" samples to the passed array.
@@ -274,7 +274,7 @@ class NeuroBoard {
 		 * 
 		 * @return void.
 		**/
-		void getSamples(int* arr[], const int& size);
+		void getSamples(int* arr[], const int& size) const;
 
         /**
          * Returns the envelope value of the channel.
@@ -288,7 +288,7 @@ class NeuroBoard {
          * 
          * @return int - Envelope value.
         **/
-        int getEnvelopeValue(void);
+        int getEnvelopeValue(void) const;
 
         /**
          * Sets the current channel to listen on. Works with A0, A1, A2 etc.
@@ -331,7 +331,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonPress(const uint8_t& button, const int& interval, void (*callback)(void));
+        void enableButtonPress(const uint8_t& button, const int& interval, void (*callback)(void)) const;
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -342,7 +342,7 @@ class NeuroBoard {
          * @param button Which button to map the passed function to.
          * @param callback Function to call when button is pressed.
         **/
-        void enableButtonPress(const uint8_t& button, void (*callback)(void));
+        void enableButtonPress(const uint8_t& button, void (*callback)(void)) const;
 
         /**
          * Calls a function when a button is pressed for a long time.
@@ -356,7 +356,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void));
+        void enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) const;
 
         /**
          * Calls the passed function when the envelope value is greater 
@@ -371,7 +371,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void));
+        void setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void)) const;
 
         /**
          * Calls the passed function when the envelope value is greater
@@ -385,7 +385,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setTriggerOnEnvelope(const int& threshold, void (*callback)(void));
+        void setTriggerOnEnvelope(const int& threshold, void (*callback)(void)) const;
 
         /**
          * Sets a flag to display the current strength of the readings using the
@@ -396,7 +396,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void displayEMGStrength(void);
+        void displayEMGStrength(void) const;
 
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
@@ -410,7 +410,7 @@ class NeuroBoard {
         /* ******************************************************* */
         /** @author Stanislav Mircic **/
 
-        void writeLEDs(void);
+        void writeLEDs(void) const;
         void writeLEDs(byte outByte);
         byte _shiftRegState = 0;
 
