@@ -10,7 +10,7 @@
 
 NeuroBoard board;
 
-void setup() {
+void setup(void) {
 
 	board.startMeasurements();
 	board.setChannel(A0);
@@ -42,7 +42,7 @@ void setup() {
 
 }
 
-void loop() {
+void loop(void) {
 
 	board.handleInputs();
 
@@ -57,7 +57,8 @@ void loop() {
 	//int* samples;
 	//board.getSamples(&samples, 10);
 	//for (int i = 0; i < 10; i++) {
-	//	Serial.println(samples[i]);
+	//	Serial.print(samples[i]);
+	//	Serial.print(" ");
 	//}
 	//delete[] samples; // Free memory for reallocation. REQUIRED.
 	//delay(2000);

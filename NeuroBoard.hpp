@@ -41,18 +41,26 @@
 
 // Defines //
 
-#define NEUROBOARD_VERSION 	0.8
-#define RED_BTN         	DD4
-#define WHITE_BTN       	DD7
+#define NEUROBOARD_VERSION 	085 // 0.8.5
 #define ON              	HIGH
 #define OFF             	LOW
 #define BUFFER_SIZE     	20
 #define SERIAL_CAP      	230400
+#define CURRENT_SHIELD_TYPE "HWT:MUSCLESS;"
 
-#ifdef ARDUINO_AVR_UNO
-    #define MAX_LEDS 6
-#else // We must be dealing with a Leonardo
-    #define MAX_LEDS 8
+#ifdef ARDUINO_AVR_LEONARDO
+	#define RED_BTN DD4
+	#define WHITE_BTN DD7
+#else // Arduino Uno Board
+	// Need to identify this !!! //
+	#define RED_BTN DD4
+	#define WHITE_BTN DD7
+#endif
+
+#ifdef ARDUINO_AVR_LEONARDO
+	#define MAX_LEDS 8
+#else // Arduino Uno Board
+	#define MAX_LEDS 6
 #endif
 
 typedef unsigned long ulong;
@@ -169,7 +177,7 @@ class NeuroBoard {
         // Static member variables //
 
         static uint8_t channel;
-        static int decayRate;
+        static uint8_t decayRate;
 
         /**
          * Samples data to a circular buffer, and calculates envelope value 
@@ -317,7 +325,7 @@ class NeuroBoard {
          * 
          * @return void.
         **/
-        void setDecayRate(const int& rate);
+        void setDecayRate(const uint8_t& rate);
 
         /**
          * Calls the passed function when the specified button is pressed.
@@ -430,7 +438,7 @@ class NeuroBoard {
          * LED pins for different boards.
         **/
         #ifdef ARDUINO_AVR_UNO
-            int ledPins[6] = {8, 9, 10, 11, 12, 13};
+            int ledPins[6] = {9, 10, 11, 12, 13, 14};
         #else // We must be dealing with a Leonardo
             int ledPins[8] = {0, 1, 2, 3, 4, 5, 6, 7};
         #endif

@@ -51,6 +51,14 @@
 
 /**
  * Faster version of map() that doesn't use multiplication or division.
+ * 
+ * @param value Value to change
+ * @param fromLow Original low value.
+ * @param fromHigh Original high value.
+ * @param toLow New low value.
+ * @param toHigh New high value.
+ * 
+ * @return long - Newly mapped value.
 **/
 long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
 
@@ -96,7 +104,7 @@ NeuroServo servo = NeuroServo();
 bool servoEnabled = false;
 bool emgStrengthEnabled = false;
 
-int NeuroBoard::decayRate = 1;
+uint8_t NeuroBoard::decayRate = 1;
 
 // Buffer Variables //
 
@@ -135,8 +143,11 @@ int whiteLongCalled = 0;
 int reading;
 
 // ISR //
-
+#ifdef ARDUINO_AVR_LEONARDO
 ISR (TIMER3_COMPA_vect) {
+#else // Arduino Uno Board
+ISR (TIMER0_COMPA_vect) {
+#endif
 
     // Get reading from analog //
 
@@ -182,35 +193,39 @@ void NeuroBoard::startMeasurements(void) const {
 
     noInterrupts();
 
-    // Set prescale to 16 for analogRead
+	for (int i = 0; i <= 7; i++) // [0, 7]
+		pinMode(i, OUTPUT);
 
-    sbi(ADCSRA, ADPS2);
-    cbi(ADCSRA, ADPS1);
-    cbi(ADCSRA, ADPS0);
+	sbi(ADCSRA, ADPS2);
+	cbi(ADCSRA, ADPS1);
+	cbi(ADCSRA, ADPS0);
 
-    // Set timer register flags //
+	// Set timer register flags //
 
-    TCCR3A = 0;
-    TCCR3B = 0;
-    TCNT3 = 0;
+	TCCR3A = 0;
+	TCCR3B = 0;
+	TCNT3 = 0;
 
-    // Configure timer registers //
+	// Configure timer registers //
 
-    // Performance Upgrade //
-    // 35 samples/second => 245 samples/second
+	OCR3A = 31250;
+	TCCR3B = (TCCR3B & 0xF8) | 0x01;
+	TIMSK3 |= (1 << OCIE1A);
 
-    OCR3A = 31250;
-    TCCR3B = (TCCR3B & 0xF8) | 0x01;
-    TIMSK3 |= (1 << OCIE1A);
-
-    // Enable interrupts //
+	// Enable interrupts //
 
     interrupts();
 
 }
 
-bool redPressed() { return PIND & B00010000; }
-bool whitePressed() { return PINE & B01000000; }
+#ifdef ARDUINO_AVR_LEONARDO
+	bool redPressed(void) { return PIND & B00010000; }
+	bool whitePressed(void) { return PINE & B01000000; }
+#else // Arduino Uno Board
+	// Placeholders until we get correct ports and pins
+	bool redPressed(void) { /*return PIND & B00001000;*/ return digitalRead(4); }
+	bool whitePressed(void) { /*return PINE & B10000000;*/ return digitalRead(7); }
+#endif
 
 void NeuroBoard::handleInputs(void) {
 
@@ -298,9 +313,9 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
-                PORTD = PORTD | BITMASK_ONE;   // digitalWrite(RELAY_PIN, ON);
-                delay(1);                      // Wait 1 ms to register relay pin as ON.
-                PORTD = PORTD & I_BITMASK_ONE; // digitalWrite(RELAY_PIN, OFF);
+                PORTD |= BITMASK_ONE;   		// digitalWrite(RELAY_PIN, ON);
+                delay(1);                       // Wait 1 ms to register relay pin as ON.
+                PORTD &= I_BITMASK_ONE; 		// digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
@@ -356,10 +371,15 @@ void NeuroBoard::handleInputs(void) {
         servo.ledbarHeight = fasterMap(readings, 30, servo.emgSaturationValue, 0, MAX_LEDS);
 
         // Display fix for when servo is disabled, but user still wants visual feedback
-        // Last check is for a Leonardo Board. Not tested with an Arduino Uno yet.
+        // Last check is for a Leonardo and Uno Board. (NEED MORE TESTING BEFORE PUSH!).
+
         if (!servoEnabled and servo.ledbarHeight == 7 and MAX_LEDS == 8) {
             servo.ledbarHeight++;
         }
+
+		if (!servoEnabled and servo.ledbarHeight == 5 and MAX_LEDS == 6) {
+			servo.ledbarHeight++;
+		}
 
         // Turn ON LEDs on the LED bar
         for (int i = 0; i < servo.ledbarHeight; i++) {
@@ -378,7 +398,7 @@ void NeuroBoard::startServo(void) const {
     // Attach servo to board
     servo.Gripper.attach(SERVO_PIN);
 
-    PORTD = PORTD & I_BITMASK_ONE; // digitalWrite(RELAY_PIN, OFF);
+    PORTD &= I_BITMASK_ONE; // digitalWrite(RELAY_PIN, OFF);
 
     // Initialize all LED pins to output
     for (int i = 0; i < MAX_LEDS; i++) {
@@ -473,12 +493,12 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 }
 
-void NeuroBoard::setDecayRate(const int& rate) {
+void NeuroBoard::setDecayRate(const uint8_t& rate) {
 
     // Check to ensure positive input, some users may interpret decay rate
     // as a negative value. This prevents that mistake.
 
-    NeuroBoard::decayRate = (rate < 0) ? -rate : rate;
+    NeuroBoard::decayRate = rate;
 
 }
 
