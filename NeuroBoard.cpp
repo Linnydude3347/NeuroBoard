@@ -49,36 +49,8 @@
 
 /// PRIVATE FUNCTIONS ///
 
-/**
- * Faster version of map() that doesn't use multiplication or division.
- * 
- * @param value Value to change
- * @param fromLow Original low value.
- * @param fromHigh Original high value.
- * @param toLow New low value.
- * @param toHigh New high value.
- * 
- * @return long - Newly mapped value.
-**/
-long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
-
-    long first = value - fromLow;
-    long second = toHigh - toLow;
-    long combined = 0;
-    while (second > 0) {                   // Avoid usage of * operator
-        combined = combined + first;
-        second = second - 1;
-    }
-    long third = fromHigh - fromLow;
-    long count = 0;
-    while (combined >= third) {            // Avoid usage of / operator
-        combined = combined - third;
-        count = count + 1;
-    }
-    count = count + toLow;
-    return count;
-
-}
+void sendMessage(const char*);
+long fasterMap(long, long, long, long, long);
 
 // Button Wait Variables //
 
@@ -113,13 +85,32 @@ int head = 0;
 int tail = 0;
 bool full = false;
 
+// Serial Buffer Variables //
+
+#define COMMAND_BUFFER_SIZE 30
+#define OUTPUT_FRAME_BUFFER_SIZE 64
+#define ANTI_FLICKERING_TIME_IN_MS 50
+
+uint16_t antiFlickeringCounterMax;
+uint16_t antiFlickeringTimerForOutput;
+uint8_t movingThreshold;
+
+char commandBuffer[COMMAND_BUFFER_SIZE];
+int commandBufferIndex = 0;
+bool messageReceived = false;
+
+byte outputFrameBuffer[OUTPUT_FRAME_BUFFER_SIZE];
+bool NeuroBoard::communicationEnabled = false;
+bool outputFrameReady = false;
+int numberChannels = 1;
+
+byte escapeSequence[ESCAPE_SEQUENCE_LENGTH] = { 255, 255, 1, 1, 128, 255 };
+byte endOfescapeSequence[ESCAPE_SEQUENCE_LENGTH] = { 255, 255, 1, 1, 129, 255 };
+
 // Envelope Value //
 
 int envelopeValue;
 
-// Serial variable, changed in startCommunication method //
-
-bool communicate = false;
 uint8_t NeuroBoard::channel = A0;
 
 // Variables for button holding //
@@ -167,6 +158,31 @@ ISR (TIMER0_COMPA_vect) {
     head = (head == BUFFER_SIZE) ? (0) : (head + 1);
     full = head == tail;
 
+	// Populate output buffer with sample data //
+
+	if (NeuroBoard::communicationEnabled) {
+
+		// Because the buffer is six (6) elements, we need to populate the output frame buffer with the buffer data.
+
+		outputFrameBuffer[0] = (buffer[0] >> 7) | 0x80;
+		outputFrameBuffer[1] = buffer[0] & 0x7F;
+		outputFrameBuffer[2] = (buffer[1] >> 7) & 0x7F;
+		outputFrameBuffer[3] = buffer[1] & 0x7F;
+		outputFrameBuffer[4] = (buffer[2] >> 7) & 0x7F;
+		outputFrameBuffer[5] = buffer[2] & 0x7F;
+		outputFrameBuffer[6] = (buffer[3] >> 7) & 0x7F;
+		outputFrameBuffer[7] = buffer[3] & 0x7F;
+		outputFrameBuffer[8] = (buffer[4] >> 7) & 0x7F;
+		outputFrameBuffer[9] = buffer[4] & 0x7F;
+		outputFrameBuffer[10] = (buffer[5] >> 7) & 0x7F;
+		outputFrameBuffer[11] = buffer[5] & 0x7F;
+
+		// Set ready flag so we know when to write data.
+
+		outputFrameReady = true;
+
+	}
+
 }
 
 // PUBLIC METHODS //
@@ -193,8 +209,10 @@ void NeuroBoard::startMeasurements(void) const {
 
     noInterrupts();
 
+	#ifdef ARDUINO_AVR_LEONARDO
 	for (int i = 0; i <= 7; i++) // [0, 7]
 		pinMode(i, OUTPUT);
+	#endif
 
 	sbi(ADCSRA, ADPS2);
 	cbi(ADCSRA, ADPS1);
@@ -215,6 +233,15 @@ void NeuroBoard::startMeasurements(void) const {
 	// Enable interrupts //
 
     interrupts();
+
+}
+
+void NeuroBoard::startCommunication(void) {
+
+	NeuroBoard::communicationEnabled = true;
+
+	antiFlickeringCounterMax = ((ANTI_FLICKERING_TIME_IN_MS * 10) / numberChannels);
+	antiFlickeringTimerForOutput = antiFlickeringCounterMax;
 
 }
 
@@ -313,9 +340,6 @@ void NeuroBoard::handleInputs(void) {
             if (!envelopeTrigger.thresholdMet) {
                 envelopeTrigger.thresholdMet = true;
                 envelopeTrigger.callback();
-                PORTD |= BITMASK_ONE;   		// digitalWrite(RELAY_PIN, ON);
-                delay(1);                       // Wait 1 ms to register relay pin as ON.
-                PORTD &= I_BITMASK_ONE; 		// digitalWrite(RELAY_PIN, OFF);
             }
         } else {
             if (envelopeValue <= envelopeTrigger.secondThreshold) {
@@ -359,6 +383,10 @@ void NeuroBoard::handleInputs(void) {
 
     // EMG Strength Code //
 
+	int readings = constrain(reading, 30, servo.emgSaturationValue);
+	movingThreshold = fasterMap(readings, 30, servo.emgSaturationValue, 0, MAX_LEDS);
+	movingThreshold = servo.sensitivities[movingThreshold]; // Convert index to value.
+
     if (emgStrengthEnabled) {
 
         // Turn OFF all LEDs on LED bar
@@ -367,11 +395,10 @@ void NeuroBoard::handleInputs(void) {
         }
 
         // Calculate what LEDs should be turned ON on the LED bar
-        int readings = constrain(reading, 30, servo.emgSaturationValue);
         servo.ledbarHeight = fasterMap(readings, 30, servo.emgSaturationValue, 0, MAX_LEDS);
 
         // Display fix for when servo is disabled, but user still wants visual feedback
-        // Last check is for a Leonardo and Uno Board. (NEED MORE TESTING BEFORE PUSH!).
+        // Check is for a Leonardo and Uno Board. (NEED MORE TESTING BEFORE PUSH!).
 
         if (!servoEnabled and servo.ledbarHeight == 7 and MAX_LEDS == 8) {
             servo.ledbarHeight++;
@@ -387,6 +414,87 @@ void NeuroBoard::handleInputs(void) {
         }
 
     }
+
+	if (!NeuroBoard::communicationEnabled) return; // We can return from here because nothing else will be after the serial buffer stuff.
+
+	//// Serial Stuff Here ////
+
+	// Relay Threshold //
+
+	antiFlickeringTimerForOutput--;
+	if (antiFlickeringTimerForOutput == 0) {
+		antiFlickeringTimerForOutput = antiFlickeringCounterMax;
+		if (envelopeValue > movingThreshold) {
+			PORTD |= BITMASK_ONE; // Turn ON relay.
+		} else {
+			PORTD &= I_BITMASK_ONE; // Turn OFF relay.
+		}
+	}
+
+	// Serial Communication //
+
+	if (outputFrameReady) {
+
+		Serial.write(outputFrameBuffer, (numberChannels << 1));
+		outputFrameReady = false;
+
+	}
+
+	while (Serial.available() > 0) {
+
+		byte incoming = Serial.read();
+
+		if (incoming == 10) { // Newline character, we've reached end of message.
+			commandBuffer[commandBufferIndex] = 0;
+			messageReceived = true;
+			commandBufferIndex = 0;
+		} else {
+			commandBuffer[commandBufferIndex] = incoming;
+			commandBufferIndex++;
+			if (commandBufferIndex == COMMAND_BUFFER_SIZE) { // If incoming data is longer than the buffer size, start writing from beginning.
+				commandBufferIndex = 0;
+				break;
+			}
+		}
+
+	}
+
+	if (messageReceived) {
+
+		messageReceived = false;
+		commandBufferIndex = 0;
+
+		char* command = strtok(commandBuffer, ";");
+		while (command != 0) {
+
+			char* separator = strchr(command, ';');
+			if (separator != 0) {
+				*separator = 0;
+				--separator;
+				if (*separator == 'c') { // Request for channels.
+					separator += 2;
+					TIMSK3 &= ~(1 << OCIE1A); // Disable timer for sampling.
+					PORTD &= I_BITMASK_ONE; // Turn off relay.
+					antiFlickeringCounterMax = ((ANTI_FLICKERING_TIME_IN_MS * 10) / numberChannels);
+					antiFlickeringTimerForOutput = antiFlickeringCounterMax;
+					TIMSK3 |= (1 << OCIE1A); // Enable timer for sampling.
+				}
+				if (*separator == 's') { // Request for sampling rate.
+					// Do nothing.
+				}
+				if (*separator == 'b') { // Request for impuls.
+					TIMSK3 &= ~(1 << OCIE1A);
+					PORTD &= I_BITMASK_ONE; // Turn off relay.
+					sendMessage(CURRENT_SHIELD_TYPE);
+					TIMSK3 |= (1 << OCIE1A);
+				}
+			}
+
+			command = strtok(0, ";"); // Find next command.
+
+		}
+
+	}
 
 }
 
@@ -495,40 +603,31 @@ void NeuroBoard::setChannel(const uint8_t& newChannel) {
 
 void NeuroBoard::setDecayRate(const uint8_t& rate) {
 
-    // Check to ensure positive input, some users may interpret decay rate
-    // as a negative value. This prevents that mistake.
-
     NeuroBoard::decayRate = rate;
 
 }
 
 void NeuroBoard::enableButtonPress(const uint8_t& button, void (*callback)(void)) const {
 
-    if (button == RED_BTN) {
-        redButtonTrigger.set(callback, 0, true);
-    }
-
-    if (button == WHITE_BTN) {
-        whiteButtonTrigger.set(callback, 0, true);
-    }
+	if (button == RED_BTN)
+		redButtonTrigger.set(callback);
+	if (button == WHITE_BTN)
+		whiteButtonTrigger.set(callback);
 
 }
 
 void NeuroBoard::enableButtonLongPress(const uint8_t& button, const int& milliseconds, void (*callback)(void)) const {
 
-    if (button == RED_BTN) {
-        redLongButtonTrigger.set(callback, milliseconds, true);
-    }
-
-    if (button == WHITE_BTN) {
-        whiteLongButtonTrigger.set(callback, milliseconds, true);
-    }
+	if (button == RED_BTN)
+		redLongButtonTrigger.set(callback, milliseconds);
+	if (button == WHITE_BTN)
+		whiteLongButtonTrigger.set(callback, milliseconds);
 
 }
 
 void NeuroBoard::setTriggerOnEnvelope(const int& threshold, const int& secondFactor, void (*callback)(void)) const {
 
-    envelopeTrigger.set(threshold, secondFactor, callback, true, false);
+    envelopeTrigger.set(threshold, secondFactor, callback);
 
 }
 
@@ -549,7 +648,7 @@ bool wait(const int& milliseconds, ulong& variable) {
     ulong ms = millis();
     bool done = (ms - variable) >= milliseconds;
     if (done)
-        variable = ms;
+		variable = ms;
     return done;
 
 }
@@ -616,6 +715,63 @@ void NeuroBoard::writeLED(const int& led, const bool& state) {
     }
 
     writeLEDs();
+
+}
+
+/**
+ * Pushes a message to the main sending buffer.
+ * 
+ * @param message Char array representing type of board.
+ * 
+ * @return void.
+**/
+void sendMessage(const char* message) {
+
+	int i;
+	int head = 0;
+
+	for (i = 0; i < ESCAPE_SEQUENCE_LENGTH; i++)
+		outputFrameBuffer[head++] = escapeSequence[i];
+	
+	i = 0;
+	while (message[i] != 0)
+		outputFrameBuffer[head++] = message[i++];
+	
+	for (i = 0; i < ESCAPE_SEQUENCE_LENGTH; i++)
+		outputFrameBuffer[head++] = endOfescapeSequence[i];
+
+	Serial.write(outputFrameBuffer, head);
+
+}
+
+/**
+ * Faster version of map() that doesn't use multiplication or division.
+ * 
+ * @param value Value to change
+ * @param fromLow Original low value.
+ * @param fromHigh Original high value.
+ * @param toLow New low value.
+ * @param toHigh New high value.
+ * 
+ * @return long - Newly mapped value.
+**/
+long fasterMap(long value, long fromLow, long fromHigh, long toLow, long toHigh) {
+
+    long first = value - fromLow;
+    long second = toHigh - toLow;
+    long combined = 0;
+    while (second > 0) {                   // Avoid usage of * operator
+        combined = combined + first;
+        second = second - 1;
+    }
+    long third = fromHigh - fromLow;
+    long count = 0;
+    while (combined >= third) {            // Avoid usage of / operator
+        combined = combined - third;
+        count = count + 1;
+    }
+    count = count + toLow;
+    return count;
 
 }
 

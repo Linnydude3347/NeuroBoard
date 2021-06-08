@@ -41,12 +41,13 @@
 
 // Defines //
 
-#define NEUROBOARD_VERSION 	085 // 0.8.5
-#define ON              	HIGH
-#define OFF             	LOW
-#define BUFFER_SIZE     	20
-#define SERIAL_CAP      	230400
-#define CURRENT_SHIELD_TYPE "HWT:MUSCLESS;"
+#define NEUROBOARD_VERSION  	086 // 0.8.6
+#define ON              		HIGH
+#define OFF             		LOW
+#define BUFFER_SIZE     		6
+#define SERIAL_CAP      		230400
+#define CURRENT_SHIELD_TYPE 	"HWT:MUSCLESS;"
+#define ESCAPE_SEQUENCE_LENGTH 	6
 
 #ifdef ARDUINO_AVR_LEONARDO
 	#define RED_BTN DD4
@@ -80,9 +81,9 @@ typedef unsigned long ulong;
 // Servo Code Start //
 
 /**
-  * Written by Marcio Amorim
-  * Updated by Stanislav Mircic
-  * Ported/Updated by Ben Antonellis
+  * Written by Marcio Amorim.
+  * Updated by Stanislav Mircic.
+  * Ported/Updated by Ben Antonellis.
 **/
 
 #define RELAY_PIN                 3             // Pin for relay that controls TENS device
@@ -104,7 +105,7 @@ struct NeuroServo {
     Servo Gripper;                              // Servo for gripper
     
     //EMG saturation values (when EMG reaches this value the gripper will be fully opened/closed)
-    int sensitivities[6] = {200, 350, 520, 680, 840, 1024};
+    int sensitivities[6] = { 200, 350, 520, 680, 840, 1024 };
     int lastSensitivitiesIndex = 4;             // Set initial sensitivity index
     
     int emgSaturationValue = 1024;              // Selected sensitivity/EMG saturation value
@@ -136,11 +137,13 @@ struct Button {
 
     Button() {};
 
-    void set(void (*callback)(void), const int& interval, const bool& enabled) {
-        this->callback = callback;
-        this->interval = interval;
-        this->enabled = enabled;
-    }
+    void set(void (*callback)(void)) { this->set(callback, 0); }
+
+	void set(void (*callback)(void), const uint8_t& interval) {
+		this->callback = callback;
+		this->interval = interval;
+		this->enabled = true;
+	}
 
 };
 
@@ -157,12 +160,12 @@ struct Trigger {
 
     Trigger() {};
 
-    void set(const int& threshold, const int& secondThreshold, void (*callback)(void), const bool& enabled, const bool& thresholdMet) {
+    void set(const int& threshold, const int& secondThreshold, void (*callback)(void)) {
         this->threshold = threshold;
         this->secondThreshold = secondThreshold;
         this->callback = callback;
-        this->enabled = enabled;
-        this->thresholdMet = thresholdMet;
+        this->enabled = true;
+        this->thresholdMet = false;
     }
 
 };
@@ -178,6 +181,7 @@ class NeuroBoard {
 
         static uint8_t channel;
         static uint8_t decayRate;
+		static bool communicationEnabled;
 
         /**
          * Samples data to a circular buffer, and calculates envelope value 
@@ -189,6 +193,13 @@ class NeuroBoard {
          * @return void.
         **/
         void startMeasurements(void) const;
+
+		/**
+		 * Sets up communication between board and SpikeRecorder.
+		 * 
+		 * @return void.
+		**/
+		void startCommunication(void);
 
         /**
          * Special function to handle all button triggers, envelope triggers, and
@@ -429,18 +440,18 @@ class NeuroBoard {
          * Neuroduino (Arduino Leonardo).
         **/
         #ifdef ARDUINO_AVR_UNO
-            int channels[8] = {A0, A1, A2, A3, A4, A5, A6, A7};
+            int channels[8] = { A0, A1, A2, A3, A4, A5, A6, A7 };
         #else // We must be dealing with a Leonardo
-            int channels[6] = {A0, A1, A2, A3, A4, A5};
+            int channels[6] = { A0, A1, A2, A3, A4, A5 };
         #endif
 
         /**
          * LED pins for different boards.
         **/
         #ifdef ARDUINO_AVR_UNO
-            int ledPins[6] = {9, 10, 11, 12, 13, 14};
+            int ledPins[6] = { 9, 10, 11, 12, 13, 14 };
         #else // We must be dealing with a Leonardo
-            int ledPins[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+            int ledPins[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
         #endif
 
 };

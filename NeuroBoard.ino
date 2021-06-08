@@ -13,6 +13,7 @@ NeuroBoard board;
 void setup(void) {
 
 	board.startMeasurements();
+  board.startCommunication();
 	board.setChannel(A0);
 	board.setDecayRate(10);
 	board.startServo();
