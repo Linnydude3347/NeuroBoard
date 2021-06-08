@@ -467,7 +467,7 @@ void NeuroBoard::handleInputs(void) {
 		char* command = strtok(commandBuffer, ";");
 		while (command != 0) {
 
-			char* separator = strchr(command, ';');
+			char* separator = strchr(command, ':');
 			if (separator != 0) {
 				*separator = 0;
 				--separator;
@@ -483,10 +483,10 @@ void NeuroBoard::handleInputs(void) {
 					// Do nothing.
 				}
 				if (*separator == 'b') { // Request for impuls.
-					TIMSK3 &= ~(1 << OCIE1A);
+					TIMSK3 &= ~(1 << OCIE1A); // Disable timer for sampling.
 					PORTD &= I_BITMASK_ONE; // Turn off relay.
 					sendMessage(CURRENT_SHIELD_TYPE);
-					TIMSK3 |= (1 << OCIE1A);
+					TIMSK3 |= (1 << OCIE1A); // Enable timer for sampling.
 				}
 			}
 
